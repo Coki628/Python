@@ -6,6 +6,7 @@ x, y = map(int, input().split())
 # キャンバスを2次元配列に格納
 canvas = []
 for i in range(x):
+	# 文字列を1字ずつリストに入れる
 	canvas.append(list(input()))
 
 for i in range(x):
