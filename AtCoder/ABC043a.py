@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+N = int(input())
+
+ans = 0
+for i in range(1, N+1):
+    ans += i
+print(ans)
