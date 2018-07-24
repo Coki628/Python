@@ -22,8 +22,7 @@ for i in range(M):
 
 # 連結かどうか(全ての頂点が訪問済かどうか)を判定するDFS
 def dfs(v):
-    # 関数内で使用する変数のglobal宣言
-    global graph
+    # 関数内で更新する変数のglobal宣言
     global visited
     # 訪問済はやる意味ないのでreturn
     if visited[v]:
