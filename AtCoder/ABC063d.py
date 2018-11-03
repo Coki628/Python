@@ -23,15 +23,17 @@ def enough(T):
 # 2分探索で最初にTrueになる場所を見つける
 hi = 10 ** 9
 low = 0
+# low+1 == hi -> lowとhiが隣り合った状態なので、境界が確定する
 while low+1 < hi:
     mid = (hi+low) // 2
     if enough(mid):
         hi = mid
     else:
         low = mid
+# hiの位置が最初のTrue
 print(hi)
 
-# こっちでも大丈夫だった。いまいち+1するとこのさじ加減がはっきり見えてない。
+# こっちでも大丈夫だった。でも上のやつのが分かりやすいかな。
 # hi = 10 ** 9 + 1
 # low = 0
 # mid = 10 ** 9 // 2
