@@ -2,9 +2,11 @@
 
 """
 ダイクストラ、最短経路DAG、トポロジカルソート、経路DP
+→トポロジカルソートにライブラリ使ってみる(本番使えないんだけどね)
 """
 
 from scipy.sparse.csgraph import dijkstra
+import networkx as nx
 
 N = int(input())
 a,b = map(int, input().split())
@@ -31,34 +33,10 @@ for i in range(M):
     elif dist[yM[i]] + 1 == dist[xM[i]]:
         dag.append((yM[i], xM[i]))
 
-# ここからトポロジカルソート準備
-incnts = [0] * N
-outnodes = [[] for i in range(N)]
-for i in range(len(dag)):
-    # 流入するノード数
-    incnts[dag[i][1]] += 1
-    # 流出先ノードのリスト
-    outnodes[dag[i][0]].append(dag[i][1])
-# 流入ノード数が0であるノードのセットS
-S = set()
-for i in range(N):
-    if incnts[i] == 0:
-        S.add(i)
-# ソート結果を保持する空リストL
-L = []
-
-# ここからトポロジカルソート
-# 暫定セットが空になるまでループ
-while S:
-    # 暫定セットから結果リストへ1つ入れる
-    L.append(S.pop())
-    # 確定させたノードから流出するノードでループ
-    for node in outnodes[L[-1]]:
-        # 流入ノード数を1減らす
-        incnts[node] -= 1
-        # 流入ノードが0なら暫定セットへ
-        if incnts[node] == 0:
-            S.add(node)
+# トポロジカルソート
+G = nx.DiGraph()
+G.add_edges_from(dag)
+L = list(nx.topological_sort(G))
 
 # 経路DP
 dp = [0] * N
