@@ -8,7 +8,6 @@
 from collections import deque
 import numpy as np
 from scipy.sparse.csgraph import dijkstra
-from scipy.sparse import lil_matrix
 
 H,W,T = map(int, input().split())
 

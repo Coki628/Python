@@ -18,4 +18,5 @@ for i in range(M):
 dist = floyd_warshall(graph, directed=False)
 for i in range(N):
     # 距離が2 = 友達の友達
+    # numpy配列は.countできなかったからこの形で
     print(np.sum(dist[i] == 2))
