@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 # 余りの切り上げ
-(a + b - 1) / b
-(a - 1) / b + 1
+(a + b - 1) // b
+(a - 1) // b + 1
 -(-a // b)
+
+def ceil(a, b):
+    return (a + b - 1) // b
 
 # 最大公約数と最小公倍数
 from functools import reduce
