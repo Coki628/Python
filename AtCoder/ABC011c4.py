@@ -2,6 +2,7 @@
 
 """
 メモ化再帰
+(DFS内で出力やんないで真偽返す版 + 条件整理)
 """
 
 N = int(input())
@@ -17,16 +18,20 @@ visited = [[False] * (remain+1) for i in range(301)]
 def dfs(cur, remain):
     # 残り回数0 or NGに当たった or 訪問済
     if remain < 0 or cur in NG or visited[cur][remain]:
-        return
+        return False
     visited[cur][remain] = True
     # 無事到着
     if cur <= 0:
-        print('YES')
-        exit()
+        return True
     # 1～3を引いていく
     for i in range(1, 4):
-        dfs(cur-i, remain-1)
+        if(dfs(cur-i, remain-1)):
+            # 着いたら即返却
+            return True
+    return False
 
-dfs(N, remain)
+if(dfs(N, remain)):
+    print('YES')
 # 最後まで着かなかった
-print('NO')
+else:
+    print('NO')
