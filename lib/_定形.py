@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# 余りの切り上げ
+# 余りの切り上げ(3つとも同じ)
 (a + b - 1) // b
 (a - 1) // b + 1
 -(-a // b)
+
+# modの除算(フェルマーの小定理)
+numer * pow(denomin, mod-2, mod) % mod
 
 def ceil(a, b):
     return (a + b - 1) // b
@@ -21,7 +24,7 @@ def lcm_list(numbers):
     return reduce(lcm_base, numbers, initial=1)
 
 # 素数判定用関数
-import math
+from math import sqrt
 def is_prime_2(num):
     if num < 2:
         return False
@@ -29,10 +32,10 @@ def is_prime_2(num):
         return True
     if num % 2 == 0 or num % 3 == 0 or num % 5 == 0:
         return False
-    # 疑似素数(2でも3でも5でも割り切れない数字)で次々に割っていく
+    # 疑似素数(2でも3でも割り切れない数字)で次々に割っていく
     prime = 7
     step = 4
-    num_sqrt = math.sqrt(num)
+    num_sqrt = sqrt(num)
     while prime <= num_sqrt:
         if num % prime == 0:
             return False
@@ -40,11 +43,8 @@ def is_prime_2(num):
         step = 6 - step
     return True
 
-# modの除算(フェルマーの小定理)
-numer * pow(denomin, mod-2, mod) % mod
-
-from math import sqrt
 # 約数の個数
+from math import sqrt
 def num_div(num):
     total = 1
     # 終点はルート切り捨て+1
@@ -72,6 +72,7 @@ def num_div_set(N):
             s.add(i)
     return s
 # こっちのが全然速い
+from math import sqrt
 def num_div_set2(N):
     # 1とその数はデフォで入れとく
     s = {1, N}
