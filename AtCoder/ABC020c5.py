@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-ダイクストラと2分探索
+ダイクストラと二分探索
 疎行列を使ってみる　→普通のが速かった…
 """
 
@@ -56,7 +56,7 @@ def dk(x):
 
     return dijkstra(graph, indices=mapping[start[0]][start[1]])[mapping[goal[0]][goal[1]]]
 
-# 2分探索で最初にTを上回る場所を見つける
+# 二分探索で最初にTを上回る場所を見つける
 hi = 10 ** 9
 low = 0
 # low+1 == hi -> lowとhiが隣り合った状態なので、境界が確定する

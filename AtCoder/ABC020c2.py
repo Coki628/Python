@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-幅優先と2分探索
+幅優先と二分探索
 """
 
 from collections import deque
@@ -61,7 +61,7 @@ def bfs(x):
     # 全部見たらゴール位置を返却
     return memo[goal[0]][goal[1]]
 
-# 2分探索で最初にTを上回る場所を見つける
+# 二分探索で最初にTを上回る場所を見つける
 hi = 10 ** 9
 low = 0
 # low+1 == hi -> lowとhiが隣り合った状態なので、境界が確定する
