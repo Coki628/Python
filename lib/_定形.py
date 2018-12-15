@@ -66,6 +66,15 @@ def num_div(num):
 def num_div_set(N):
     # 1とその数はデフォで入れとく
     s = {1, N}
+    for i in range(2, N//2+1):
+        # 割り切れるなら、iを追加
+        if N % i == 0:
+            s.add(i)
+    return s
+# こっちのが全然速い
+def num_div_set2(N):
+    # 1とその数はデフォで入れとく
+    s = {1, N}
     # 終点はルート切り捨て+1
     end = int(sqrt(N)) + 1
     for i in range(2, end+1):
