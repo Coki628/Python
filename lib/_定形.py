@@ -5,6 +5,9 @@
 (a - 1) // b + 1
 -(-a // b)
 
+# 二番目の要素でソート
+aN.sort(key=lambda x: x[1])
+
 # modの除算(フェルマーの小定理)
 numer * pow(denomin, mod-2, mod) % mod
 
