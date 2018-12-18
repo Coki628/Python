@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# 余りの切り上げ(3つとも同じ)
-(a + b - 1) // b
-(a - 1) // b + 1
--(-a // b)
-
 # 二番目の要素でソート
+aN = [[1, 2], [3, 1]]
 aN.sort(key=lambda x: x[1])
 
 # modの除算(フェルマーの小定理)
-numer * pow(denomin, mod-2, mod) % mod
+MOD = 10 ** 9 + 7
+numer = denomin = 1
+numer * pow(denomin, MOD-2, MOD) % MOD
 
 # 配列要素全部掛け(総乗)
 import functools
@@ -19,8 +17,11 @@ prod([1, 2, 3])
 import numpy as np
 np.prod([1, 2, 3])
 
+# 余りの切り上げ(3つとも同じ)
 def ceil(a, b):
-    return (a + b - 1) // b
+    (a + b - 1) // b
+    (a - 1) // b + 1
+    return -(-a // b)
 
 # 最大公約数と最小公倍数
 from functools import reduce
@@ -68,9 +69,12 @@ def num_div(num):
             cnt += 1
         # 指数+1をかけていくと約数をカウントできる
         total *= (cnt + 1)
-        # 最後までそのまま来たやつは素数なので2つ
-        if i == end and total == 1:
-            return 2
+        # 1まで分解したら終了
+        if num == 1:
+            break
+    # 最後に残ったnumの分
+    if num != 1:
+        total *= 2
     return total
 
 # 約数の列挙
@@ -95,3 +99,50 @@ def num_div_set2(N):
             s.add(i)
             s.add(N // i)
     return s
+
+# 素因数分解
+from collections import defaultdict
+from math import sqrt
+def fact_prime(num):
+    d = defaultdict(int)
+    # 終点はルート切り捨て+1
+    end = int(sqrt(num)) + 1
+    for i in range(2, end+1):
+        cnt = 0
+        # 素因数分解：小さい方から割れるだけ割って素数をカウント
+        while num % i == 0:
+            num //= i
+            d[i] += 1
+        # 1まで分解したら終了
+        if num == 1:
+            break
+    # 最後に残ったnumは素数(ただし1^1は1^0なので数に入れない)
+    if num != 1:
+        d[num] += 1
+    return d
+
+# 階乗たくさん使う時用のテーブル準備
+# MAX：階乗に使う数値の最大以上まで作る
+def init_factorial(MAX):
+    # 階乗テーブル
+    factorial = [1] * (MAX)
+    factorial[0] = factorial[1] = 1
+    for i in range(2, MAX):
+        factorial[i] = factorial[i-1] * i % MOD
+    # 逆元テーブル
+    inverse = [1] * (MAX)
+    # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
+    inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
+    for i in range(MAX-2, 0, -1):
+        # 最後から戻っていくこのループならMAX回powするより処理が速い
+        inverse[i] = inverse[i+1] * (i+1) % MOD
+
+# 組み合わせの数(必要な階乗と逆元のテーブルを事前に作っておく)
+def nCr(n, r):
+    # 10C7 = 10C3
+    r = min(r, n-r)
+    # 分子の計算
+    numerator = factorial[n]
+    # 分母の計算
+    denominator = inverse[r] * inverse[n-r] % MOD
+    return numerator * denominator % MOD
