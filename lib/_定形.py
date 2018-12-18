@@ -11,6 +11,14 @@ aN.sort(key=lambda x: x[1])
 # modの除算(フェルマーの小定理)
 numer * pow(denomin, mod-2, mod) % mod
 
+# 配列要素全部掛け(総乗)
+import functools
+import operator
+prod = functools.partial(functools.reduce, operator.mul)
+prod([1, 2, 3])
+import numpy as np
+np.prod([1, 2, 3])
+
 def ceil(a, b):
     return (a + b - 1) // b
 
@@ -74,7 +82,7 @@ def num_div_set(N):
         if N % i == 0:
             s.add(i)
     return s
-# こっちのが全然速い
+# こっちのが全然速い(むしろ個数もこれにlenやる方が速いぽい)
 from math import sqrt
 def num_div_set2(N):
     # 1とその数はデフォで入れとく
