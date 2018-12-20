@@ -22,4 +22,4 @@ for i in range(N):
     cnt += E_ruiseki[N] - E_ruiseki[i+1]
     ans = min(ans, cnt)
 
-print(ans)　
+print(ans)
