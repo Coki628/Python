@@ -100,6 +100,19 @@ def num_div_set2(N):
             s.add(N // i)
     return s
 
+# 素数列挙(エラトステネスの篩)
+def eratosthenes_sieve(n):
+    table = [0] * (n + 1)
+    prime_list = []
+    
+    for i in range(2, n + 1):
+        if table[i] == 0:
+            prime_list.append(i)
+            for j in range(i + i, n + 1, i):
+                table[j] = 1
+    
+    return prime_list
+
 # 素因数分解
 from collections import defaultdict
 from math import sqrt
