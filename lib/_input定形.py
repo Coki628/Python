@@ -41,6 +41,7 @@ for i in range(H):
     HW.append(list(map(int, input().split())))
 # 入力から値を読み込む(リスト内包表記)
 HW = [list(input()) for i in range(H)]
+cN = [list(map(int, input().split())) for i in range(N)]
 # 8方向を見に行く用の配列を準備しておく
 dx = [1, 0, -1, 0, 1, -1, -1, 1]
 dy = [0, 1, 0, -1, 1, 1, -1, -1]
