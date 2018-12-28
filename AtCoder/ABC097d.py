@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-参考：http://at274.hatenablog.com/entry/2018/02/02/173000
+参考：https://img.atcoder.jp/arc097/editorial.pdf
+　　　http://at274.hatenablog.com/entry/2018/02/02/173000
 ・Union-Find木
 ・これである頂点間に経路が繋がっているかどうか素早く分かる。
 """
