@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# 青い点を探して処理する関数
-def search_bluedot(end_x, end_y):
+# 赤い点を探して処理する関数
+def search_reddot(end_x, end_y):
 	# 更新する値をグローバル宣言
 	global ans
 	global field
@@ -32,6 +32,6 @@ for x in range(dot_count*2):
 	for y in range(dot_count*2):
 		# 青い点を見つけたら、そこより内側で赤い点を探す
 		if field[y][x] == 2:
-			search_bluedot(x, y)
+			search_reddot(x, y)
 
 print(ans)
