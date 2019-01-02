@@ -6,6 +6,7 @@
 →同じ回数(今回なら5回)足すのであればmodを揃えればその倍数にコントロールできる。
 """
 
+# 素数列挙(エラトステネスの篩)
 def eratosthenes_sieve(n):
     table = [0] * (n + 1)
     prime_list = []
@@ -24,3 +25,4 @@ def eratosthenes_sieve(n):
 
 N = int(input())
 print(*(eratosthenes_sieve(10000)[:N]))
+
