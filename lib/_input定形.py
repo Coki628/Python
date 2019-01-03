@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# 高速な標準入力
+import sys
+input = sys.stdin.readline
+
 # 数値型
 N = int(input())
 # 数値型で各変数
@@ -27,8 +31,6 @@ sN = [input() for i in range(N)]
 # 縦*横の2次元配列
 H, W = map(int, input().split())
 # 全0の初期化
-HW = [[0 for i in range(W)] for j in range(H)]
-# これでも大丈夫
 HW = [[0] * W for i in range(H)]
 HW = np.zeros((H,W,))
 # 入力から値を読み込む(スペース無文字列)
