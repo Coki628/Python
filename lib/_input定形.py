@@ -2,7 +2,7 @@
 
 # 高速な標準入力
 import sys
-input = sys.stdin.readline
+def input(): return sys.stdin.readline().strip()
 
 # 数値型
 N = int(input())

@@ -58,6 +58,40 @@ def is_prime_2(num):
         step = 6 - step
     return True
 
+# 素数列挙(エラトステネスの篩)
+def eratosthenes_sieve(n):
+    table = [0] * (n + 1)
+    prime_list = []
+    
+    for i in range(2, n + 1):
+        if table[i] == 0:
+            prime_list.append(i)
+            for j in range(i + i, n + 1, i):
+                table[j] = 1
+    
+    return prime_list
+
+# 素因数分解
+from collections import Counter
+from math import sqrt
+def fact_prime(num):
+    d = Counter()
+    # 終点はルート切り捨て+1
+    end = int(sqrt(num)) + 1
+    for i in range(2, end+1):
+        cnt = 0
+        # 素因数分解：小さい方から割れるだけ割って素数をカウント
+        while num % i == 0:
+            num //= i
+            d[i] += 1
+        # 1まで分解したら終了
+        if num == 1:
+            break
+    # 最後に残ったnumは素数(ただし1^1は1^0なので数に入れない)
+    if num != 1:
+        d[num] += 1
+    return d
+
 # 約数の個数
 from math import sqrt
 def num_div(num):
@@ -102,40 +136,6 @@ def num_div_set2(N):
             s.add(i)
             s.add(N // i)
     return s
-
-# 素数列挙(エラトステネスの篩)
-def eratosthenes_sieve(n):
-    table = [0] * (n + 1)
-    prime_list = []
-    
-    for i in range(2, n + 1):
-        if table[i] == 0:
-            prime_list.append(i)
-            for j in range(i + i, n + 1, i):
-                table[j] = 1
-    
-    return prime_list
-
-# 素因数分解
-from collections import defaultdict
-from math import sqrt
-def fact_prime(num):
-    d = defaultdict(int)
-    # 終点はルート切り捨て+1
-    end = int(sqrt(num)) + 1
-    for i in range(2, end+1):
-        cnt = 0
-        # 素因数分解：小さい方から割れるだけ割って素数をカウント
-        while num % i == 0:
-            num //= i
-            d[i] += 1
-        # 1まで分解したら終了
-        if num == 1:
-            break
-    # 最後に残ったnumは素数(ただし1^1は1^0なので数に入れない)
-    if num != 1:
-        d[num] += 1
-    return d
 
 # 階乗たくさん使う時用のテーブル準備
 # MAX：階乗に使う数値の最大以上まで作る
