@@ -6,6 +6,9 @@
 # 二番目の要素でソート
 aN = [[1, 2], [3, 1]]
 aN.sort(key=lambda x: x[1])
+# こっちのがちょっと速い
+from operator import itemgetter
+aN.sort(key=itemgetter(1))
 
 # modの除算(フェルマーの小定理)
 MOD = 10 ** 9 + 7
