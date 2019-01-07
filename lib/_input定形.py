@@ -33,6 +33,8 @@ H, W = map(int, input().split())
 # 全0の初期化
 HW = [[0] * W for i in range(H)]
 HW = np.zeros((H,W,))
+# N個の空配列で初期化
+[[] for i in range(N)]
 # 入力から値を読み込む(スペース無文字列)
 HW = []
 for i in range(H):
