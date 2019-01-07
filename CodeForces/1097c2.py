@@ -8,7 +8,7 @@
 import sys
 def input(): return sys.stdin.readline().strip()
 
-from collections import deque, Counter
+from collections import Counter
 
 N = int(input())
 
