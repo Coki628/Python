@@ -4,7 +4,7 @@
 参考：https://img.atcoder.jp/abc106/editorial.pdf
 　　　https://www.hamayanhamayan.com/entry/2018/08/18/234325
 ・累積和
-・O(QN+N^2)(10万*500+25万)がきついらしく、pythonでTLEしてpypyでACして2秒弱くらい。
+・O(QN+N^2)(10万*500+25万=5025万)がきついらしく、pythonでTLEしてpypyでACして2秒弱くらい。
 　この問題制限3secだからいいけど。
 """
 
