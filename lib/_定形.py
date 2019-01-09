@@ -43,7 +43,7 @@ def lcm_list(numbers):
 
 # 素数判定用関数
 from math import sqrt
-def is_prime_2(num):
+def is_prime2(num):
     if num < 2:
         return False
     if num == 2 or num == 3 or num == 5:
@@ -142,19 +142,19 @@ def num_div_set2(N):
 
 # 階乗たくさん使う時用のテーブル準備
 # MAX：階乗に使う数値の最大以上まで作る
-def init_factorial(MAX):
-    # 階乗テーブル
-    factorial = [1] * (MAX)
-    factorial[0] = factorial[1] = 1
-    for i in range(2, MAX):
-        factorial[i] = factorial[i-1] * i % MOD
-    # 逆元テーブル
-    inverse = [1] * (MAX)
-    # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
-    inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
-    for i in range(MAX-2, 0, -1):
-        # 最後から戻っていくこのループならMAX回powするより処理が速い
-        inverse[i] = inverse[i+1] * (i+1) % MOD
+MAX = 100
+# 階乗テーブル
+factorial = [1] * (MAX)
+factorial[0] = factorial[1] = 1
+for i in range(2, MAX):
+    factorial[i] = factorial[i-1] * i % MOD
+# 逆元テーブル
+inverse = [1] * (MAX)
+# powに第三引数入れると冪乗のmod付計算を高速にやってくれる
+inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
+for i in range(MAX-2, 0, -1):
+    # 最後から戻っていくこのループならMAX回powするより処理が速い
+    inverse[i] = inverse[i+1] * (i+1) % MOD
 
 # 組み合わせの数(必要な階乗と逆元のテーブルを事前に作っておく)
 def nCr(n, r):
