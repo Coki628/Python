@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# 再帰呼び出しの回数制限(デフォルト1000)
+import sys
+sys.setrecursionlimit(10 ** 9)
+
 # 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
 '{:.9f}'.format(3.1415)
 
@@ -166,6 +170,19 @@ def nCr(n, r):
     denominator = inverse[r] * inverse[n-r] % MOD
     return numerator * denominator % MOD
 
+# ワーシャルフロイド用隣接行列
+G = [[float('inf')] * N for i in range(N)]
+# ワーシャルフロイドで全頂点の最短距離
+for k in range(N):
+    for i in range(N):
+        for j in range(N):
+            # 始点 = 終点、は例外的に距離0にしておく
+            if i == j:
+                G[i][j] = 0
+            else:
+                G[i][j] = min(G[i][j], G[i][k] + G[k][j])
+
+
 # Union-Find木
 class UnionFind:
     def __init__(self, n):
@@ -202,3 +219,47 @@ class UnionFind:
     # 同じ集合に属するか判定
     def same_check(self, x, y):
         return self.find(x) == self.find(y)
+
+
+# 重み付きUnion-Find木
+class WeightedUnionFind:
+    def __init__(self, n):
+        self.par = [i for i in range(n+1)]
+        self.rank = [0] * (n+1)
+        # 根への距離を管理
+        self.weight = [0] * (n+1)
+
+    # 検索
+    def find(self, x):
+        if self.par[x] == x:
+            return x
+        else:
+            y = self.find(self.par[x])
+            # 親への重みを追加しながら根まで走査
+            self.weight[x] += self.weight[self.par[x]]
+            self.par[x] = y
+            return y
+
+    # 併合
+    def union(self, x, y, w):
+        rx = self.find(x)
+        ry = self.find(y)
+        # xの木の高さ < yの木の高さ
+        if self.rank[rx] < self.rank[ry]:
+            self.par[rx] = ry
+            self.weight[rx] = w - self.weight[x] + self.weight[y]
+        # xの木の高さ ≧ yの木の高さ
+        else:
+            self.par[ry] = rx
+            self.weight[ry] = - w - self.weight[y] + self.weight[x]
+            # 木の高さが同じだった場合の処理
+            if self.rank[rx] == self.rank[ry]:
+                self.rank[rx] += 1
+
+    # 同じ集合に属するか
+    def same(self, x, y):
+        return self.find(x) == self.find(y)
+
+    # xからyへのコスト
+    def diff(self, x, y):
+        return self.weight[x] - self.weight[y]
