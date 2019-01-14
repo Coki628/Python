@@ -6,6 +6,7 @@
 ・メモリ節約のため、dictをsetにした。
 ・さらに使い終わった1つ前はもういらないので消すことにした。
 　→やっとACした。
+・あとちょっと初期化とか色々調整
 """
 
 S = input()
@@ -17,31 +18,21 @@ tmp = 0
 for i in range(len(S)):
     if S[i] == 'F':
         tmp += 1
+        if i == len(S)-1:
+            S2.append(tmp)
     # T毎に区切る
     else:
         S2.append(tmp)
         tmp = 0
-S2.append(tmp)
-
-# 文字列がFのみだとこの後のDPできないので別処理
-if len(S2) == 1:
-    if X == S2[0] and Y == 0:
-        print('Yes')
-    else:
-        print('No')
-    exit()
 
 # あるかないか分かればいいので、dictじゃなくてsetにする
 dpx = [set() for _ in range(len(S2))]
 dpy = [set() for _ in range(len(S2))]
-# xの初期化：step0は右移動、step1ではそのまま
+# xの初期化：step0は右移動固定
 dpx[0].add(S2[0])
-dpx[1].add(S2[0])
-# yの初期化：step0は何もなし、step1で上下どちらかに移動
+# yの初期化：step0は何も動かないので座標0
 dpy[0].add(0)
-dpy[1].add(S2[1])
-dpy[1].add(-S2[1])
-for i in range(2, len(S2)):
+for i in range(1, len(S2)):
     # 左右に移動する
     for v in dpx[i-1]:
         if i % 2 == 0:
@@ -63,7 +54,7 @@ for i in range(2, len(S2)):
     dpy[i-1] = set()
 
 # 最後のstepでXとYが到達可能ならOK
-if X in dpx[len(S2)-1] and Y in dpy[len(S2)-1]:
+if X in dpx[-1] and Y in dpy[-1]:
     print('Yes')
 else:
     print('No')
