@@ -217,7 +217,7 @@ class UnionFind:
                 self.rank[x] += 1
 
     # 同じ集合に属するか判定
-    def same_check(self, x, y):
+    def same(self, x, y):
         return self.find(x) == self.find(y)
 
 
