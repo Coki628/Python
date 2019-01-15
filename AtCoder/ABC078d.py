@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+"""
+※すげー前に書いたやつ。
+"""
  
 N, Z, W = map(int, input().split())
 card_list = list(map(int, input().split()))
