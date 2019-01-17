@@ -6,9 +6,12 @@
 ・経路が木だと分かってると、こんなシンプルなDFSでいけるんだなー。
 ・ってpypyでTLEだったよこれ、ダイクストラより速そうなのに。
 ・pythonだとAC通った。しかもちょっとだけダイクストラより速く。分からん。
+・こっちも入力速いやつにしたら0.7秒くらいになった。
+　ちなみにpypyはそれでも1.3秒くらい…。
 """
 
 import sys
+def input(): return sys.stdin.readline().strip()
 
 # 再帰呼び出しの回数制限(デフォルト1000)
 sys.setrecursionlimit(10 ** 9)

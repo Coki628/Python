@@ -5,7 +5,12 @@
 ・ダイクストラ(優先度付きキュー)は思った以上に速いんだな。
 ・計算量はちゃんと作れてれば、O((E+V)logV)=2NlogN=20万*5=約100万(+Qの10万)
 ・pythonでギリAC(1.5秒くらい)、でも今回なぜかpypyでも速くならなかった。
+・入力速いやつにしたら、0.8秒くらいになった！こんなに変わる時もあるんだなー。
+　ちなみにpypyも同じくらいになった。
 """
+
+import sys
+def input(): return sys.stdin.readline().strip()
 
 from heapq import heappop, heappush
 
