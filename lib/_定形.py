@@ -7,6 +7,9 @@ sys.setrecursionlimit(10 ** 9)
 # 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
 '{:.9f}'.format(3.1415)
 
+# 四捨五入で整数に丸める
+round = lambda x: int((x*2+1) // 2)
+
 # 二番目の要素でソート
 aN = [[1, 2], [3, 1]]
 aN.sort(key=lambda x: x[1])
@@ -146,7 +149,7 @@ def num_div_set2(N):
 
 # 階乗たくさん使う時用のテーブル準備
 # MAX：階乗に使う数値の最大以上まで作る
-MAX = 100
+MAX = 101
 # 階乗テーブル
 factorial = [1] * (MAX)
 factorial[0] = factorial[1] = 1
@@ -169,6 +172,31 @@ def nCr(n, r):
     # 分母の計算
     denominator = inverse[r] * inverse[n-r] % MOD
     return numerator * denominator % MOD
+
+# テーブル準備MODなし版
+MAX = 51
+# 階乗テーブル
+factorial = [1] * (MAX)
+factorial[0] = factorial[1] = 1
+for i in range(2, MAX):
+    factorial[i] = factorial[i-1] * i
+
+# 組み合わせの数(必要な階乗のテーブルを事前に作っておく)
+def nCr(n, r):
+    # 10C7 = 10C3
+    r = min(r, n-r)
+    # 分子の計算
+    numerator = factorial[n]
+    # 分母の計算
+    denominator = factorial[r] * factorial[n-r]
+    return numerator // denominator
+
+# 事前テーブルなし組み合わせ簡易版
+from math import factorial
+def nCr(n, r):
+    # 10C7 = 10C3
+    r = min(r, n-r)
+    return factorial(n) / factorial(r) / factorial(n-r)
 
 # ワーシャルフロイド用隣接行列
 G = [[float('inf')] * N for i in range(N)]
