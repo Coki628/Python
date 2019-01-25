@@ -1,43 +1,67 @@
 # -*- coding: utf-8 -*-
 
+# 各種インポート
+import sys, re
+from collections import deque, defaultdict, Counter
+from math import sqrt, hypot, factorial, pi, sin, cos, radians
+from heapq import heappop, heappush, heapify, heappushpop
+from bisect import bisect_left, bisect_right
+from itertools import permutations, combinations, product
+from operator import itemgetter, mul
+from copy import deepcopy
+from functools import reduce, partial
+from fractions import Fraction
+from string import ascii_lowercase, ascii_uppercase, digits
+
+def input(): return sys.stdin.readline().strip()
+def ceil(a, b=1): return int(-(-a // b))
+def round(x): return int((x*2+1) // 2)
+def INT(): return int(input())
+def MAP(): return map(int, input().split())
+def LIST(): return list(map(int, input().split()))
+sys.setrecursionlimit(10 ** 9)
+INF = float('inf')
+MOD = 10 ** 9 + 7
+
+# numpy系
+import numpy as np
+from scipy.sparse.csgraph import dijkstra, floyd_warshall
+
+# 調査用
+# import matplotlib.pyplot as plt 
+# import pandas as pd
+
 # 再帰呼び出しの回数制限(デフォルト1000)
-import sys
 sys.setrecursionlimit(10 ** 9)
 
 # 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
 '{:.9f}'.format(3.1415)
 
 # 四捨五入で整数に丸める
-round = lambda x: int((x*2+1) // 2)
+def round(x): return int((x*2+1) // 2)
 
 # 二番目の要素でソート
 aN = [[1, 2], [3, 1]]
 aN.sort(key=lambda x: x[1])
 # こっちのがちょっと速い
-from operator import itemgetter
 aN.sort(key=itemgetter(1))
 
 # modの除算(フェルマーの小定理)
-MOD = 10 ** 9 + 7
-numer = denomin = 1
-numer * pow(denomin, MOD-2, MOD) % MOD
+def fermat(x, y, MOD):
+    return x * pow(y, MOD-2, MOD) % MOD
 
 # 配列要素全部掛け(総乗)
-import functools
-import operator
-prod = functools.partial(functools.reduce, operator.mul)
+prod = partial(reduce, mul)
 prod([1, 2, 3])
-import numpy as np
 np.prod([1, 2, 3])
 
 # 余りの切り上げ(3つとも同じ)
-def ceil(a, b):
-    (a + b - 1) // b
-    (a - 1) // b + 1
-    return -(-a // b)
+# def ceil(a, b):
+#     (a + b - 1) // b
+#     (a - 1) // b + 1
+#     return -(-a // b)
 
 # 最大公約数と最小公倍数
-from functools import reduce
 def gcd(a, b):
     while b > 0:
         a, b = b, a%b
@@ -49,7 +73,6 @@ def lcm_list(numbers):
     return reduce(lcm_base, numbers, initial=1)
 
 # 素数判定用関数
-from math import sqrt
 def is_prime2(num):
     if num < 2:
         return False
@@ -82,8 +105,6 @@ def eratosthenes_sieve(n):
     return prime_list
 
 # 素因数分解
-from collections import Counter
-from math import sqrt
 def fact_prime(num):
     d = Counter()
     # 終点はルート切り捨て+1
@@ -103,7 +124,6 @@ def fact_prime(num):
     return d
 
 # 約数の個数
-from math import sqrt
 def num_div(num):
     total = 1
     # 終点はルート切り捨て+1
@@ -134,7 +154,6 @@ def num_div_set(N):
             s.add(i)
     return s
 # こっちのが全然速い(むしろ個数もこれにlenやる方が速いぽい)
-from math import sqrt
 def num_div_set2(N):
     # 1とその数はデフォで入れとく
     s = {1, N}
@@ -192,23 +211,65 @@ def nCr(n, r):
     return numerator // denominator
 
 # 事前テーブルなし組み合わせ簡易版
-from math import factorial
 def nCr(n, r):
     # 10C7 = 10C3
     r = min(r, n-r)
     return factorial(n) / factorial(r) / factorial(n-r)
 
-# ワーシャルフロイド用隣接行列
-G = [[float('inf')] * N for i in range(N)]
-# ワーシャルフロイドで全頂点の最短距離
-for k in range(N):
-    for i in range(N):
-        for j in range(N):
-            # 始点 = 終点、は例外的に距離0にしておく
-            if i == j:
-                G[i][j] = 0
-            else:
-                G[i][j] = min(G[i][j], G[i][k] + G[k][j])
+# ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点)
+def dijkstra(N: int, nodes: list, src: int) -> list:
+    # 頂点[ある始点からの最短距離]
+    # (経路自体を知りたい時はここに前の頂点も持たせる)
+    res = [float('inf')] * N
+    # スタート位置
+    que = [(0, src)]
+    res[src] = 0
+    # キューが空になるまで
+    while len(que) != 0:
+        # srcからの距離, 現在のノード
+        dist, cur = heappop(que)
+        # 出発ノードcurの到着ノードでループ
+        for nxt, cost in nodes[cur]:
+            # 今回の経路のが短い時
+            if res[cur] + cost < res[nxt]:
+                res[nxt] = res[cur] + cost
+                # 現在の移動距離をキューの優先度として、早い方から先に処理するようにする
+                heappush(que, (res[nxt], nxt))
+    # ノードsrcからの最短距離リストを返却
+    return res
+
+# ベルマンフォード(頂点数, 辺集合(0-indexed), 始点)
+def bellman_ford(N: int, edges: list, src: int) -> list:
+    # 頂点[ある始点からの最短距離]
+    # (経路自体を知りたい時はここに前の頂点も持たせる)
+    res = [float('inf')] * N
+    res[src] = 0
+    # 各辺によるコストの置き換えを頂点数N-1回繰り返す
+    for i in range(N-1):
+        for src, dest, cost in edges:
+            if res[dest] > res[src] + cost:
+                res[dest] = res[src] + cost
+    # 無限に減らせる場所がないか確認
+    for src, dest, cost in edges:
+        if res[dest] > res[src] + cost:
+            # あったら空リストを返却
+            return []
+    # 問題なければ頂点リストを返却
+    return res
+
+# ワーシャルフロイド(頂点数, 隣接行列(0-indexed))
+def warshall_floyd(N: int, graph: list) -> list:
+    res = deepcopy(graph)
+    # 全頂点の最短距離
+    for k in range(N):
+        for i in range(N):
+            for j in range(N):
+                # 始点 = 終点、は例外的に距離0にしておく
+                if i == j:
+                    res[i][j] = 0
+                else:
+                    res[i][j] = min(res[i][j], res[i][k] + res[k][j])
+    return res
 
 
 # Union-Find木
@@ -220,7 +281,7 @@ class UnionFind:
         # 木の高さを格納する（初期状態では0）
         self.rank = [0] * (n+1)
 
-    # 検索
+    # 根の検索(グループ番号と言えなくもない)
     def find(self, x):
         # 根ならその番号を返す
         if self.par[x] == x:
