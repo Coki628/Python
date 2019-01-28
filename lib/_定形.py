@@ -3,7 +3,7 @@
 # 各種インポート
 import sys, re
 from collections import deque, defaultdict, Counter
-from math import sqrt, hypot, factorial, pi, sin, cos, radians
+from math import gcd, sqrt, hypot, factorial, pi, sin, cos, radians
 from heapq import heappop, heappush, heapify, heappushpop
 from bisect import bisect_left, bisect_right
 from itertools import permutations, combinations, product
@@ -16,6 +16,9 @@ from string import ascii_lowercase, ascii_uppercase, digits
 def input(): return sys.stdin.readline().strip()
 def ceil(a, b=1): return int(-(-a // b))
 def round(x): return int((x*2+1) // 2)
+def fermat(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
+def lcm(x, y): return (x * y) // gcd(x, y)
+def lcm_list(nums): return reduce(lcm, nums, initial=1)
 def INT(): return int(input())
 def MAP(): return map(int, input().split())
 def LIST(): return list(map(int, input().split()))
@@ -37,14 +40,14 @@ sys.setrecursionlimit(10 ** 9)
 # 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
 '{:.9f}'.format(3.1415)
 
-# 四捨五入で整数に丸める
-def round(x): return int((x*2+1) // 2)
-
 # 二番目の要素でソート
 aN = [[1, 2], [3, 1]]
 aN.sort(key=lambda x: x[1])
 # こっちのがちょっと速い
 aN.sort(key=itemgetter(1))
+
+# 四捨五入で整数に丸める
+def round(x): return int((x*2+1) // 2)
 
 # modの除算(フェルマーの小定理)
 def fermat(x, y, MOD):
@@ -61,22 +64,17 @@ np.prod([1, 2, 3])
 #     (a - 1) // b + 1
 #     return -(-a // b)
 
-# 最大公約数と最小公倍数
-def gcd(a, b):
-    while b > 0:
-        a, b = b, a%b
-    return a
-def lcm_base(x, y):
-    return (x * y) // gcd(x, y)
-def lcm_list(numbers):
+# 最小公倍数
+def lcm(x, y): return (x * y) // gcd(x, y)
+def lcm_list(nums):
     # reduce(使う関数, 足し合わせるリスト, 初期値)
-    return reduce(lcm_base, numbers, initial=1)
+    return reduce(lcm, nums, initial=1)
 
-# 素数判定用関数
-def is_prime2(num):
-    if num < 2:
+# 素数判定
+def is_prime(num):
+    if num < 2: 
         return False
-    if num == 2 or num == 3 or num == 5:
+    if num in [2, 3, 5]: 
         return True
     if num % 2 == 0 or num % 3 == 0 or num % 5 == 0:
         return False
@@ -95,17 +93,15 @@ def is_prime2(num):
 def eratosthenes_sieve(n):
     table = [0] * (n + 1)
     prime_list = []
-    
     for i in range(2, n + 1):
         if table[i] == 0:
             prime_list.append(i)
             for j in range(i + i, n + 1, i):
                 table[j] = 1
-    
     return prime_list
 
 # 素因数分解
-def fact_prime(num):
+def factorize(num: int) -> dict:
     d = Counter()
     # 終点はルート切り捨て+1
     end = int(sqrt(num)) + 1
@@ -123,38 +119,8 @@ def fact_prime(num):
         d[num] += 1
     return d
 
-# 約数の個数
-def num_div(num):
-    total = 1
-    # 終点はルート切り捨て+1
-    end = int(sqrt(num)) + 1
-    for i in range(2, end+1):
-        cnt = 0
-        # 素因数分解：小さい方から割れるだけ割って指数をカウント
-        while num % i == 0:
-            num //= i
-            cnt += 1
-        # 指数+1をかけていくと約数をカウントできる
-        total *= (cnt + 1)
-        # 1まで分解したら終了
-        if num == 1:
-            break
-    # 最後に残ったnumの分
-    if num != 1:
-        total *= 2
-    return total
-
-# 約数の列挙
-def num_div_set(N):
-    # 1とその数はデフォで入れとく
-    s = {1, N}
-    for i in range(2, N//2+1):
-        # 割り切れるなら、iを追加
-        if N % i == 0:
-            s.add(i)
-    return s
-# こっちのが全然速い(むしろ個数もこれにlenやる方が速いぽい)
-def num_div_set2(N):
+# 約数の列挙・個数
+def divisor_set(N: int) -> set:
     # 1とその数はデフォで入れとく
     s = {1, N}
     # 終点はルート切り捨て+1
@@ -168,19 +134,20 @@ def num_div_set2(N):
 
 # 階乗たくさん使う時用のテーブル準備
 # MAX：階乗に使う数値の最大以上まで作る
-MAX = 101
-# 階乗テーブル
-factorial = [1] * (MAX)
-factorial[0] = factorial[1] = 1
-for i in range(2, MAX):
-    factorial[i] = factorial[i-1] * i % MOD
-# 逆元テーブル
-inverse = [1] * (MAX)
-# powに第三引数入れると冪乗のmod付計算を高速にやってくれる
-inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
-for i in range(MAX-2, 0, -1):
-    # 最後から戻っていくこのループならMAX回powするより処理が速い
-    inverse[i] = inverse[i+1] * (i+1) % MOD
+def init_fact_inv(MAX: int, MOD: int) -> list:
+    # 階乗テーブル
+    factorial = [1] * (MAX)
+    factorial[0] = factorial[1] = 1
+    for i in range(2, MAX):
+        factorial[i] = factorial[i-1] * i % MOD
+    # 逆元テーブル
+    inverse = [1] * (MAX)
+    # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
+    inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
+    for i in range(MAX-2, 0, -1):
+        # 最後から戻っていくこのループならMAX回powするより処理が速い
+        inverse[i] = inverse[i+1] * (i+1) % MOD
+    return factorial, inverse
 
 # 組み合わせの数(必要な階乗と逆元のテーブルを事前に作っておく)
 def nCr(n, r):
@@ -193,12 +160,13 @@ def nCr(n, r):
     return numerator * denominator % MOD
 
 # テーブル準備MODなし版
-MAX = 51
-# 階乗テーブル
-factorial = [1] * (MAX)
-factorial[0] = factorial[1] = 1
-for i in range(2, MAX):
-    factorial[i] = factorial[i-1] * i
+def init_factorial(MAX: int) -> list:
+    # 階乗テーブル
+    factorial = [1] * (MAX)
+    factorial[0] = factorial[1] = 1
+    for i in range(2, MAX):
+        factorial[i] = factorial[i-1] * i
+    return factorial
 
 # 組み合わせの数(必要な階乗のテーブルを事前に作っておく)
 def nCr(n, r):
