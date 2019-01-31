@@ -3,7 +3,7 @@
 """
 参考：https://kimiyuki.net/writeup/algo/atcoder/arc-085-d/
 　　　https://atcoder.jp/contests/abc078/submissions/3854338
-・ミニマックス法
+・ゲーム木の探索(ミニマックス法)
 ・メモ化再帰
 ・メモの持ち方をシンプルにした版
 　→無事AC。相手のスコアはメモらなくてもいいのか…。

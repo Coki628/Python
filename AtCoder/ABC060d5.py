@@ -3,7 +3,7 @@
 """
 参考：https://atcoder.jp/contests/abc060/submissions/3958560
 ・前から普通にDPもdictでやってみる。
-・送るDP
+・配るDP
 ・2つ目の添字はdict
 """
 

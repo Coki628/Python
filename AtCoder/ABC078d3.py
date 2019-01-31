@@ -2,7 +2,7 @@
 
 """
 参考：https://kimiyuki.net/writeup/algo/atcoder/arc-085-d/
-・ミニマックス法
+・ゲーム木の探索(ミニマックス法)
 ・メモ化再帰
 ・先手と後手にそれぞれのメモを作る
 ・TLEしてpypyでAC(O(N^2)=2000^2=400万)

@@ -4,7 +4,7 @@
 参考：https://img.atcoder.jp/abc082/editorial.pdf
 　　　https://atcoder.jp/contests/abc082/submissions/3930644
 ・計算量改善。-8000～8000全部回してたループを値があるkeyだけ回るようにした。
-・それに合わせて、貰うDPを送るDPにした。(自分的にはこっちのが分かりやすいし)
+・それに合わせて、貰うDPを配るDPにした。(自分的にはこっちのが分かりやすいし)
 　→TLEしない代わりになんとこれはメモリ超過…
 """
 
