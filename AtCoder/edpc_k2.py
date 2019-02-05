@@ -2,8 +2,9 @@
 
 """
 参考：https://kyopro-friends.hatenablog.com/entry/2019/01/12/231000
+　　　https://www.hamayanhamayan.com/entry/2019/01/09/002200
 ・ゲームDP
-・負け状態を押し付けられるかどうか
+・後退解析：負け状態を押し付けられるかどうか
 ・pypyで0.4秒くらいでAC
 """
 

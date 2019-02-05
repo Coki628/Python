@@ -2,9 +2,10 @@
 
 """
 参考：https://kyopro-friends.hatenablog.com/entry/2019/01/12/231000
+　　　https://www.hamayanhamayan.com/entry/2019/01/09/002200
+・後退解析：負け状態を押し付けられるかどうか
 ・メモ化再帰
 ・自分の得点等、手番固有の情報がないので、手番はメモしなくていい
-・負け状態を押し付けられるかどうか
 ・pypyはだめで、pythonでギリギリ1.9秒のAC
 """
 

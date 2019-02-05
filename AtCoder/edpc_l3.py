@@ -2,11 +2,13 @@
 
 """
 参考：https://atcoder.jp/contests/dp/submissions/4122950
+　　　https://www.hamayanhamayan.com/entry/2019/01/09/004223
+・区間DP
 ・メモ化再帰
 ・ゲーム木の探索
 ・得点は引数に入れないし、メモにも入れない。mxとmnの戻り値で管理する。
 ・とりあえずサンプル通ったけどTLE。再帰の900万はきつい。
-・C++でほぼ同じ実装作ってAC
+・C++でほぼ同じ実装作って0.06秒くらいでAC
 """
 
 import sys, re
