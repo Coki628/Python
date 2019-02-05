@@ -2,6 +2,7 @@
 
 """
 参考：https://img.atcoder.jp/abc117/editorial.pdf
+　　　https://atcoder.jp/contests/abc117/submissions/4167397
 ・XOR系
 ・各ビット0の多い所は1にするっていう方針は合ってた。
 ・ちょっと条件間違って書いてたのと、
