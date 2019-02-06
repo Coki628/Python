@@ -16,6 +16,8 @@ from fractions import Fraction
 from string import ascii_lowercase, ascii_uppercase, digits
 
 def input(): return sys.stdin.readline().strip()
+def list2d(a, b, c): return [[c] * b for i in range(a)]
+def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
 def ceil(a, b=1): return int(-(-a // b))
 def round(x): return int((x*2+1) // 2)
 def fermat(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
@@ -43,6 +45,18 @@ sys.setrecursionlimit(10 ** 9)
 # 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
 '{:.9f}'.format(3.1415)
 
+# 文字列リバース
+s = ''
+s = s[::-1]
+
+# int -> bin(str)
+num = 1234
+num = format(num, 'b')
+# int -> bin(str) (8桁0埋め)
+num = format(aN[i], '08b')
+# bin(str) => int
+num = int(num, 2)
+
 # 二番目の要素でソート
 aN = [[1, 2], [3, 1]]
 aN.sort(key=lambda x: x[1])
@@ -58,8 +72,19 @@ def fermat(x, y, MOD):
 
 # 配列要素全部掛け(総乗)
 prod = partial(reduce, mul)
+# これでもよさげ
+def prod(nums): return reduce(mul, nums, 1)
 prod([1, 2, 3])
 np.prod([1, 2, 3])
+
+# 右左上下
+directions = [(0,1),(0,-1),(1,0),(-1,0)]
+# 四方に一回り大きいグリッドを作る
+# grid = [['*'] * (W+2) for i in range(H+2)]
+# for i in range(1,H+1):
+#     row = list(input())
+#     for j in range(1, W+1):
+#         grid[i][j] = row[j-1]
 
 # 余りの切り上げ(3つとも同じ)
 # def ceil(a, b):
@@ -241,6 +266,38 @@ def warshall_floyd(N: int, graph: list) -> list:
                 else:
                     res[i][j] = min(res[i][j], res[i][k] + res[k][j])
     return res
+
+# トポロジカルソート(頂点数、辺集合(DAG, 0-indexed))
+def topological_sort(N: int, edges: list) -> list:
+    # ここからトポロジカルソート準備
+    incnts = [0] * N
+    outnodes = [[] for i in range(N)]
+    for i in range(len(edges)):
+        # 流入するノード数
+        incnts[edges[i][1]] += 1
+        # 流出先ノードのリスト
+        outnodes[edges[i][0]].append(edges[i][1])
+    # 流入ノード数が0であるノードのセットS
+    S = set()
+    for i in range(N):
+        if incnts[i] == 0:
+            S.add(i)
+
+    # ここからトポロジカルソート
+    L = []
+    # 暫定セットが空になるまでループ
+    while S:
+        # 暫定セットから結果リストへ1つ入れる
+        L.append(S.pop())
+        # 確定させたノードから流出するノードでループ
+        for node in outnodes[L[-1]]:
+            # 流入ノード数を1減らす
+            incnts[node] -= 1
+            # 流入ノードが0なら暫定セットへ
+            if incnts[node] == 0:
+                S.add(node)
+    # ソートされた頂点のリストを返却
+    return L
 
 
 # Union-Find木
