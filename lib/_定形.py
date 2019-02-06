@@ -18,7 +18,7 @@ from string import ascii_lowercase, ascii_uppercase, digits
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
-def ceil(a, b=1): return int(-(-a // b))
+def ceil(x, y=1): return int(-(-x // y))
 def round(x): return int((x*2+1) // 2)
 def fermat(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
 def lcm(x, y): return (x * y) // gcd(x, y)
