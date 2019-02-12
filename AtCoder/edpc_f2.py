@@ -2,7 +2,7 @@
 
 """
 参考：https://qiita.com/drken/items/03c7db44ccd27820ea0d
-・最長共通部分列問題
+・最長共通部分列問題(LCS)
 ・i側とj側の両方向に配るDP
 ・復元
 ・計算量O(len(s)*len(t)+len(s)+len(t))=900万ちょっと、pypyで0.6秒くらい。
