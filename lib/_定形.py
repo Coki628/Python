@@ -10,7 +10,7 @@ from heapq import heappop, heappush, heapify, heappushpop
 from bisect import bisect_left, bisect_right
 from itertools import permutations, combinations, product
 from operator import itemgetter, mul
-from copy import deepcopy
+from copy import copy, deepcopy
 from functools import reduce, partial
 from fractions import Fraction
 from string import ascii_lowercase, ascii_uppercase, digits
