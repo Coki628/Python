@@ -3,12 +3,12 @@
 # 各種インポート
 import sys, re
 from collections import deque, defaultdict, Counter
-from math import sqrt, hypot, factorial, pi, sin, cos, radians
+from math import sqrt, hypot, factorial, pi, sin, cos, radians, log10
 if sys.version_info.minor >= 5: from math import gcd
 else: from fractions import gcd 
 from heapq import heappop, heappush, heapify, heappushpop
 from bisect import bisect_left, bisect_right
-from itertools import permutations, combinations, product
+from itertools import permutations, combinations, product, accumulate
 from operator import itemgetter, mul
 from copy import copy, deepcopy
 from functools import reduce, partial
@@ -80,7 +80,7 @@ np.prod([1, 2, 3])
 # 右左上下
 directions = [(0,1),(0,-1),(1,0),(-1,0)]
 # 四方に一回り大きいグリッドを作る
-# grid = [['*'] * (W+2) for i in range(H+2)]
+# grid = list2d(H+2, W+2, '*')
 # for i in range(1,H+1):
 #     row = list(input())
 #     for j in range(1, W+1):
@@ -179,6 +179,7 @@ def init_fact_inv(MAX: int, MOD: int) -> list:
 
 # 組み合わせの数(必要な階乗と逆元のテーブルを事前に作っておく)
 def nCr(n, r):
+    if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
     # 分子の計算
@@ -198,6 +199,7 @@ def init_factorial(MAX: int) -> list:
 
 # 組み合わせの数(必要な階乗のテーブルを事前に作っておく)
 def nCr(n, r):
+    if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
     # 分子の計算
@@ -206,8 +208,22 @@ def nCr(n, r):
     denominator = factorial[r] * factorial[n-r]
     return numerator // denominator
 
+# テーブル準備logでやる版
+def init_fact_log(MAX: int) -> list:
+    fact_log = [0] * (MAX)
+    for i in range(1, MAX):
+        fact_log[i] = fact_log[i-1] + log10(i)
+    return fact_log
+
+def nCr(n, r):
+    if n < r: return 0
+    # 10C7 = 10C3
+    r = min(r, n-r)
+    return round(pow(10, fact_log[n] - fact_log[r] - fact_log[n-r]))
+
 # 事前テーブルなし組み合わせ簡易版
 def nCr(n, r):
+    if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
     return factorial(n) // (factorial(r) * factorial(n-r))
