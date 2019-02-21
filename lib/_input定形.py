@@ -39,6 +39,7 @@ HW = np.zeros((H,W,))
 HW = []
 for i in range(H):
     HW.append(list(input()))
+HW = [list(input()) for i in range(H)]
 # 入力から値を読み込む(スペース有数値)
 HW = []
 for i in range(H):
