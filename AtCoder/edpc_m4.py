@@ -42,7 +42,7 @@ class BIT:
     def __init__(self, n):
         # 0-indexed
         self.size = n
-        self.tree = [0] * n
+        self.tree = [0] * (n+1)
  
     def sum(self, i):
         s = 0
@@ -53,7 +53,8 @@ class BIT:
         return s
     
     # 区間和の取得 [l, r)
-    def get(self, l, r):
+    def get(self, l, r=None):
+        if r is None: r = l+1
         res = 0
         if r: res += self.sum(r-1)
         if l: res -= self.sum(l-1)
@@ -80,4 +81,4 @@ for i in range(N):
         sm = dp[i].get(max(j-aN[i], 0), j+1) % MOD
         dp[i+1].add(j, sm)
 
-print(dp[N].get(K, K+1) % MOD)
+print(dp[N].get(K) % MOD)
