@@ -43,9 +43,9 @@ is_odd = 0
 if input() == 'odd':
     is_odd = 1
 
-def search(num):
-    print('?', num, flush=True)
-    # 奇数でmod取っても偶奇が一致するなら、まだqが大きい
+def search(q):
+    print('?', q, flush=True)
+    # 奇数でmod取っても偶奇が一致するなら、まだqが大きい(ans<q)
     return (input() == 'odd') == is_odd
 
 # 二分探索
