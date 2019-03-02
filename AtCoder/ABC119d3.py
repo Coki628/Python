@@ -3,7 +3,7 @@
 """
 参考：https://img.atcoder.jp/abc119/editorial.pdf
 ・前計算しないで直接やる版
-・なぜかWAなんだけど分からん。
+・INFがfloat('inf')だとダメで10**18にしたらいけた。absとの合わせが良くないんだろうか。
 """
 
 import sys, re
@@ -38,7 +38,7 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = float('inf')
+INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
 A,B,Q=MAP()
@@ -60,9 +60,9 @@ for i in range(Q):
     idx2=bisect_left(S, x)
     idx3=bisect_right(T, x)-1
     idx4=bisect_left(T, x)
-    # idx番目の神社に行く
+    # idx1番目の神社に行く
     dist1=x-S[idx1]
-    # idx番目の神社から一番近い寺に行く
+    # idx1番目の神社から、xから右か左に一番近かった寺に行く
     dist1+=min(abs(S[idx1]-T[idx3]), abs(S[idx1]-T[idx4]))
     dist2=S[idx2]-x
     dist2+=min(abs(S[idx2]-T[idx3]), abs(S[idx2]-T[idx4]))
