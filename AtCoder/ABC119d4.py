@@ -4,6 +4,7 @@
 参考：https://img.atcoder.jp/abc119/editorial.pdf
 ・前計算しないで直接やる版
 ・INFがfloat('inf')だとダメで10**18にしたらいけた。INF-INFがnanになるからだった。
+・上記を考慮して修正版
 """
 
 import sys, re
@@ -38,7 +39,7 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = float('inf')
 MOD = 10 ** 9 + 7
 
 A,B,Q=MAP()
@@ -63,11 +64,11 @@ for i in range(Q):
     # idx1番目の神社に行く
     dist1=x-S[idx1]
     # idx1番目の神社から、xから右か左に一番近かった寺に行く
-    dist1+=min(abs(S[idx1]-T[idx3]), abs(S[idx1]-T[idx4]))
+    if dist1!=INF: dist1+=min(abs(S[idx1]-T[idx3]), abs(S[idx1]-T[idx4]))
     dist2=S[idx2]-x
-    dist2+=min(abs(S[idx2]-T[idx3]), abs(S[idx2]-T[idx4]))
+    if dist2!=INF: dist2+=min(abs(S[idx2]-T[idx3]), abs(S[idx2]-T[idx4]))
     dist3=x-T[idx3]
-    dist3+=min(abs(T[idx3]-S[idx1]), abs(T[idx3]-S[idx2]))
+    if dist3!=INF: dist3+=min(abs(T[idx3]-S[idx1]), abs(T[idx3]-S[idx2]))
     dist4=T[idx4]-x
-    dist4+=min(abs(T[idx4]-S[idx1]), abs(T[idx4]-S[idx2]))
+    if dist4!=INF: dist4+=min(abs(T[idx4]-S[idx1]), abs(T[idx4]-S[idx2]))
     print(min(dist1, dist2, dist3, dist4))
