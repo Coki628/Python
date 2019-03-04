@@ -324,6 +324,8 @@ class UnionFind:
         self.par = [i for i in range(n+1)]
         # 木の高さを格納する（初期状態では0）
         self.rank = [0] * (n+1)
+        # あるノードを根とする集合に属するノード数
+        self.size = [1] * (n+1)
 
     # 根の検索(グループ番号と言えなくもない)
     def find(self, x):
@@ -343,8 +345,10 @@ class UnionFind:
         # 木の高さを比較し、低いほうから高いほうに辺を張る
         if self.rank[x] < self.rank[y]:
             self.par[x] = y
+            self.size[y] += self.size[x]
         else:
             self.par[y] = x
+            self.size[x] += self.size[y]
             # 木の高さが同じなら片方を1増やす
             if self.rank[x] == self.rank[y]:
                 self.rank[x] += 1
