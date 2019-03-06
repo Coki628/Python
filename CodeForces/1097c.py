@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+"""
+・括弧系
+・スタック
+"""
+
 import sys
 def input(): return sys.stdin.readline().strip()
 
