@@ -4,7 +4,7 @@ import sys, re
 from collections import deque, defaultdict, Counter
 from math import sqrt, hypot, factorial, pi, sin, cos, radians, log10
 if sys.version_info.minor >= 5: from math import gcd
-else: from fractions import gcd 
+else: from fractions import gcd
 from heapq import heappop, heappush, heapify, heappushpop
 from bisect import bisect_left, bisect_right
 from itertools import permutations, combinations, product, accumulate
