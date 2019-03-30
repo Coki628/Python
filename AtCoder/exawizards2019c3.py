@@ -2,8 +2,9 @@
 
 """
 参考：https://img.atcoder.jp/exawizards2019/editorial.pdf
+　　　https://www.youtube.com/watch?v=dUCnyA3Rj_0
 ・二分探索
-・20万でO(QlogN)だけど、python1.9秒ギリギリ、pypyは0.5秒くらいで余裕だった。
+・20万のO(QlogN)だけど、python1.9秒ギリギリ、pypyは0.5秒くらいで余裕だった。
 """
 
 import sys
