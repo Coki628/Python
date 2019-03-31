@@ -98,6 +98,10 @@ def lcm_list(nums):
     # reduce(使う関数, 足し合わせるリスト, 初期値)
     return reduce(lcm, nums, initial=1)
 
+# 1からnまでの等差数列の和
+def get_sum(n):
+    return (1+n)*n//2
+
 # 素数判定
 def is_prime(num):
     if num < 2: 
