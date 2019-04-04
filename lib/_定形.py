@@ -330,6 +330,8 @@ class UnionFind:
         self.rank = [0] * (n+1)
         # あるノードを根とする集合に属するノード数
         self.size = [1] * (n+1)
+        # あるノードを根とする集合が木かどうか
+        self.tree = [True] * (n+1)
 
     # 根の検索(グループ番号と言えなくもない)
     def find(self, x):
@@ -346,6 +348,14 @@ class UnionFind:
         # 根を探す
         x = self.find(x)
         y = self.find(y)
+
+        # 木かどうかの判定用
+        if x == y:
+            self.tree[x] = False
+            return
+        if not self.tree[x] or not self.tree[y]:
+            self.tree[x] = self.tree[y] = False
+
         # 木の高さを比較し、低いほうから高いほうに辺を張る
         if self.rank[x] < self.rank[y]:
             self.par[x] = y
@@ -360,6 +370,14 @@ class UnionFind:
     # 同じ集合に属するか判定
     def same(self, x, y):
         return self.find(x) == self.find(y)
+
+    # あるノードの属する集合のノード数
+    def get_size(self, x):
+        return self.size[self.find(x)]
+
+    # 木かどうかの判定
+    def is_tree(self, x):
+        return self.tree[self.find(x)]
 
 
 # 重み付きUnion-Find木
