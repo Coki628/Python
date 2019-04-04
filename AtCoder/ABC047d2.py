@@ -2,7 +2,7 @@
 
 """
 参考：https://atcoder.jp/contests/abc047/submissions/4077573
-・しゃくとりってかfor文で左端だけ管理すればいけたからやってみる。
+・尺取ってかfor文で左端だけ管理すればいけたからやってみる。
 """
 
 import sys

@@ -4,7 +4,7 @@
 参考：https://img.atcoder.jp/colopl2018-qual/editorial.pdf
 　　　https://www.hamayanhamayan.com/entry/2017/12/10/031120
 ・全探索の応用
-・奇数はbit全探索、偶数は1つ使うor使えないの二択しかないので普通のループでいける。
+・奇数はビット全探索、偶数は1つ使うor使えないの二択しかないので普通のループでいける。
 ・互いに素
 ・今回は対ごとに素(どの二つも互いに素)である必要があるので、gcd(a,b,c)ではダメで
 　個別に2つずつ見ていく必要がある。
@@ -45,7 +45,7 @@ for i in range(A, B+1):
 ans=len(even)+1
 
 valid=[]
-# 奇数はbit全探索
+# 奇数はビット全探索
 for i in range(1<<len(odd)):
     check=[]
     for j in range(len(odd)):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# しゃくとり法
+# 尺取法
 # (人の参考にして整理した版)
 
 N,K = map(int, input().split())

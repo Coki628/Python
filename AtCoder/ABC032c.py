@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# しゃくとり法
+# 尺取法
 
 import numpy as np
 

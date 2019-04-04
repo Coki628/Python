@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# しゃくとり法
+# 尺取法
 
 N,K = map(int, input().split())
 sN = [int(input()) for i in range(N)]

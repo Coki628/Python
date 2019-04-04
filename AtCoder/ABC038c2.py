@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# しゃくとり法
+# 尺取法
 
 N = int(input())
 aN = list(map(int, input().split()))

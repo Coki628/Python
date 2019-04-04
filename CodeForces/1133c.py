@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-・しゃくとり
+・尺取法
 """
 
 import sys
