@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-・これはTLE
+参考：https://img.atcoder.jp/nikkei2019-final/editorial.pdf
+・集めるのに最適なマスは中央値取るだけでいけるようなのでやってみる。
 """
 
 import sys
@@ -26,36 +27,37 @@ def get_sum(n):
     return (1+n)*n//2
 
 H,W,K=MAP()
+# 全てある状態で初期化
 rowsm=[W]*H
 colsm=[H]*W
 RC=[None]*K
 for i in range(K):
     r,c=MAP()
+    # 入力に応じて引いていく
     rowsm[r-1]-=1
     colsm[c-1]-=1
     RC[i]=(r-1, c-1)
+# 残っている駒の個数
+cnt=H*W-K
 
-mn=INF
-row=0
+row=sm=0
 for i in range(H):
-    sm=0
-    for j in range(H):
-        sm+=rowsm[j]*abs(i-j)
-    if mn>sm:
-        mn=sm
+    sm+=rowsm[i]
+    # 累積和が駒の総数の半分以上になったところが中央値
+    if sm>=cnt/2:
         row=i
-mn=INF
-col=0
+        break
+col=sm=0
 for i in range(W):
-    sm=0
-    for j in range(W):
-        sm+=colsm[j]*abs(i-j)
-    if mn>sm:
-        mn=sm
+    sm+=colsm[i]
+    if sm>=cnt/2:
         col=i
+        break
+
+# 最小が狙えるrowとcolに対して、全て集めた時の値
 ans=(get_sum(row)+get_sum(H-row-1))*W+(get_sum(col)+get_sum(W-col-1))*H
 for i in range(K):
     r,c=RC[i]
+    # 入力で与えられた部分を引いていく
     ans-=abs(row-r)+abs(col-c)
-
 print(ans)
