@@ -14,6 +14,7 @@ from copy import copy, deepcopy
 from functools import reduce, partial
 from fractions import Fraction
 from string import ascii_lowercase, ascii_uppercase, digits
+from os.path import commonprefix
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
