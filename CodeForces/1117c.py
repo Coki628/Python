@@ -83,6 +83,7 @@ else:
     # dist<=midを初めて満たす(初めてdistがmid以上になる)位置
     print(hi)
 
+# 二分探索まとめ
 # 以下(境界の下)を探す時：f(mid)<mid, ->low
 # ex.) abc020c, kupc2018d(ちょっと変形)
 # 以上(境界の上)を探す時：f(mid)<=mid, ->hi
