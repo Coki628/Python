@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+参考：https://www.youtube.com/watch?v=FRzpDCx17vw
 ・尺取でもやってみた版
 """
 

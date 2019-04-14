@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-・400点なんとか自力AC
+参考：https://www.youtube.com/watch?v=FRzpDCx17vw
 ・累積和
 ・コンテスト後、ちょっと整理した版
 """
