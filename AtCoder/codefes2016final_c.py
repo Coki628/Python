@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+参考：https://mathtrain.jp/nim
 ・500点自力AC！これは嬉しい。
 ・Nim、XOR系
 """
