@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+"""
+・優先度付きキュー
+・想定解とは違うけどちゃんとACではある。
+・200点なのに実装時間かかったし、良い手ではないとは思うが。
+"""
+
 import sys
 from heapq import heappop, heappush, heapify
 
