@@ -45,7 +45,7 @@ memo = [None] * (K+1)
 
 def dfs(k):
     # 既に見た局面ならメモの内容を返す
-    if memo[k] != None:
+    if memo[k] is not None:
         return memo[k]
     for i in range(N):
         # 山の残数より多くは取れない

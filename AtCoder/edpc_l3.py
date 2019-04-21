@@ -47,7 +47,7 @@ memo = [[None] * (N+1) for i in range(N+1)]
 
 def dfs(turn, l, r):
     # 既に見た局面ならメモの内容を返す
-    if memo[l][r] != None:
+    if memo[l][r] is not None:
         return memo[l][r]
     # 全部取り切ったので終了
     if l > r:
