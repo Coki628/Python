@@ -85,7 +85,7 @@ else:
 
 # 二分探索まとめ
 # 以下(境界の下)を探す時：f(mid)<mid, ->low
-# ex.) abc020c, kupc2018d(ちょっと変形)
+# ex.) abc020c, kupc2018d(ちょっと変形), abc107d
 # 以上(境界の上)を探す時：f(mid)<=mid, ->hi
 # ex.) abc063d, cf1117c, alds1_4_d
 # 未満(境界の下)を探す時：f(mid)<=mid, ->low
