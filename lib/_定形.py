@@ -324,6 +324,7 @@ def topological_sort(N: int, edges: list) -> list:
 # Union-Find木
 class UnionFind:
     def __init__(self, n):
+        self.n = n
         # 親要素のノード番号を格納。par[x] == xの時そのノードは根
         # 1-indexedのままでOK、その場合は[0]は未使用
         self.par = [i for i in range(n+1)]
@@ -379,6 +380,14 @@ class UnionFind:
     # 木かどうかの判定
     def is_tree(self, x):
         return self.tree[self.find(x)]
+
+    # 集合の数
+    def len(self):
+        res = set()
+        for i in range(self.n+1):
+            res.add(self.find(i))
+        # グループ0の分を引いて返却
+        return len(res) - 1
 
 
 # 重み付きUnion-Find木
@@ -470,3 +479,35 @@ class BipartiteMatching:
     def solve(self):
         # 増大路発見に成功したらTrue(=1)。合計することでマッチング数となる
         return sum(self.dfs(i, set()) for i in range(self.n))
+
+
+class BIT:
+    def __init__(self, n):
+        # 0-indexed
+        self.size = n
+        self.tree = [0] * (n+1)
+
+    # [0, i]を合計する
+    def sum(self, i):
+        s = 0
+        i += 1
+        while i > 0:
+            s += self.tree[i-1]
+            i -= i & -i
+        return s
+
+    # 値の追加：添字, 値
+    def add(self, i, x):
+        i += 1
+        while i <= self.size:
+            self.tree[i-1] += x
+            i += i & -i
+
+    # 区間和の取得 [l, r)
+    def get(self, l, r=None):
+        # 引数が1つなら一点の値を取得
+        if r is None: r = l+1
+        res = 0
+        if r: res += self.sum(r-1)
+        if l: res -= self.sum(l-1)
+        return res
