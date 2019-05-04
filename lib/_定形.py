@@ -237,7 +237,7 @@ def nCr(n, r):
 def dijkstra(N: int, nodes: list, src: int) -> list:
     # 頂点[ある始点からの最短距離]
     # (経路自体を知りたい時はここに前の頂点も持たせる)
-    res = [float('inf')] * N
+    res = [INF] * N
     # スタート位置
     que = [(0, src)]
     res[src] = 0
@@ -259,14 +259,14 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
 def bellman_ford(N: int, edges: list, src: int) -> list:
     # 頂点[ある始点からの最短距離]
     # (経路自体を知りたい時はここに前の頂点も持たせる)
-    res = [float('inf')] * N
+    res = [INF] * N
     res[src] = 0
     # 各辺によるコストの置き換えを頂点数N-1回繰り返す
     for i in range(N-1):
         for src, dest, cost in edges:
             if res[dest] > res[src] + cost:
                 res[dest] = res[src] + cost
-    # 無限に減らせる場所がないか確認
+    # 負の閉路(いくらでもコストを減らせてしまう場所)がないかチェックする
     for src, dest, cost in edges:
         if res[dest] > res[src] + cost:
             # あったら空リストを返却
@@ -277,15 +277,18 @@ def bellman_ford(N: int, edges: list, src: int) -> list:
 # ワーシャルフロイド(頂点数, 隣接行列(0-indexed))
 def warshall_floyd(N: int, graph: list) -> list:
     res = deepcopy(graph)
+    for i in range(N):
+        # 始点 = 終点、は予め距離0にしておく
+        res[i][i] = 0
     # 全頂点の最短距離
     for k in range(N):
         for i in range(N):
             for j in range(N):
-                # 始点 = 終点、は例外的に距離0にしておく
-                if i == j:
-                    res[i][j] = 0
-                else:
-                    res[i][j] = min(res[i][j], res[i][k] + res[k][j])
+                res[i][j] = min(res[i][j], res[i][k] + res[k][j])
+    # 負の閉路(いくらでもコストを減らせてしまう場所)がないかチェックする
+    for i in range(N):
+        if res[i][i] < 0:
+            return []
     return res
 
 # トポロジカルソート(頂点数、辺集合(DAG, 0-indexed))
@@ -482,10 +485,14 @@ class BipartiteMatching:
 
 
 class BIT:
+    # N+1で初期化すること
     def __init__(self, n):
         # 0-indexed
-        self.size = n
-        self.tree = [0] * (n+1)
+        nv = 1
+        while nv < n:
+            nv *= 2
+        self.size = nv
+        self.tree = [0] * nv
 
     # [0, i]を合計する
     def sum(self, i):
