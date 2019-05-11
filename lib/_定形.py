@@ -485,10 +485,10 @@ class BipartiteMatching:
 
 
 class BIT:
-    # N+1で初期化すること
     def __init__(self, n):
         # 0-indexed
         nv = 1
+        n += 1
         while nv < n:
             nv *= 2
         self.size = nv
