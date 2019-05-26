@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+"""
+・300点自力AC
+・imos
+"""
+
 import sys
 from itertools import accumulate
 

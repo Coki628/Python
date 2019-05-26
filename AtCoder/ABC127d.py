@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+・400点自力AC
+"""
+
 import sys
 from operator import itemgetter
 
