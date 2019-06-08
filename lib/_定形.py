@@ -170,6 +170,7 @@ def init_fact_inv(MAX: int, MOD: int) -> list:
     階乗たくさん使う時用のテーブル準備
     MAX：階乗に使う数値の最大以上まで作る
     """
+    MAX += 1
     # 階乗テーブル
     factorial = [1] * MAX
     factorial[0] = factorial[1] = 1
@@ -197,6 +198,7 @@ def nCr(n, r, factorial, inverse):
 
 # テーブル準備MODなし版
 def init_factorial(MAX: int) -> list:
+    MAX += 1
     # 階乗テーブル
     factorial = [1] * MAX
     factorial[0] = factorial[1] = 1
@@ -217,12 +219,13 @@ def nCr(n, r):
 
 # テーブル準備logでやる版
 def init_fact_log(MAX: int) -> list:
+    MAX += 1
     fact_log = [0] * MAX
     for i in range(1, MAX):
         fact_log[i] = fact_log[i-1] + log10(i)
     return fact_log
 
-def nCr(n, r):
+def nCr(n, r, fact_log):
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
