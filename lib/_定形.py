@@ -165,9 +165,11 @@ def divisor_set(N: int) -> set:
             s.add(N // i)
     return s
 
-# 階乗たくさん使う時用のテーブル準備
-# MAX：階乗に使う数値の最大以上まで作る
 def init_fact_inv(MAX: int, MOD: int) -> list:
+    """
+    階乗たくさん使う時用のテーブル準備
+    MAX：階乗に使う数値の最大以上まで作る
+    """
     # 階乗テーブル
     factorial = [1] * MAX
     factorial[0] = factorial[1] = 1
@@ -183,7 +185,7 @@ def init_fact_inv(MAX: int, MOD: int) -> list:
     return factorial, inverse
 
 # 組み合わせの数(必要な階乗と逆元のテーブルを事前に作っておく)
-def nCr(n, r):
+def nCr(n, r, factorial, inverse):
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
