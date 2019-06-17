@@ -3,7 +3,7 @@
 """
 参考：http://garnacha.techblog.jp/archives/38634648.html
 　　　https://suikaba.hatenablog.com/entry/2017/07/02/234925
-・二次元DP、貰うDP
+・2次元DP、貰うDP
 ・練習のため、こっちもやってみる。
 ・同じ点を軸にして両方の追記ができるから配る方が分かりやすいかなぁ。
 　if文の場合分けもいらないし、aNとの添字も合うし。

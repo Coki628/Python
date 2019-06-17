@@ -3,7 +3,7 @@
 """
 参考：http://garnacha.techblog.jp/archives/38634648.html
 　　　https://suikaba.hatenablog.com/entry/2017/07/02/234925
-・二次元DP、配るDP
+・2次元DP、配るDP
 ・jの添字に何を当てるかとか、自力で作るにはまだ練習が必要。
 """
 
