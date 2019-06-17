@@ -535,7 +535,7 @@ class SegTree:
     def __init__(self, n, func, init):
         """
         :param n: 要素数
-        :param func: 値の操作に使う関数(min, max, addなど)
+        :param func: 値の操作に使う関数(min, max, add, gcdなど)
         :param init: 要素の初期値
         """
         n += 1
