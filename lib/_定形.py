@@ -82,7 +82,7 @@ np.prod([1, 2, 3])
 directions = [(0,1),(0,-1),(1,0),(-1,0)]
 # 四方に一回り大きいグリッドを作る
 # grid = list2d(H+2, W+2, '*')
-# for i in range(1,H+1):
+# for i in range(1, H+1):
 #     row = list(input())
 #     for j in range(1, W+1):
 #         grid[i][j] = row[j-1]
@@ -493,7 +493,6 @@ class BIT:
     def __init__(self, n):
         # 0-indexed
         nv = 1
-        n += 1
         while nv < n:
             nv *= 2
         self.size = nv
@@ -534,11 +533,10 @@ class SegTree:
  
     def __init__(self, n, func, init):
         """
-        :param n: 要素数
+        :param n: 要素数(0-indexed)
         :param func: 値の操作に使う関数(min, max, add, gcdなど)
-        :param init: 要素の初期値
+        :param init: 要素の初期値(単位元)
         """
-        n += 1
         self.n = n
         self.func = func
         self.init = init
