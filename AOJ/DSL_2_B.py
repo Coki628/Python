@@ -16,7 +16,6 @@ def LIST(): return list(map(int, input().split()))
 INF=float('inf')
 
 class BIT:
-    # N+1で初期化すること
     def __init__(self, n):
         # 0-indexed
         nv = 1
@@ -51,6 +50,7 @@ class BIT:
         return res
 
 N,Q=MAP()
+# 1-indexed対応
 bit=BIT(N+1)
 for _ in range(Q):
     com,x,y=MAP()

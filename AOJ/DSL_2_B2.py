@@ -29,7 +29,6 @@ class SegTree:
         :param func: 値の操作に使う関数(min, max, addなど)
         :param init: 要素の初期値
         """
-        n += 1
         self.n = n
         self.func = func
         self.init = init
@@ -81,7 +80,8 @@ class SegTree:
         )
 
 N,Q=MAP()
-st=SegTree(N, add, 0)
+# 1-indexed対応
+st=SegTree(N+1, add, 0)
 for _ in range(Q):
     com,x,y=MAP()
     if com==0:
