@@ -88,7 +88,7 @@ class SegTreeMax:
 N,M,K=MAP()
 A=[0]+LIST()
 
-# dp[i][j] := j日目にi回使った状態(2次元目をセグ木で構築)
+# dp[i][j] := i回目をj日目に使った状態(2次元目をセグ木で構築)
 dp=[None]*(M+1)
 for i in range(M+1):
     dp[i]=SegTreeMax(N+1)

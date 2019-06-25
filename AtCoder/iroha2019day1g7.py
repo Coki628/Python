@@ -8,6 +8,7 @@
 ・内ループをセグメント木(RMaxQ)にした。
 ・線形がlogになったはずだけど、かえって遅くなった…。
 ・セグ木をより汎用的に使えるように改修
+・C++でAC確認。
 """
 
 import sys
@@ -33,7 +34,7 @@ class SegTree:
     1.update:  i番目の値をxに更新する
     2.get_val: 区間[l, r)の値を得る
     """
- 
+
     def __init__(self, n, func, init):
         """
         :param n: 要素数
@@ -93,7 +94,7 @@ class SegTree:
 N,M,K=MAP()
 A=[0]+LIST()
 
-# dp[i][j] := j日目にi回使った状態(2次元目をセグ木で構築)
+# dp[i][j] := i回目をj日目に使った状態(2次元目をセグ木で構築)
 dp=[None]*(M+1)
 for i in range(M+1):
     dp[i]=SegTree(N+1, max, -INF)
