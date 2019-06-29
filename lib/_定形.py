@@ -11,7 +11,7 @@ from bisect import bisect_left, bisect_right
 from itertools import permutations, combinations, product, accumulate
 from operator import itemgetter, mul
 from copy import copy, deepcopy
-from functools import reduce, partial
+from functools import reduce, partial, lru_cache
 from fractions import Fraction
 from string import ascii_lowercase, ascii_uppercase, digits
 from os.path import commonprefix
@@ -42,6 +42,10 @@ from scipy.sparse.csgraph import dijkstra, floyd_warshall
 
 # 再帰呼び出しの回数制限(デフォルト1000)
 sys.setrecursionlimit(10 ** 9)
+# 再帰関数の前にこれ書くと速くなったりするらしい。
+@lru_cache(maxsize=None)
+def rec():
+    rec()
 
 # 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
 '{:.9f}'.format(3.1415)
@@ -165,10 +169,16 @@ def divisor_set(N: int) -> set:
             s.add(N // i)
     return s
 
-def init_fact_inv(MAX: int, MOD: int) -> list:
-    """
-    階乗たくさん使う時用のテーブル準備
-    MAX：階乗に使う数値の最大以上まで作る
+def init_fact_inv(MAX: int, MOD: int):
+    """ 階乗たくさん使う時用のテーブル準備
+
+    Parameters
+    ----------
+        MAX：階乗に使う数値の最大以上まで作る
+        MOD
+    Returns
+    -------
+        factorial (list<int>), inverse (list<int>)
     """
     MAX += 1
     # 階乗テーブル
@@ -185,8 +195,8 @@ def init_fact_inv(MAX: int, MOD: int) -> list:
         inverse[i] = inverse[i+1] * (i+1) % MOD
     return factorial, inverse
 
-# 組み合わせの数(必要な階乗と逆元のテーブルを事前に作っておく)
 def nCr(n, r, factorial, inverse):
+    """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
@@ -517,7 +527,7 @@ class BIT:
     # 区間和の取得 [l, r)
     def get(self, l, r=None):
         # 引数が1つなら一点の値を取得
-        if r is None: r = l+1
+        if r is None: r = l + 1
         res = 0
         if r: res += self.sum(r-1)
         if l: res -= self.sum(l-1)
