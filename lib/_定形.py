@@ -72,8 +72,7 @@ aN.sort(key=itemgetter(1))
 def round(x): return int((x*2+1) // 2)
 
 # modの除算(フェルマーの小定理)
-def fermat(x, y, MOD):
-    return x * pow(y, MOD-2, MOD) % MOD
+def fermat(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
 
 # 配列要素全部掛け(総乗)
 prod = partial(reduce, mul)
@@ -99,16 +98,14 @@ directions = [(0,1),(0,-1),(1,0),(-1,0)]
 
 # 最小公倍数
 def lcm(x, y): return (x * y) // gcd(x, y)
-def lcm_list(nums):
-    # reduce(使う関数, 足し合わせるリスト, 初期値)
-    return reduce(lcm, nums, initial=1)
+# reduce(使う関数, 足し合わせるリスト, 初期値)
+def lcm_list(nums): return reduce(lcm, nums, initial=1)
 
 # 1からnまでの等差数列の和
-def get_sum(n):
-    return (1+n)*n//2
+def get_sum(n): return (1+n)*n//2
 
-# 素数判定
 def is_prime(num):
+    """ 素数判定 """
     if num < 2: 
         return False
     if num in [2, 3, 5]: 
@@ -126,8 +123,8 @@ def is_prime(num):
         step = 6 - step
     return True
 
-# 素数列挙(エラトステネスの篩)
 def eratosthenes_sieve(n):
+    """ 素数列挙(エラトステネスの篩) """
     table = [0] * (n + 1)
     prime_list = []
     for i in range(2, n + 1):
@@ -137,8 +134,8 @@ def eratosthenes_sieve(n):
                 table[j] = 1
     return prime_list
 
-# 素因数分解
 def factorize(num: int) -> dict:
+    """ 素因数分解 """
     d = Counter()
     # 終点はルート切り捨て+1
     end = int(sqrt(num)) + 1
@@ -156,8 +153,8 @@ def factorize(num: int) -> dict:
         d[num] += 1
     return d
 
-# 約数の列挙・個数
 def divisor_set(N: int) -> set:
+    """ 約数の列挙・個数 """
     # 1とその数はデフォで入れとく
     s = {1, N}
     # 終点はルート切り捨て+1
@@ -206,8 +203,84 @@ def nCr(n, r, factorial, inverse):
     denominator = inverse[r] * inverse[n-r] % MOD
     return numerator * denominator % MOD
 
-# テーブル準備MODなし版
+
+class FactInvMOD:
+    """ 階乗たくさん使う時用のテーブル準備 """
+
+    def __init__(self, MAX, MOD):
+        """ MAX：階乗に使う数値の最大以上まで作る """
+        
+        MAX += 1
+        self.MAX = MAX
+        self.MOD = MOD
+
+        # 階乗テーブル
+        factorial = [1] * MAX
+        factorial[0] = factorial[1] = 1
+        for i in range(2, MAX):
+            factorial[i] = factorial[i-1] * i % MOD
+        # 階乗の逆元テーブル
+        inverse = [1] * MAX
+        # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
+        inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
+        for i in range(MAX-2, 0, -1):
+            # 最後から戻っていくこのループならMAX回powするより処理が速い
+            inverse[i] = inverse[i+1] * (i+1) % MOD
+        self.fact = factorial
+        self.inv = inverse
+    
+    def nCr(self, n, r):
+        """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
+        if n < r: return 0
+        # 10C7 = 10C3
+        r = min(r, n-r)
+        # 分子の計算
+        numerator = self.fact[n]
+        # 分母の計算
+        denominator = self.inv[r] * self.inv[n-r] % self.MOD
+        return numerator * denominator % self.MOD
+
+
+def init_fact_inv(MAX: int, MOD: int):
+    """ 階乗たくさん使う時用のテーブル準備
+
+    Parameters
+    ----------
+        MAX：階乗に使う数値の最大以上まで作る
+        MOD
+    Returns
+    -------
+        factorial (list<int>), inverse (list<int>)
+    """
+    MAX += 1
+    # 階乗テーブル
+    factorial = [1] * MAX
+    factorial[0] = factorial[1] = 1
+    for i in range(2, MAX):
+        factorial[i] = factorial[i-1] * i % MOD
+    # 階乗の逆元テーブル
+    inverse = [1] * MAX
+    # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
+    inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
+    for i in range(MAX-2, 0, -1):
+        # 最後から戻っていくこのループならMAX回powするより処理が速い
+        inverse[i] = inverse[i+1] * (i+1) % MOD
+    return factorial, inverse
+
+def nCr(n, r, factorial, inverse):
+    """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
+    if n < r: return 0
+    # 10C7 = 10C3
+    r = min(r, n-r)
+    # 分子の計算
+    numerator = factorial[n]
+    # 分母の計算
+    denominator = inverse[r] * inverse[n-r] % MOD
+    return numerator * denominator % MOD
+
+
 def init_factorial(MAX: int) -> list:
+    """ テーブル準備MODなし版 """
     MAX += 1
     # 階乗テーブル
     factorial = [1] * MAX
@@ -216,8 +289,8 @@ def init_factorial(MAX: int) -> list:
         factorial[i] = factorial[i-1] * i
     return factorial
 
-# 組み合わせの数(必要な階乗のテーブルを事前に作っておく)
 def nCr(n, r):
+    """ 組み合わせの数(必要な階乗のテーブルを事前に作っておく) """
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
@@ -227,8 +300,8 @@ def nCr(n, r):
     denominator = factorial[r] * factorial[n-r]
     return numerator // denominator
 
-# テーブル準備logでやる版
 def init_fact_log(MAX: int) -> list:
+    """ テーブル準備logでやる版 """
     MAX += 1
     fact_log = [0] * MAX
     for i in range(1, MAX):
@@ -241,17 +314,17 @@ def nCr(n, r, fact_log):
     r = min(r, n-r)
     return round(pow(10, fact_log[n] - fact_log[r] - fact_log[n-r]))
 
-# 事前テーブルなし組み合わせ簡易版
 def nCr(n, r):
+    """ 事前テーブルなし組み合わせ簡易版 """
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
     return factorial(n) // (factorial(r) * factorial(n-r))
 
-# ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点)
 def dijkstra(N: int, nodes: list, src: int) -> list:
-    # 頂点[ある始点からの最短距離]
-    # (経路自体を知りたい時はここに前の頂点も持たせる)
+    """ ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点) """
+
+    # 頂点[ある始点からの最短距離] (経路自体を知りたい時はここに前の頂点も持たせる)
     res = [INF] * N
     # スタート位置
     que = [(0, src)]
@@ -270,10 +343,10 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     # ノードsrcからの最短距離リストを返却
     return res
 
-# ベルマンフォード(頂点数, 辺集合(0-indexed), 始点)
 def bellman_ford(N: int, edges: list, src: int) -> list:
-    # 頂点[ある始点からの最短距離]
-    # (経路自体を知りたい時はここに前の頂点も持たせる)
+    """ ベルマンフォード(頂点数, 辺集合(0-indexed), 始点) """
+
+    # 頂点[ある始点からの最短距離] (経路自体を知りたい時はここに前の頂点も持たせる)
     res = [INF] * N
     res[src] = 0
     # 各辺によるコストの置き換えを頂点数N-1回繰り返す
@@ -289,8 +362,9 @@ def bellman_ford(N: int, edges: list, src: int) -> list:
     # 問題なければ頂点リストを返却
     return res
 
-# ワーシャルフロイド(頂点数, 隣接行列(0-indexed))
 def warshall_floyd(N: int, graph: list) -> list:
+    """ ワーシャルフロイド(頂点数, 隣接行列(0-indexed)) """
+
     res = deepcopy(graph)
     for i in range(N):
         # 始点 = 終点、は予め距離0にしておく
@@ -306,8 +380,9 @@ def warshall_floyd(N: int, graph: list) -> list:
             return []
     return res
 
-# トポロジカルソート(頂点数、辺集合(DAG, 0-indexed))
 def topological_sort(N: int, edges: list) -> list:
+    """ トポロジカルソート(頂点数、辺集合(DAG, 0-indexed)) """
+
     # ここからトポロジカルソート準備
     incnts = [0] * N
     outnodes = [[] for i in range(N)]
@@ -339,8 +414,9 @@ def topological_sort(N: int, edges: list) -> list:
     return L
 
 
-# Union-Find木
 class UnionFind:
+    """ Union-Find木 """
+
     def __init__(self, n):
         self.n = n
         # 親要素のノード番号を格納。par[x] == xの時そのノードは根
@@ -353,8 +429,8 @@ class UnionFind:
         # あるノードを根とする集合が木かどうか
         self.tree = [True] * (n+1)
 
-    # 根の検索(グループ番号と言えなくもない)
     def find(self, x):
+        """ 根の検索(グループ番号と言えなくもない) """
         # 根ならその番号を返す
         if self.par[x] == x:
             return x
@@ -363,8 +439,8 @@ class UnionFind:
             self.par[x] = self.find(self.par[x])
             return self.par[x]
 
-    # 併合
     def union(self, x, y):
+        """ 併合 """
         # 根を探す
         x = self.find(x)
         y = self.find(y)
@@ -387,20 +463,20 @@ class UnionFind:
             if self.rank[x] == self.rank[y]:
                 self.rank[x] += 1
 
-    # 同じ集合に属するか判定
     def same(self, x, y):
+        """ 同じ集合に属するか判定 """
         return self.find(x) == self.find(y)
 
-    # あるノードの属する集合のノード数
     def get_size(self, x):
+        """ あるノードの属する集合のノード数 """
         return self.size[self.find(x)]
-
-    # 木かどうかの判定
+    
     def is_tree(self, x):
+        """ 木かどうかの判定 """
         return self.tree[self.find(x)]
 
-    # 集合の数
     def len(self):
+        """ 集合の数 """
         res = set()
         for i in range(self.n+1):
             res.add(self.find(i))
@@ -408,16 +484,17 @@ class UnionFind:
         return len(res) - 1
 
 
-# 重み付きUnion-Find木
 class WeightedUnionFind:
+    """ 重み付きUnion-Find木 """
+
     def __init__(self, n):
         self.par = [i for i in range(n+1)]
         self.rank = [0] * (n+1)
         # 根への距離を管理
         self.weight = [0] * (n+1)
 
-    # 検索
     def find(self, x):
+        """ 検索 """
         if self.par[x] == x:
             return x
         else:
@@ -427,8 +504,8 @@ class WeightedUnionFind:
             self.par[x] = y
             return y
 
-    # 併合
     def union(self, x, y, w):
+        """ 併合 """
         rx = self.find(x)
         ry = self.find(y)
         # xの木の高さ < yの木の高さ
@@ -443,12 +520,12 @@ class WeightedUnionFind:
             if self.rank[rx] == self.rank[ry]:
                 self.rank[rx] += 1
 
-    # 同じ集合に属するか
     def same(self, x, y):
+        """ 同じ集合に属するか """
         return self.find(x) == self.find(y)
 
-    # xからyへのコスト
     def diff(self, x, y):
+        """ xからyへのコスト """
         return self.weight[x] - self.weight[y]
 
 
@@ -500,6 +577,7 @@ class BipartiteMatching:
 
 
 class BIT:
+
     def __init__(self, n):
         # 0-indexed
         nv = 1
@@ -508,8 +586,8 @@ class BIT:
         self.size = nv
         self.tree = [0] * nv
 
-    # [0, i]を合計する
     def sum(self, i):
+        """ [0, i]を合計する """
         s = 0
         i += 1
         while i > 0:
@@ -517,15 +595,15 @@ class BIT:
             i -= i & -i
         return s
 
-    # 値の追加：添字, 値
     def add(self, i, x):
+        """ 値の追加：添字i, 値x """
         i += 1
         while i <= self.size:
             self.tree[i-1] += x
             i += i & -i
 
-    # 区間和の取得 [l, r)
     def get(self, l, r=None):
+        """ 区間和の取得 [l, r) """
         # 引数が1つなら一点の値を取得
         if r is None: r = l + 1
         res = 0
