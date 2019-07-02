@@ -23,8 +23,8 @@ def ceil(x, y=1): return int(-(-x // y))
 def round(x): return int((x*2+1) // 2)
 def fermat(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
 def lcm(x, y): return (x * y) // gcd(x, y)
-def lcm_list(nums): return reduce(lcm, nums, 1)
-def gcd_list(nums): return reduce(gcd, nums, nums[0])
+def lcm_list(li): return reduce(lcm, li, 1)
+def gcd_list(li): return reduce(gcd, li, 0)
 def INT(): return int(input())
 def MAP(): return map(int, input().split())
 def LIST(): return list(map(int, input().split()))
@@ -157,9 +157,8 @@ def divisor_set(N: int) -> set:
     """ 約数の列挙・個数 """
     # 1とその数はデフォで入れとく
     s = {1, N}
-    # 終点はルート切り捨て+1
-    end = int(sqrt(N)) + 1
-    for i in range(2, end+1):
+    # 終点はルート切り捨て
+    for i in range(2, int(sqrt(N))+1):
         # 割り切れるなら、iとN/iを追加
         if N % i == 0:
             s.add(i)
