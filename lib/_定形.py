@@ -82,7 +82,9 @@ prod([1, 2, 3])
 np.prod([1, 2, 3])
 
 # 右左上下
-directions = [(0,1),(0,-1),(1,0),(-1,0)]
+# directions = [(0,1),(0,-1),(1,0),(-1,0)]
+# directions = ((0,1),(1,0),(0,-1),(-1,0))
+directions = ((1,0),(-1,0),(0,1),(0,-1))
 # 四方に一回り大きいグリッドを作る
 # grid = list2d(H+2, W+2, '*')
 # for i in range(1, H+1):
@@ -238,6 +240,11 @@ class FactInvMOD:
         # 分母の計算
         denominator = self.inv[r] * self.inv[n-r] % self.MOD
         return numerator * denominator % self.MOD
+
+    def nPr(self, n, r):
+        """ 順列 """
+        if n < r: return 0
+        return self.fact[n] * self.inv[n-r] % self.MOD
 
 
 def init_fact_inv(MAX: int, MOD: int):
@@ -609,6 +616,36 @@ class BIT:
         if r: res += self.sum(r-1)
         if l: res -= self.sum(l-1)
         return res
+
+
+class BIT:
+    """ BIT汎用版 """
+
+    def __init__(self, n, func, init):
+        # 0-indexed
+        nv = 1
+        while nv < n:
+            nv *= 2
+        self.size = nv
+        self.func = func
+        self.init = init
+        self.tree = [init] * nv
+    
+    def query(self, i):
+        """ [0, i]の値を取得 """
+        s = self.init
+        i += 1
+        while i > 0:
+            s = self.func(s, self.tree[i-1])
+            i -= i & -i
+        return s
+    
+    def update(self, i, x):
+        """ 値の更新：添字i, 値x """
+        i += 1
+        while i <= self.size:
+            self.tree[i-1] = self.func(self.tree[i-1], x)
+            i += i & -i
 
 
 class SegTree:
