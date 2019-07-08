@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+・座標圧縮
+"""
+
 N = int(input())
 aN = [int(input()) for i in range(N)]
 
