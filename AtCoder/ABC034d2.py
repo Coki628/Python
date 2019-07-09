@@ -3,6 +3,7 @@
 """
 参考：https://www.slideshare.net/chokudai/abc034
 ・二分探索
+・今回は探す値が小数なので、適当に誤差がなくなるまでやるって形になる。
 """
 
 import sys
