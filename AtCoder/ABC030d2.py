@@ -3,7 +3,7 @@
 """
 参考：https://www.slideshare.net/chokudai/abc030
 ・桁DP
-・やばい大きさの値でmod取りたい時は、桁毎に前から順に処理できる。
+・やばい大きさの値に対してmod取りたい時は、桁毎に前から順に処理できる。
 """
 
 import sys
