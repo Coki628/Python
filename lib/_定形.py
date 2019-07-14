@@ -3,14 +3,17 @@
 # 各種インポート
 import sys, re
 from collections import deque, defaultdict, Counter
-from math import sqrt, hypot, factorial, pi, sin, cos, radians, log10
+from math import (
+    sqrt, hypot, factorial, log10, log2,
+    pi, sin, cos, acos, atan2, radians, degrees,
+)
 if sys.version_info.minor >= 5: from math import gcd
 else: from fractions import gcd
 from heapq import heappop, heappush, heapify, heappushpop
 from bisect import bisect_left, bisect_right
 from itertools import permutations, combinations, product, accumulate
-from operator import itemgetter, mul
-from copy import copy, deepcopy
+from operator import itemgetter, mul, add, xor
+# from copy import copy, deepcopy
 from functools import reduce, partial, lru_cache
 from fractions import Fraction
 from string import ascii_lowercase, ascii_uppercase, digits
@@ -31,6 +34,9 @@ def LIST(): return list(map(int, input().split()))
 sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
+
+# ライブラリのよりこっちのが速い
+def deepcopy(li): return [x[:] for x in li]
 
 # numpy系
 import numpy as np
