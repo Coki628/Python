@@ -5,7 +5,8 @@
 ・bitDP、メモ化再帰
 ・今回は添字の取りうる範囲より遷移する可能性のある場所のが
 　全然少ないはずなので、dictでメモを持つ。
-・でもこれはまだpypyでもTLE
+・25箇所全部回してたのを、setで必要な所だけ回るようにする。
+・pythonはギリギリでTLE、pypyはなぜかWA
 """
 
 import sys
@@ -30,11 +31,14 @@ grid=[None]*5
 for i in range(5):
     grid[i]=LIST()
 
-used=[None]*26
+used=[-1]*26
+unused=set()
 for i in range(5):
     for j in range(5):
-        if grid[i][j]!=0:
-            used[grid[i][j]]=(i, j)
+        if grid[i][j]==0:
+            unused.add(i*5+j)
+        else:
+            used[grid[i][j]]=i*5+j
 
 def check(bit, a):
     h=a//5
@@ -65,20 +69,21 @@ def rec(bit, cur):
         return 1
     res=0
     # 置く場所が決まっている時はその遷移だけ確認
-    if used[cur]:
-        h,w=used[cur]
-        nxt=h*5+w
+    if used[cur]!=-1:
+        nxt=used[cur]
         # nxtが既にbitに含まれている時、checkでダメな時はskip
         if not (bit>>nxt)&1 and check(bit, nxt):
             res=rec(bit+(1<<nxt), cur+1)
             res%=MOD
     else:
-        # 決まっていない時は25箇所それぞれを試す
-        for i in range(25):
-            # iが既にbitに含まれている時、checkでダメな時はskip
-            if not (bit>>i)&1 and check(bit, i):
-                res+=rec(bit+(1<<i), cur+1)
+        # 決まっていない時は25箇所(のうち空いている所だけ)それぞれを試す
+        for nxt in unused:
+            # nxtが既にbitに含まれている時、checkでダメな時はskip
+            if not (bit>>nxt)&1 and check(bit, nxt):
+                unused.remove(nxt)
+                res+=rec(bit+(1<<nxt), cur+1)
                 res%=MOD
+                unused.add(nxt)
     memo[bit]=res
     return res
 
