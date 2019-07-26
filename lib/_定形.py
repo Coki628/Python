@@ -252,6 +252,11 @@ class FactInvMOD:
         if n < r: return 0
         return self.fact[n] * self.inv[n-r] % self.MOD
 
+    def nHr(self, n, r):
+        """ 重複組み合わせ """
+        # r個選ぶところにN-1個の仕切りを入れる
+        return self.nCr(r+n-1, r)
+
 
 def init_fact_inv(MAX: int, MOD: int):
     """ 階乗たくさん使う時用のテーブル準備
