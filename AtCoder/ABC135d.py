@@ -4,8 +4,10 @@
 参考：https://img.atcoder.jp/abc135/editorial.pdf
 　　　https://www.youtube.com/watch?v=brfeRxmzuKw
 ・数え上げDP
+・桁DP系
 ・各桁独立で考えられる。(例：234 => 2*100+3*10+4*1)
 ・MOD13の世界なので、13か所のどこかに遷移させていく。
+・添字にMODのどこなのかを使うDPはyahoo2017final_aでもあった。
 ・計算量は10万*13*10で1300万、pypyで0.7秒AC。
 """
 
@@ -48,7 +50,7 @@ for i in range(N):
             nxt=int(S[i])*mul
             dp[i+1][(j+nxt)%13]+=dp[i][j]
             dp[i+1][(j+nxt)%13]%=MOD
-    # 桁を合わせ用(10万桁とか直接使ったら死ぬので、毎回ここでMOD13する)
+    # 桁合わせ用(10万桁とか直接使ったら死ぬので、毎回ここでMOD13する)
     mul*=10
     mul%=13
 # 最終的にN桁終わって余り5の数が答え
