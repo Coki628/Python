@@ -100,12 +100,11 @@ def rec(lix, liy, d):
         midx=(lix2[-1][1]+lix3[0][1])/2
         borders1=[]
         borders2=[]
-        for i, x, y in lix:
-            if midx-mn<=x<=midx+mn:
-                borders1.append((i, x, y))
-        for i, x, y in liy:
-            if midx-mn<=x<=midx+mn:
-                borders2.append((i, x, y))
+        for i in range(len(lix)):
+            if midx-mn<=lix[i][1]<=midx+mn:
+                borders1.append(lix[i])
+            if midx-mn<=liy[i][1]<=midx+mn:
+                borders2.append(liy[i]) 
         mn=min(mn, find_min2(mn, borders1, borders2))
         return mn
     # y方向に半分にする(内容はほぼ同じ)
@@ -124,12 +123,11 @@ def rec(lix, liy, d):
         midy=(liy2[-1][2]+liy3[0][2])/2
         borders1=[]
         borders2=[]
-        for i, x, y in liy:
-            if midy-mn<=y<=midy+mn:
-                borders1.append((i, x, y))
-        for i, x, y in lix:
-            if y<=midy+mn:
-                borders2.append((i, x, y))
+        for i in range(len(liy)):
+            if midy-mn<=liy[i][2]<=midy+mn:
+                borders1.append(liy[i])
+            if midy-mn<=lix[i][2]<=midy+mn:
+                borders2.append(lix[i])
         mn=min(mn, find_min3(mn, borders1, borders2))
         return mn
 
