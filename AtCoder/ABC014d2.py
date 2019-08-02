@@ -33,7 +33,7 @@ class SegTreeIndex:
     """
     以下のクエリを処理する
     1.update:  i番目の値をxに更新する
-    2.get_val: 区間[l, r)の値とindexを得る
+    2.get_val: 区間[l, r)の値とindex(同値があった場合は一番左)を得る
     """
  
     def __init__(self, n, func, init):
