@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-・高さ固定じゃなかったのでこれはWA
-"""
-
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -21,20 +17,8 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-N, M, L = MAP()
-P, Q, R = MAP()
+day = input()
 
-# 高さLRは固定なので先に決めておく
-if R > L:
-    # 高さが足りなければ0確定
-    print(0)
-    exit()
-L2 = L // R
-
-# 縦横は入れ替え可能なので両方作る
-N2 = N // P
-M2 = M // Q
-N3 = N // Q
-M3 = M // P
-
-print(max(N2*M2*L2, N3*M3*L2))
+d = {'Monday': 5, 'Tuesday': 4 ,'Wednesday': 3, 'Thursday': 2,
+        'Friday': 1, 'Saturday': 0, 'Sunday': 0}
+print(d[day])

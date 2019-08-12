@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+・再帰探索
+"""
+
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -17,8 +21,22 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-day = input()
+m, n, N = MAP()
 
-d = {'Monday': 5, 'Tuesday': 4 ,'Wednesday': 3, 'Thursday': 2,
-        'Friday': 1, 'Saturday': 0, 'Sunday': 0}
-print(d[day])
+ans = 0
+def rec(cur, mod):
+    global ans
+    ans += cur
+    # 今回回収分から作れる分
+    nxt = cur // m * n
+    # 今回作った余りと前回までの余りから作れる分
+    nxt += (mod+cur%m) // m * n
+    # 1本も作れなくなったら終了
+    if nxt == 0:
+        return
+    # 今回新たに作った分と余りを次の処理に送る
+    rec(nxt, (mod+cur%m)%m)
+    return
+
+rec(N, 0)
+print(ans)
