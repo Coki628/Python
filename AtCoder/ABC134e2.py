@@ -3,7 +3,7 @@
 """
 参考：https://img.atcoder.jp/abc134/editorial.pdf
 　　　https://www.youtube.com/watch?v=-o4r74eJzV4
-・後ろからLIS
+・後ろからLIS(最長増加部分列)
 """
 
 import sys
