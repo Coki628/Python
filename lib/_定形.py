@@ -146,8 +146,7 @@ def factorize(num: int) -> dict:
     """ 素因数分解 """
     d = Counter()
     # 終点はルート切り捨て+1
-    end = int(sqrt(num)) + 1
-    for i in range(2, end+1):
+    for i in range(2, int(sqrt(num))+1):
         cnt = 0
         # 素因数分解：小さい方から割れるだけ割って素数をカウント
         while num % i == 0:
