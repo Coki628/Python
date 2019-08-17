@@ -67,6 +67,8 @@ num = format(num, 'b')
 num = format(aN[i], '08b')
 # bin(str) => int
 num = int(num, 2)
+# int -> 10進4桁0埋め(str)
+num = format(num, '04')
 
 # 二番目の要素でソート
 aN = [[1, 2], [3, 1]]
