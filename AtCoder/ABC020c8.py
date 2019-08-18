@@ -2,11 +2,10 @@
 
 """
 ダイクストラと二分探索
-疎行列を使ってみる　→普通のが速かった…
+疎行列を使ってみる
+ちょっと色々修正、あんま速度変わらなかったけど。。
 """
 
-from collections import deque
-import numpy as np
 from scipy.sparse.csgraph import dijkstra
 from scipy.sparse import lil_matrix
 
@@ -33,27 +32,32 @@ for i in range(H+2):
         mapping[i][j] = num
         num += 1
 
+# 引数にするグラフの準備
+graph = lil_matrix((num, num))
+x_list = []
+for i in range(1,H+1):
+    for j in range(1, W+1):
+        cur = (i, j)
+        # 4方向見る
+        for direction in directions:   
+            nxt = tuple(map(lambda x,y: x+y, cur, direction))
+            # 壁はスキップ
+            if field[nxt[0]][nxt[1]] == '*':
+                continue
+            elif (field[nxt[0]][nxt[1]] == '.' 
+                    or field[nxt[0]][nxt[1]] == 'S' 
+                    or field[nxt[0]][nxt[1]] == 'G'):
+                graph[mapping[cur[0]][cur[1]], mapping[nxt[0]][nxt[1]]] = 1
+            elif field[nxt[0]][nxt[1]] == '#':
+                # xの値は都度変更できるようにindexだけ保持
+                x_list.append((mapping[cur[0]][cur[1]], mapping[nxt[0]][nxt[1]]))
+
 # ダイクストラ
 def dk(x):
-    # 引数にするグラフの準備
-    graph = lil_matrix((num, num))
-    for i in range(1,H+1):
-        for j in range(1, W+1):
-            cur = (i, j)
-            # 4方向見る
-            for direction in directions:   
-                nxt = tuple(map(lambda x,y: x+y, cur, direction))
-                # 壁はスキップ
-                if field[nxt[0]][nxt[1]] == '*':
-                    continue
-                elif (field[nxt[0]][nxt[1]] == '.' 
-                        or field[nxt[0]][nxt[1]] == 'S' 
-                        or field[nxt[0]][nxt[1]] == 'G'):
-                    graph[mapping[cur[0]][cur[1]], mapping[nxt[0]][nxt[1]]] = 1
-                elif field[nxt[0]][nxt[1]] == '#':
-                    graph[mapping[cur[0]][cur[1]], mapping[nxt[0]][nxt[1]]] = x
-
-    return dijkstra(graph, indices=mapping[start[0]][start[1]])[mapping[goal[0]][goal[1]]]
+    # xの値を設定
+    for s, t in x_list:
+        graph[s,t] = x
+    return dijkstra(graph.tocsr(), indices=mapping[start[0]][start[1]])[mapping[goal[0]][goal[1]]]
 
 # 二分探索で最初にTを上回る場所を見つける
 hi = 10 ** 9
