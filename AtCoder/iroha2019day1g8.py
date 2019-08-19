@@ -4,6 +4,8 @@
 ・この後のnumpy実装練習のやりやすさのために、配るDP版を準備。
 ・この時点で計算量N^3=365^3=4900万くらい。
 　pypyでギリギリも頷ける。
+・2次元目の不要な遷移(1日目に3回使った状態とか)を枝刈りしたら、
+　0.1秒くらい速くなって、pypyで0.7秒AC。
 """
 
 import sys
@@ -30,7 +32,7 @@ A = [0] + LIST() + [0]*K
 dp=list2d(M+1, N+K+1, -INF)
 dp[0][0] = 0
 for i in range(M):
-    for j in range(N):
+    for j in range(i, N):
         for k in range(j+1, j+K+1):
             # 1~K日後の範囲内で全ての日に遷移してみる
             dp[i+1][k] = max(dp[i+1][k], dp[i][j]+A[k])

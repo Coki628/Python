@@ -4,6 +4,8 @@
 ・numpy実装、python0.8秒AC。
 ・np.maximumで配列一括比較してループを1つ減らした。
 ・とはいえこれでもギリギリで、枝刈りのbreak入れてやっと通った感じ。。
+・追加で2次元目の遷移の始点を調整した(1日目に3回使った状態とかを省いた)
+　けど、速度ほぼ変わらず。1度に遷移させる数はあんま影響しないのかな。
 """
 
 import sys
@@ -39,7 +41,7 @@ for i in range(M):
         # 使用回数M回に届かない遷移はさせない
         if k == end: break
         # 各k日後への遷移をまとめてやる
-        dp[i+1,k:end] = np.maximum(dp[i+1,k:end], dp[i,:end-k]+A[k:end])
+        dp[i+1,i+k:end] = np.maximum(dp[i+1,i+k:end], dp[i,i:end-k]+A[i+k:end])
 
 # M回終わって、あとK日で終わりまで行ければOK
 ans = -INF
