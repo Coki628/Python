@@ -5,6 +5,7 @@
 ・こっちの説明の方が理解できたかも。
 ・真ん中は(x/2切り上げ)+(x/2切り捨て+1)で、出せるってことで。
 ・二分探索ライブラリ確認用
+・理解しやすいようにコメントを追記
 """
 
 import sys
@@ -38,8 +39,10 @@ def bisearch_max(mn, mx, func):
             ng = mid
     return ok
 
+# 数値ペアをx個作った時(1..x以下の数)、最大の積がlim未満にできるかどうか
 def calc(x):
     lim=a*b
+    # xが奇数ならど真ん中2つ、偶数ならx/2とx/2+1、を一言で書くとこうなる
     mx=ceil(x, 2)*(x//2+1)
     return mx<lim
 
@@ -54,4 +57,5 @@ for _ in range(Q):
 
     # 二分探索
     res = bisearch_max(1, 10**18, calc)
+    # 1..xのうち絶対1つは自分が使っているので、1人減らす
     print(res-1)
