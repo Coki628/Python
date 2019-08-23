@@ -31,6 +31,10 @@ def gcd_list(li): return reduce(gcd, li, 0)
 def INT(): return int(input())
 def MAP(): return map(int, input().split())
 def LIST(): return list(map(int, input().split()))
+def Yes(): print('Yes')
+def No(): print('No')
+def YES(): print('YES')
+def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
@@ -59,6 +63,9 @@ def rec():
 # 文字列リバース
 s = ''
 s = s[::-1]
+
+# 行列入れ替え
+# li2 = list(zip(*li1))
 
 # int -> bin(str)
 num = 1234
@@ -338,6 +345,34 @@ def nCr(n, r):
     # 10C7 = 10C3
     r = min(r, n-r)
     return factorial(n) // (factorial(r) * factorial(n-r))
+
+def bisearch_min(mn, mx, func):
+    """ 条件を満たす最小値を見つける二分探索 """
+    ok = mx
+    ng = mn
+    while ng+1 < ok:
+        mid = (ok+ng) // 2
+        if func(mid):
+            # 下を探しに行く
+            ok = mid
+        else:
+            # 上を探しに行く
+            ng = mid
+    return ok
+
+def bisearch_max(mn, mx, func):
+    """ 条件を満たす最大値を見つける二分探索 """
+    ok = mn
+    ng = mx
+    while ok+1 < ng:
+        mid = (ok+ng) // 2
+        if func(mid):
+            # 上を探しに行く
+            ok = mid
+        else:
+            # 下を探しに行く
+            ng = mid
+    return ok
 
 def dijkstra(N: int, nodes: list, src: int) -> list:
     """ ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点) """
