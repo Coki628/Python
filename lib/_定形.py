@@ -396,6 +396,30 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     # ノードsrcからの最短距離リストを返却
     return res
 
+def dijkstra(N: int, nodes: list, src: int) -> list:
+    """ ダイクストラ高速化版(頂点数, 隣接リスト(0-indexed), 始点) """
+
+    # 頂点[ある始点からの最短距離] (経路自体を知りたい時はここに前の頂点も持たせる)
+    res = [INF] * N
+    # スタート位置
+    que = [src]
+    res[src] = 0
+    # キューが空になるまで
+    while len(que) != 0:
+        # 距離*N + 現在のノード
+        cur = heappop(que)
+        # ノードだけ取り出す
+        cur %= N
+        # 出発ノードcurの到着ノードでループ
+        for nxt, cost in nodes[cur]:
+            # 今回の経路のが短い時
+            if res[cur] + cost < res[nxt]:
+                res[nxt] = res[cur] + cost
+                # 距離*N+ノード番号 の形でキューに詰める
+                heappush(que, res[nxt]*N+nxt)
+    # ノードsrcからの最短距離リストを返却
+    return res
+
 def bellman_ford(N: int, edges: list, src: int) -> list:
     """ ベルマンフォード(頂点数, 辺集合(0-indexed), 始点) """
 
@@ -463,6 +487,9 @@ def topological_sort(N: int, edges: list) -> list:
             # 流入ノードが0なら暫定セットへ
             if incnts[node] == 0:
                 S.add(node)
+    # 閉路があって正しくソート出来なかった場合
+    if len(L) != N:
+        return []
     # ソートされた頂点のリストを返却
     return L
 
