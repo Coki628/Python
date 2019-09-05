@@ -389,10 +389,10 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
         # 出発ノードcurの到着ノードでループ
         for nxt, cost in nodes[cur]:
             # 今回の経路のが短い時
-            if res[cur] + cost < res[nxt]:
-                res[nxt] = res[cur] + cost
+            if dist + cost < res[nxt]:
+                res[nxt] = dist + cost
                 # 現在の移動距離をキューの優先度として、早い方から先に処理するようにする
-                heappush(que, (res[nxt], nxt))
+                heappush(que, (dist+cost, nxt))
     # ノードsrcからの最短距離リストを返却
     return res
 
@@ -408,15 +408,16 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     while len(que) != 0:
         # 距離*N + 現在のノード
         cur = heappop(que)
-        # ノードだけ取り出す
+        # 距離とノードに分ける
+        dist = cur // N
         cur %= N
         # 出発ノードcurの到着ノードでループ
         for nxt, cost in nodes[cur]:
             # 今回の経路のが短い時
-            if res[cur] + cost < res[nxt]:
-                res[nxt] = res[cur] + cost
+            if dist + cost < res[nxt]:
+                res[nxt] = dist + cost
                 # 距離*N+ノード番号 の形でキューに詰める
-                heappush(que, res[nxt]*N+nxt)
+                heappush(que, (dist+cost)*N+nxt)
     # ノードsrcからの最短距離リストを返却
     return res
 
