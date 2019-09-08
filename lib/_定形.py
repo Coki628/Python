@@ -374,6 +374,34 @@ def bisearch_max(mn, mx, func):
             ng = mid
     return ok
 
+def bisearch_min(mn, mx, func):
+    """ 条件を満たす最小値を見つける二分探索(小数用) """
+    ok = mx
+    ng = mn
+    for i in range(100):
+        mid = (ok+ng) / 2
+        if func(mid):
+            # 下を探しに行く
+            ok = mid
+        else:
+            # 上を探しに行く
+            ng = mid
+    return ok
+
+def bisearch_max(mn, mx, func):
+    """ 条件を満たす最大値を見つける二分探索(小数用) """
+    ok = mn
+    ng = mx
+    for i in range(100):
+        mid = (ok+ng) / 2
+        if func(mid):
+            # 上を探しに行く
+            ok = mid
+        else:
+            # 下を探しに行く
+            ng = mid
+    return ok
+
 def dijkstra(N: int, nodes: list, src: int) -> list:
     """ ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点) """
 
