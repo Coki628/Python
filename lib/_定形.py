@@ -22,6 +22,7 @@ from os.path import commonprefix
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
+def list4d(a, b, c, d, e): return [[[[e] * d for j in range(c)] for j in range(b)] for i in range(a)]
 def ceil(x, y=1): return int(-(-x // y))
 def round(x): return int((x*2+1) // 2)
 def fermat(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
@@ -30,7 +31,7 @@ def lcm_list(li): return reduce(lcm, li, 1)
 def gcd_list(li): return reduce(gcd, li, 0)
 def INT(): return int(input())
 def MAP(): return map(int, input().split())
-def LIST(): return list(map(int, input().split()))
+def LIST(N=None): return list(MAP()) if N is None else [INT() for i in range(N)]
 def Yes(): print('Yes')
 def No(): print('No')
 def YES(): print('YES')
@@ -39,7 +40,7 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-# ライブラリのよりこっちのが速い
+# ライブラリのよりこっちのが速い(ただし2次元限定)
 def deepcopy(li): return [x[:] for x in li]
 
 # numpy系
@@ -57,8 +58,8 @@ sys.setrecursionlimit(10 ** 9)
 def rec():
     rec()
 
-# 小数点以下9桁まで表示(これやんないと自動でeとか使われる)
-'{:.9f}'.format(3.1415)
+# 小数点以下10桁まで表示(これやんないと自動でeとか使われる)
+'{:.10f}'.format(3.1415)
 
 # 文字列リバース
 s = ''
@@ -123,6 +124,8 @@ def get_sum(n): return (1+n)*n//2
 
 def is_prime(num):
     """ 素数判定 """
+    from math import sqrt
+
     if num < 2: 
         return False
     if num in [2, 3, 5]: 
@@ -142,6 +145,7 @@ def is_prime(num):
 
 def eratosthenes_sieve(n):
     """ 素数列挙(エラトステネスの篩) """
+
     table = [0] * (n + 1)
     prime_list = []
     for i in range(2, n + 1):
@@ -153,6 +157,9 @@ def eratosthenes_sieve(n):
 
 def factorize(num: int) -> dict:
     """ 素因数分解 """
+    from math import sqrt
+    from Collections import Counter
+
     d = Counter()
     # 終点はルート切り捨て+1
     for i in range(2, int(sqrt(num))+1):
@@ -171,6 +178,8 @@ def factorize(num: int) -> dict:
 
 def divisor_set(N: int) -> set:
     """ 約数の列挙・個数 """
+    from math import sqrt
+
     # 1とその数はデフォで入れとく
     s = {1, N}
     # 終点はルート切り捨て
@@ -180,6 +189,25 @@ def divisor_set(N: int) -> set:
             s.add(i)
             s.add(N // i)
     return s
+
+def lenLIS(A: list, equal=False):
+    """ 最長増加部分列の長さ """
+    from operator import gt, ge
+    from bisect import bisect_left, bisect_right
+
+    # デフォルトは狭義のLIS(同値を含まない)
+    compare = gt if not equal else ge
+    bisect = bisect_left if not equal else bisect_right
+    L = [A[0]]
+    for a in A[1:]:
+        if compare(a, L[-1]):
+            # Lの末尾よりaが大きければ増加部分列を延長できる
+            L.append(a)
+        else:
+            # そうでなければ、「aより小さい最大要素の次」をaにする
+            # 該当位置は、二分探索で特定できる
+            L[bisect(L, a)] = a
+    return len(L)
 
 def init_fact_inv(MAX: int, MOD: int):
     """ 階乗たくさん使う時用のテーブル準備
@@ -192,6 +220,7 @@ def init_fact_inv(MAX: int, MOD: int):
     -------
         factorial (list<int>), inverse (list<int>)
     """
+    
     MAX += 1
     # 階乗テーブル
     factorial = [1] * MAX
@@ -209,6 +238,7 @@ def init_fact_inv(MAX: int, MOD: int):
 
 def nCr(n, r, factorial, inverse):
     """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
+
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
@@ -228,7 +258,6 @@ class FactInvMOD:
         MAX += 1
         self.MAX = MAX
         self.MOD = MOD
-
         # 階乗テーブル
         factorial = [1] * MAX
         factorial[0] = factorial[1] = 1
@@ -246,6 +275,7 @@ class FactInvMOD:
     
     def nCr(self, n, r):
         """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
+
         if n < r: return 0
         # 10C7 = 10C3
         r = min(r, n-r)
@@ -257,11 +287,13 @@ class FactInvMOD:
 
     def nPr(self, n, r):
         """ 順列 """
+
         if n < r: return 0
         return self.fact[n] * self.inv[n-r] % self.MOD
 
     def nHr(self, n, r):
         """ 重複組み合わせ """
+
         # r個選ぶところにN-1個の仕切りを入れる
         return self.nCr(r+n-1, r)
 
@@ -277,6 +309,7 @@ def init_fact_inv(MAX: int, MOD: int):
     -------
         factorial (list<int>), inverse (list<int>)
     """
+
     MAX += 1
     # 階乗テーブル
     factorial = [1] * MAX
@@ -294,6 +327,7 @@ def init_fact_inv(MAX: int, MOD: int):
 
 def nCr(n, r, factorial, inverse):
     """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
+
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
@@ -306,6 +340,7 @@ def nCr(n, r, factorial, inverse):
 
 def init_factorial(MAX: int) -> list:
     """ テーブル準備MODなし版 """
+
     MAX += 1
     # 階乗テーブル
     factorial = [1] * MAX
@@ -316,6 +351,7 @@ def init_factorial(MAX: int) -> list:
 
 def nCr(n, r):
     """ 組み合わせの数(必要な階乗のテーブルを事前に作っておく) """
+
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
@@ -327,6 +363,8 @@ def nCr(n, r):
 
 def init_fact_log(MAX: int) -> list:
     """ テーブル準備logでやる版 """
+    from math import log10
+
     MAX += 1
     fact_log = [0] * MAX
     for i in range(1, MAX):
@@ -341,6 +379,8 @@ def nCr(n, r, fact_log):
 
 def nCr(n, r):
     """ 事前テーブルなし組み合わせ簡易版 """
+    from math import factorial
+
     if n < r: return 0
     # 10C7 = 10C3
     r = min(r, n-r)
@@ -348,6 +388,7 @@ def nCr(n, r):
 
 def bisearch_min(mn, mx, func):
     """ 条件を満たす最小値を見つける二分探索 """
+
     ok = mx
     ng = mn
     while ng+1 < ok:
@@ -362,6 +403,7 @@ def bisearch_min(mn, mx, func):
 
 def bisearch_max(mn, mx, func):
     """ 条件を満たす最大値を見つける二分探索 """
+
     ok = mn
     ng = mx
     while ok+1 < ng:
@@ -376,6 +418,7 @@ def bisearch_max(mn, mx, func):
 
 def bisearch_min(mn, mx, func):
     """ 条件を満たす最小値を見つける二分探索(小数用) """
+
     ok = mx
     ng = mn
     for i in range(100):
@@ -390,6 +433,7 @@ def bisearch_min(mn, mx, func):
 
 def bisearch_max(mn, mx, func):
     """ 条件を満たす最大値を見つける二分探索(小数用) """
+
     ok = mn
     ng = mx
     for i in range(100):
@@ -404,6 +448,7 @@ def bisearch_max(mn, mx, func):
 
 def dijkstra(N: int, nodes: list, src: int) -> list:
     """ ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点) """
+    from heapq import heappush, heappop
 
     # 頂点[ある始点からの最短距離] (経路自体を知りたい時はここに前の頂点も持たせる)
     res = [INF] * N
@@ -426,6 +471,7 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
 
 def dijkstra(N: int, nodes: list, src: int) -> list:
     """ ダイクストラ高速化版(頂点数, 隣接リスト(0-indexed), 始点) """
+    from heapq import heappush, heappop
 
     # 頂点[ある始点からの最短距離] (経路自体を知りたい時はここに前の頂点も持たせる)
     res = [INF] * N
@@ -470,6 +516,7 @@ def bellman_ford(N: int, edges: list, src: int) -> list:
 
 def warshall_floyd(N: int, graph: list) -> list:
     """ ワーシャルフロイド(頂点数, 隣接行列(0-indexed)) """
+    from copy import deepcopy
 
     res = deepcopy(graph)
     for i in range(N):
