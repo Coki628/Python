@@ -2,7 +2,7 @@
 
 """
 ・自力AC！
-・二次元累積和、白黒分離させて考える。
+・2次元累積和、白黒分離させて考える。
 ・O((HW)^2)=10000^2=1億は無理かと思ったけど通った。pypyAC1.1秒。
 　ループ内がシンプルなのと、区間だから実質半分なのが良かったのかな。
 """
@@ -38,7 +38,7 @@ for i in range(1, H+1):
         else:
             white[i][j] = row[j-1]
 
-# 二次元累積和
+# 2次元累積和
 for i in range(1, H+1):
     black[i] = list(accumulate(black[i]))
     white[i] = list(accumulate(white[i]))
