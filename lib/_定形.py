@@ -495,6 +495,44 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     # ノードsrcからの最短距離リストを返却
     return res
 
+def dijkstra(N: int, nodes: list, src: int) -> list:
+    """ ダイクストラ高速化版(頂点数, 隣接リスト(0-indexed), 始点) """
+    from heapq import heappush, heappop
+
+    # 頂点(ある始点からの最短距離, 前の頂点)
+    res = [(INF, -1) for i in range(N)]
+    # スタート位置
+    que = [src]
+    res[src] = (0, -1)
+    # キューが空になるまで
+    while len(que) != 0:
+        # 距離*N + 現在のノード
+        cur = heappop(que)
+        # 距離とノードに分ける
+        dist = cur // N
+        cur %= N
+        # 出発ノードcurの到着ノードでループ
+        for nxt, cost in nodes[cur]:
+            # 今回の経路のが短い時
+            if dist + cost < res[nxt][0]:
+                res[nxt] = (dist+cost, cur)
+                # 距離*N+ノード番号 の形でキューに詰める
+                heappush(que, (dist+cost)*N+nxt)
+    # ノードsrcからの最短距離と経路のリストを返却
+    return res
+
+# s,t間の経路を取得
+def get_route(s, t, res):
+    prev = t
+    StoT = [t]
+    while prev != s:
+        prev = res[prev][1]
+        if prev == -1:
+            return None
+        StoT.append(prev)
+    StoT = StoT[::-1]
+    return StoT
+
 def bellman_ford(N: int, edges: list, src: int) -> list:
     """ ベルマンフォード(頂点数, 辺集合(0-indexed), 始点) """
 
