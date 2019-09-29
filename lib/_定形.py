@@ -158,12 +158,11 @@ def eratosthenes_sieve(n):
 def factorize(num: int) -> dict:
     """ 素因数分解 """
     from math import sqrt
-    from Collections import Counter
+    from collections import Counter
 
     d = Counter()
     # 終点はルート切り捨て+1
     for i in range(2, int(sqrt(num))+1):
-        cnt = 0
         # 素因数分解：小さい方から割れるだけ割って素数をカウント
         while num % i == 0:
             num //= i
