@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-・蟻本演習、自力AC
-・グリッドBFS
+・蟻本演習、自力AC！
+・半分前列挙、ナップザックでやったの思い出しながらやった。
+・今回はテーマとしてやったからいいけど、N=1000の形でこの方針に気付けるかどうかだな。。
 """
 
 import sys
-from collections import deque
+from bisect import bisect_right
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -24,41 +25,38 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-directions = ((1,0),(-1,0),(0,1),(0,-1))
-ch = cw = 0
+N, M = MAP()
+A = LIST(N)
 
-H, W, N = MAP()
-grid = list2d(H+2, W+2, 'X')
-for i in range(1, H+1):
-    row = list(input())
-    for j in range(1, W+1):
-        grid[i][j] = row[j-1]
-        if grid[i][j] == 'S':
-            ch, cw = i, j
+# 半分全列挙
+A1 = [0] + A[:N//2]
+A2 = [0] + A[N//2:]
+S1 = set()
+S2 = set()
+for i in range(len(A1)):
+    for j in range(i, len(A1)):
+        S1.add(A1[i]+A1[j])
+for i in range(len(A2)):
+    for j in range(i, len(A2)):
+        S2.add(A2[i]+A2[j])
 
-def bfs(grid, sh, sw, goal):
-
-    visited = list2d(H+2, W+2, 0)
-    que = deque()
-    que.append((sh, sw, 0))
-
-    while len(que):
-
-        h, w, c = que.popleft()
-        if grid[h][w] == goal:
-            return h, w, c
-        if visited[h][w]:
-            continue
-        visited[h][w] = 1
-
-        for d in directions:
-            h2, w2 = h + d[0], w + d[1]
-            if grid[h2][w2] != 'X':
-                que.append((h2, w2, c+1))
-
+S1 = sorted(S1)
+S2 = sorted(S2)
 ans = 0
-for i in range(1, N+1):
-    res = bfs(grid, ch, cw, str(i))
-    ch, cw = res[0], res[1]
-    ans += res[2]
+# S1とS2、S1とS1、S2とS2のそれぞれで最適な組を探す
+for a in S1:
+    idx = bisect_right(S2, M-a) - 1
+    if idx == -1:
+        continue
+    ans = max(ans, a+S2[idx])
+for a in S1:
+    idx = bisect_right(S1, M-a) - 1
+    if idx == -1:
+        continue
+    ans = max(ans, a+S1[idx])
+for a in S2:
+    idx = bisect_right(S2, M-a) - 1
+    if idx == -1:
+        continue
+    ans = max(ans, a+S2[idx])
 print(ans)
