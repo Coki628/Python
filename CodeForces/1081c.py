@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-解説参考：
+解説参考：https://codeforces.com/blog/entry/63888
 ・数え上げDP
 ・自分で思いつく気がしない…。
 ・図的には自分の下と右下に送る感じ
