@@ -18,10 +18,19 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-A = LIST(4)
-B = LIST(2)
+A = INT()
+B = INT()
+C = INT()
+D = INT()
+E = INT()
 
-A.sort()
-B.sort()
+t = 0
+cur = A
+if cur < 0:
+    t += (-cur) * C
+    cur = 0
+if cur == 0:
+    t +=  D
+t += (B-cur) * E
 
-print(sum(A[1:])+B[1])
+print(t)

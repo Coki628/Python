@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
+"""
+・numpy実装
+・計算量H^2*HW=50^4=625万はpythonだと不安な物量だけど、
+　numpyでHWの数え上げを一括処理。0.2秒で安心のAC。
+"""
+
 import sys
+import numpy as np
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -18,23 +25,25 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-H, W, D = MAP()
-grid = [None] * H
+H, W = MAP()
+grid = np.zeros((H, W), dtype=np.int8)
 for i in range(H):
-    grid[i] = list(input())
+    for j, w in enumerate(list(input())):
+        if w == 'B':
+            grid[i,j] = 1
+        elif w == 'R':
+            grid[i,j] = 2
 
-def check(grid, H, W):
+def check(b, r):
     cnt = 0
-    for i in range(H):
-        for j in range(W-D+1):
-            # 範囲内に1つでも#があれがNG
-            if not grid[i][j:j+D].count('#'):
-                cnt += 1
+    # 条件を満たすマスの数を、2次元まとめて数える
+    cnt += np.count_nonzero(grid[:b] != 0)
+    cnt += np.count_nonzero(grid[b:r] != 1)
+    cnt += np.count_nonzero(grid[r:] != 2)
     return cnt
 
-ans = 0
-ans += check(grid, H, W)
-# 行列逆転
-grid = list(zip(*grid))
-ans += check(grid, W, H)
+ans = INF
+for i in range(1, H):
+    for j in range(i+1, H):
+        ans = min(ans, check(i, j))
 print(ans)

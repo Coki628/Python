@@ -18,19 +18,10 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-A = INT()
-B = INT()
-C = INT()
-D = INT()
-E = INT()
+N, A, B, C, D = MAP()
 
-t = 0
-cur = A
-if cur < 0:
-    t += (-cur) * C
-    cur = 0
-if cur == 0:
-    t +=  D
-t += (B-cur) * E
+xcnt = ceil(N, A)
+ycnt = ceil(N, C)
+ans = min(xcnt*B, ycnt*D)
 
-print(t)
+print(ans)

@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 
 """
-・TLE想定、部分点獲得
-・N=50じゃあんま関係ないだろうと思いつつも、区間和をO(1)で出せるように累積和してみる。
-　まあ、やっぱり結果は変わらず。。
+参考：https://www.ioi-jp.org/joi/2018/2019-yo/2019-yo-t4-review.html
+　　　https://atcoder.jp/contests/joi2019yo/submissions/6630347
+・実は自分の左右だけ見れば、沈んだ時の増減が分かる。
+　って言う点に気付けなかった。。
+・解説だけで自力実装うまくいかなくて人の参考。
+　その区画が沈んだかどうかのフラグを持つ。
+　沈めて確認、を1つずつやっていけば、連続した区間は1回しか数えないからうまくいく。
 """
 
 import sys
-from itertools import combinations, accumulate
+from collections import defaultdict
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
-def list4d(a, b, c, d, e): return [[[[e] * d for j in range(c)] for j in range(b)] for i in range(a)]
 def ceil(x, y=1): return int(-(-x // y))
 def INT(): return int(input())
 def MAP(): return map(int, input().split())
-def LIST(N=None): return list(MAP()) if N is None else [INT() for i in range(N)]
+def LIST(): return list(map(int, input().split()))
 def Yes(): print('Yes')
 def No(): print('No')
 def YES(): print('YES')
@@ -26,19 +29,34 @@ INF = float('inf')
 MOD = 10 ** 9 + 7
 
 N = INT()
-A = LIST(N)
+A = LIST()
 
-acc = [0] + list(accumulate(A))
-ans = INF
-for i in range(1, N):
-    for comb in combinations(range(1, N), i):
-        comb = [0] + list(comb) + [N]
-        mn, mx = INF, -INF
-        for j in range(i+1):
-            l, r = comb[j], comb[j+1]
-            sm = acc[r] - acc[l]
-            mn = min(mn, sm)
-            mx = max(mx, sm)
-        dist = mx - mn
-        ans = min(ans, dist)
-print(ans)
+# 最初から陸地0
+if max(A) == 0:
+    print(0)
+    exit()
+
+# その区画がまだ陸地かどうかのフラグ
+is_land = [False] + [True]*N + [False]
+
+B = defaultdict(list)
+for i, a in enumerate(A):
+    # 高さ毎に区画の位置を格納
+    B[a].append(i+1)
+
+cnt = mx = 1
+# 高さaのループ
+for a, b in sorted(B.items()):
+    # その高さでの各区画iのループ
+    for i in b:
+        # 区画iが沈む
+        is_land[i] = False
+        # 両側が陸地なら島が増える
+        if is_land[i-1] and is_land[i+1]:
+            cnt += 1
+        # 両側が海なら島が減る
+        elif not is_land[i-1] and not is_land[i+1]:
+            cnt -= 1
+    # 各高さでの島の数からmaxを取る
+    mx = max(mx, cnt)
+print(mx)

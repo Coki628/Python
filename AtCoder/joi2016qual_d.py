@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
-・自力AC、二分探索
-・JOI予選の4問目は部分点続きだったから、ちゃんと通せたのはまあ嬉しい。
+・並びを全列挙のTLE想定、pythonで部分点1、pypyで部分点2獲得。
 """
 
 import sys
-from bisect import bisect_left
+from itertools import permutations
+from collections import Counter
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -24,43 +24,18 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-N, T, Q = MAP()
-A = []
-for i in range(N):
-    a, d = MAP()
-    A.append((a, d))
-X = [x-1 for x in LIST(Q)]
+N, M = MAP()
+A = LIST(N)
 
-# 人々が集まる位置を確認
-B = []
-for i in range(N-1):
-    # 向かい合う位置の真ん中に集まる
-    if A[i][1] == 1 and A[i+1][1] == 2:
-        B.append((A[i][0] + A[i+1][0]) // 2)
-# 左に進む人を処理しやすいように逆向きにしたリストを作成
-Brev = sorted([-b for b in B])
-
-ans = [0] * N
-for i in range(N):
-    a, d = A[i]
-    # 右に向かう人
-    if d == 1:
-        idx1 = bisect_left(B, a)
-        idx2 = bisect_left(B, a+T)
-        # T秒後もidxが同じなら、止まらず進む
-        if idx1 == idx2:
-            ans[i] = a + T
-        # 異なれば、集まる場所に止まる
-        else:
-            ans[i] = B[idx1]
-    # 左に向かう人
-    else:
-        # 逆向きリストを使えば、二分探索がほぼ同じ形のまま使える
-        a = -a
-        idx1 = bisect_left(Brev, a)
-        idx2 = bisect_left(Brev, a+T)
-        if idx1 == idx2:
-            ans[i] = -(a + T)
-        else:
-            ans[i] = -Brev[idx1]
-[print(ans[x]) for x in X]
+C = Counter(A)
+ans = INF
+for perm in permutations(range(1, M+1)):
+    good = []
+    for a in perm:
+        good += [a] * C[a]
+    diff = 0
+    for i in range(N):
+        if A[i] != good[i]:
+            diff += 1
+    ans = min(ans, diff)
+print(ans)

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
-・蟻本演習2-3-13、さくっと自力AC！
-・グリッドDP、2種類のフラグの情報を入れる。
+・蟻本演習2-1-3、自力AC
+・グリッドBFS
 """
 
 import sys
+from collections import deque
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -21,39 +22,43 @@ def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
-MOD = 10 ** 5
+MOD = 10 ** 9 + 7
 
-H, W = MAP()
+directions = ((1,0),(-1,0),(0,1),(0,-1))
+ch = cw = 0
 
-# dp[0/1][0/1][i][j] := 直前に曲がったかどうか(0/1)、直前は上か右か(0/1)、の状態でグリッド位置(i, j)に到達する通り数
-dp = list4d(2, 2, H+1, W+1, 0)
-# 初期化：(0, 0)から上に行く場合と右に行く場合
-dp[0][0][1][0] = 1
-dp[0][1][0][1] = 1
+H, W, N = MAP()
+grid = list2d(H+2, W+2, 'X')
+for i in range(1, H+1):
+    row = list(input())
+    for j in range(1, W+1):
+        grid[i][j] = row[j-1]
+        if grid[i][j] == 'S':
+            ch, cw = i, j
 
-for i in range(H):
-    for j in range(W):
-        # フラグなし↑↑
-        dp[0][0][i+1][j] += dp[0][0][i][j]
-        # フラグなし↑→
-        dp[1][1][i][j+1] += dp[0][0][i][j]
-        # フラグなし→↑
-        dp[1][0][i+1][j] += dp[0][1][i][j]
-        # フラグなし→→
-        dp[0][1][i][j+1] += dp[0][1][i][j]
-        # フラグあり↑↑
-        dp[0][0][i+1][j] += dp[1][0][i][j]
-        # フラグあり→→
-        dp[0][1][i][j+1] += dp[1][1][i][j]
+def bfs(grid, sh, sw, goal):
 
-        for k in range(2):
-            for l in range(2):
-                dp[k][l][i][j] %= MOD
+    visited = list2d(H+2, W+2, 0)
+    que = deque()
+    que.append((sh, sw, 0))
 
-# (H-1, W-1)に辿り着いた全てのケースを合計する
+    while len(que):
+
+        h, w, c = que.popleft()
+        if grid[h][w] == goal:
+            return h, w, c
+        if visited[h][w]:
+            continue
+        visited[h][w] = 1
+
+        for d in directions:
+            h2, w2 = h + d[0], w + d[1]
+            if grid[h2][w2] != 'X':
+                que.append((h2, w2, c+1))
+
 ans = 0
-for k in range(2):
-    for l in range(2):
-        ans += dp[k][l][H-1][W-1]
-        ans %= MOD
+for i in range(1, N+1):
+    res = bfs(grid, ch, cw, str(i))
+    ch, cw = res[0], res[1]
+    ans += res[2]
 print(ans)

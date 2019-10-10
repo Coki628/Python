@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """
-・TLE想定、部分点獲得
+・並びを全列挙のTLE想定。
+・内ループN=10万の一致比較をnumpyでまとめて処理。これで部分点2獲得。
 """
 
 import sys
-from itertools import combinations
+import numpy as np
+from itertools import permutations
+from collections import Counter
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -23,18 +26,18 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-N = INT()
+N, M = MAP()
 A = LIST(N)
+A = np.array(A, dtype=np.int64)
 
+C = Counter(A)
 ans = INF
-for i in range(1, N):
-    for comb in combinations(range(1, N), i):
-        comb = [0] + list(comb) + [N]
-        mn, mx = INF, -INF
-        for j in range(i+1):
-            sm = sum(A[comb[j]:comb[j+1]])
-            mn = min(mn, sm)
-            mx = max(mx, sm)
-        dist = mx - mn
-        ans = min(ans, dist)
+for perm in permutations(range(1, M+1)):
+    good = []
+    for a in perm:
+        good += [a] * C[a]
+    good = np.array(good, dtype=np.int64)
+    # まとめて一致比較
+    diff = (A!=good).sum()
+    ans = min(ans, diff)
 print(ans)

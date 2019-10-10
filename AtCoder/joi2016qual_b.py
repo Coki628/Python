@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from operator import itemgetter
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -19,10 +20,14 @@ INF = float('inf')
 MOD = 10 ** 9 + 7
 
 N, M = MAP()
-A = LIST(N)
+AB = []
+for i in range(M):
+    a, b = MAP()
+    AB.append((a, b))
 
-for k in range(1, M+1):
-    for i in range(N-1):
-        if A[i]%k > A[i+1]%k:
-            A[i], A[i+1] = A[i+1], A[i]
-[print(a) for a in A]
+AB.sort(key=itemgetter(1))
+AB = AB[:-1]
+ans = 0
+for a, b in AB:
+    ans += max(0, (b-a)//2)
+print(ans)

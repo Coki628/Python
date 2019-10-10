@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from operator import itemgetter
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -19,15 +18,16 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-N, M = MAP()
-AB = []
-for i in range(M):
-    a, b = MAP()
-    AB.append((a, b))
+N = INT()
+A = LIST()
 
-AB.sort(key=itemgetter(1))
-AB = AB[:-1]
-ans = 0
-for a, b in AB:
-    ans += max(0, (b-a)//2)
-print(ans)
+mx = cnt = 0
+for a in A:
+    if a == 1:
+        cnt += 1
+    else:
+        mx = max(mx, cnt)
+        cnt = 0
+mx = max(mx, cnt)
+
+print(mx+1)
