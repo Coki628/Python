@@ -163,20 +163,19 @@ def get_lca(a, b):
     # この時点で一致すればそこがLCA
     if a == b:
         return mx
-    else:
-        # aとbが一致する直前の高さまで持ってくる
-        for i in range(16, -1, -1):
-            a2 = nxt[i][a]
-            b2 = nxt[i][b]
-            if a2 != b2:
-                # 最大コストの取得
-                mx = max(mx, cost[i][a], cost[i][b])
-                a = a2
-                b = b2
-        # 元々直前の高さだった場合、1度もmaxを取らないのでここで取る
-        if a != b:
-            mx = max(mx, cost[0][a], cost[0][b])
-        return mx
+    # aとbが一致する直前の高さまで持ってくる
+    for i in range(16, -1, -1):
+        a2 = nxt[i][a]
+        b2 = nxt[i][b]
+        if a2 != b2:
+            # 最大コストの取得
+            mx = max(mx, cost[i][a], cost[i][b])
+            a = a2
+            b = b2
+    # 元々直前の高さだった場合、1度もmaxを取らないのでここで取る
+    if a != b:
+        mx = max(mx, cost[0][a], cost[0][b])
+    return mx
 
 Q = INT()
 for i in range(Q):

@@ -58,9 +58,9 @@ class PartiallyPersistentUnionFind:
         if self.par[x] > self.par[y]:
             x, y = y, x
         # xにyを付ける
+        self.par[x] += self.par[y]
         self.par[y] = x
         self.last[y] = t
-        self.par[x] += self.par[y]
         return True
 
     def same(self, t, x, y):
