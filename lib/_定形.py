@@ -176,7 +176,7 @@ def factorize(num: int) -> dict:
         d[num] += 1
     return d
 
-def divisor_set(N: int) -> set:
+def divisors(N: int) -> set:
     """ 約数の列挙・個数 """
     from math import sqrt
 
@@ -190,8 +190,8 @@ def divisor_set(N: int) -> set:
             s.add(N // i)
     return s
 
-def lenLIS(A: list, equal=False):
-    """ 最長増加部分列の長さ """
+def LIS(A: list, equal=False) -> list:
+    """ 最長増加部分列 """
     from operator import gt, ge
     from bisect import bisect_left, bisect_right
 
@@ -207,7 +207,7 @@ def lenLIS(A: list, equal=False):
             # そうでなければ、「aより小さい最大要素の次」をaにする
             # 該当位置は、二分探索で特定できる
             L[bisect(L, a)] = a
-    return len(L)
+    return L
 
 def init_fact_inv(MAX: int, MOD: int):
     """ 階乗たくさん使う時用のテーブル準備
@@ -838,27 +838,36 @@ class BIT:
 
 class SegTree:
     """
-    以下のクエリを処理する
+    セグメント木
     1.update:  i番目の値をxに更新する
     2.query: 区間[l, r)の値を得る
     """
- 
-    def __init__(self, n, func, init):
+
+    def __init__(self, n, func, intv, A=[]):
         """
         :param n: 要素数(0-indexed)
         :param func: 値の操作に使う関数(min, max, add, gcdなど)
-        :param init: 要素の初期値(単位元)
+        :param intv: 要素の初期値(単位元)
+        :param A: 初期化に使うリスト(オプション)
         """
         self.n = n
         self.func = func
-        self.init = init
+        self.intv = intv
         # nより大きい2の冪数
         n2 = 1
         while n2 < n:
             n2 <<= 1
         self.n2 = n2
-        self.tree = [self.init] * (n2 << 1)
- 
+        self.tree = [self.intv] * (n2 << 1)
+        # 初期化の値が決まっている場合
+        if A:
+            # 1段目(最下段)の初期化
+            for i in range(n):
+                self.tree[n2+i] = A[i]
+            # 2段目以降の初期化
+            for i in range(n2-1, -1, -1):
+                self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
+
     def update(self, i, x):
         """
         i番目の値をxに更新
@@ -879,7 +888,7 @@ class SegTree:
         """
         l = a + self.n2
         r = b + self.n2
-        s = self.init
+        s = self.intv
         while l < r:
             if r & 1:
                 r -= 1
@@ -894,7 +903,7 @@ class SegTree:
 
 class SegTreeIndex:
     """
-    以下のクエリを処理する
+    セグメント木(index取得対応版)
     1.update:  i番目の値をxに更新する
     2.query: 区間[l, r)の値とindex(同値があった場合は一番左)を得る
     """
