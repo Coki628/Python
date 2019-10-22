@@ -3,6 +3,7 @@
 """
 参考：https://codeforces.com/blog/entry/70720
 ・括弧系
+・"("で+1、")"で-1して、最小値になった回数が、括弧のグループ数になる。
 ・これはTLE
 """
 
@@ -34,6 +35,7 @@ if C['('] != C[')']:
     print(1, 1)
     exit()
 
+# 最小値になった回数を返す
 def check(S):
     cnt = 0
     C = Counter()
