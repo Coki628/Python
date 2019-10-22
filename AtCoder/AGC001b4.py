@@ -3,7 +3,8 @@
 """
 参考：http://tutuz.hateblo.jp/entry/2018/09/06/224654
 ・O(1)解法は思いつくか分からないから、別解もやる。
-　これはO(logN)でAC解法。
+・これはO(logN)でAC解法。
+・ユークリッドの互除法応用
 """
 
 import sys
