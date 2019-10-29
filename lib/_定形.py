@@ -421,7 +421,7 @@ def bisearch_min(mn, mx, func):
 
     ok = mx
     ng = mn
-    for i in range(100):
+    for _ in range(100):
         mid = (ok+ng) / 2
         if func(mid):
             # 下を探しに行く
@@ -436,7 +436,7 @@ def bisearch_max(mn, mx, func):
 
     ok = mn
     ng = mx
-    for i in range(100):
+    for _ in range(100):
         mid = (ok+ng) / 2
         if func(mid):
             # 上を探しに行く
