@@ -42,7 +42,7 @@ def bisearch_max(mn, mx, func):
             ng = mid
     return ok
 
-# カップをdig1度傾けた時、溢れるかどうか
+# カップをdig1度傾けた時、溢れないかどうか
 def calc1(dig1):
     # 傾けた反対側の角度
     dig2 = 90 - dig1
