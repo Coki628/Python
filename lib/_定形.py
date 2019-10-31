@@ -607,6 +607,35 @@ def topological_sort(N: int, edges: list) -> list:
     # ソートされた頂点のリストを返却
     return L
 
+def compress(A):
+    """ 座標圧縮 """
+
+    zipped, unzipped = {}, {}
+    for i, a in enumerate(sorted(set(A))):
+        zipped[a] = i
+        unzipped[i] = a
+    return zipped, unzipped
+
+def shakutori(N, K, A):
+    """ 尺取法 """
+
+    l = r = ans = 0
+    sm = 0
+    while l < N:
+        # ここのand以下の条件は問題によって変わる
+        while r < N and sm + A[r] <= K:
+            sm += A[r]
+            r += 1
+        # ここで求める答えに足したりmax取ったりする
+        ans += r - l
+        # 左が右に追いついたら、右も左に合わせて+1する
+        if l == r:
+            # 左右同時に動くので、何も引く必要はない
+            r += 1
+        else:
+            # 左を動かす分、合計から引く
+            sm -= A[l]
+        l += 1
 
 class UnionFind:
     """ Union-Find木 """
@@ -899,6 +928,10 @@ class SegTree:
             l >>= 1
             r >>= 1
         return s
+
+    def get(self, i):
+        """ 一点取得 """
+        return self.tree[i+self.n2]
 
 
 class SegTreeIndex:
