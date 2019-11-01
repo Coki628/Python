@@ -53,7 +53,7 @@ def calc(x):
     # 各aについて、条件を満たす数を数える
     ans = 0
     for a in A:
-        # 式変形： a * b <= x => b <= floor(x / a)
+        # 式変形： a * b <= x → b <= floor(x / a)
         ans += bisect_right(B, x // a)
     return ans >= K
 
