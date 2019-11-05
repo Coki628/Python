@@ -62,4 +62,4 @@ A = sorted(LIST())
 B = sorted(LIST())
 MAX = 10 ** 18
 
-print(bisearch_min(0, MAX+1, calc))
+print(bisearch_min(0, MAX, calc))
