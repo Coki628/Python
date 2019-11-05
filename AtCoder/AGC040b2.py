@@ -112,6 +112,7 @@ for i in range(N):
     r1 = st2.get(i)
     l2 = max(st1.query(0, i), st1.query(i+1, N))
     r2 = min(st2.query(0, i), st2.query(i+1, N))
+    # 区間長が負の数にならないように0とmax取る
     ans = max(ans, max(r1-l1+1, 0) + max(r2-l2+1, 0))
 
 # ある場所から半分に分けるケース
