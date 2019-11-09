@@ -123,6 +123,10 @@ def lcm_list(nums): return reduce(lcm, nums, initial=1)
 # 1からnまでの等差数列の和
 def get_sum(n): return (1+n)*n//2
 
+# 等差数列の和：(初項a, 末項b, 項数c)
+def get_sum(a, b, c):
+    return (a+b) * c // 2
+
 def is_prime(num):
     """ 素数判定 """
     from math import sqrt
@@ -637,6 +641,16 @@ def shakutori(N, K, A):
             sm -= A[l]
         l += 1
 
+def bit_count(i):
+
+    i = i - ((i >> 1) & 0x55555555)
+    i = (i & 0x33333333) + ((i >> 2) & 0x33333333)
+    i = (i + (i >> 4)) & 0x0f0f0f0f
+    i = i + (i >> 8)
+    i = i + (i >> 16)
+    return i & 0x3f
+
+
 class UnionFind:
     """ Union-Find木 """
 
@@ -686,25 +700,25 @@ class UnionFind:
             if self.rank[x] == self.rank[y]:
                 self.rank[x] += 1
 
-    def same(self, x, y):
+    def is_same(self, x, y):
         """ 同じ集合に属するか判定 """
         return self.find(x) == self.find(y)
 
-    def get_size(self, x):
-        """ あるノードの属する集合のノード数 """
-        return self.size[self.find(x)]
+    def get_size(self, x=None):
+        if x is not None:
+            """ あるノードの属する集合のノード数 """
+            return self.size[self.find(x)]
+        else:
+            """ 集合の数 """
+            res = set()
+            for i in range(self.n+1):
+                res.add(self.find(i))
+            # グループ0の分を引いて返却
+            return len(res) - 1
     
     def is_tree(self, x):
         """ 木かどうかの判定 """
         return self.tree[self.find(x)]
-
-    def len(self):
-        """ 集合の数 """
-        res = set()
-        for i in range(self.n+1):
-            res.add(self.find(i))
-        # グループ0の分を引いて返却
-        return len(res) - 1
 
 
 class WeightedUnionFind:
@@ -905,9 +919,9 @@ class SegTree:
         """
         i += self.n2
         self.tree[i] = x
-        while i > 1:
-            self.tree[i >> 1] = x = self.func(x, self.tree[i ^ 1])
+        while i > 0:
             i >>= 1
+            self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
  
     def query(self, a, b):
         """
@@ -932,6 +946,10 @@ class SegTree:
     def get(self, i):
         """ 一点取得 """
         return self.tree[i+self.n2]
+
+    def all(self):
+        """ 全区間[0, n)の取得 """
+        return self.tree[1]
 
 
 class SegTreeIndex:
@@ -973,15 +991,15 @@ class SegTreeIndex:
         """
         i += self.n2
         self.tree[i] = x
-        while i > 1:
-            left, right = min(i, i^1), max(i, i^1)
-            if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
-                self.tree[i >> 1] = self.tree[left]
-                self.index[i >> 1] = self.index[left]
-            else:
-                self.tree[i >> 1] = self.tree[right]
-                self.index[i >> 1] = self.index[right]
+        while i > 0:
             i >>= 1
+            left, right = i*2, i*2+1
+            if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
+                self.tree[i] = self.tree[left]
+                self.index[i] = self.index[left]
+            else:
+                self.tree[i] = self.tree[right]
+                self.index[i] = self.index[right]
  
     def query(self, a, b):
         """
