@@ -69,15 +69,15 @@ class SegTreeIndex:
         """
         i += self.n2
         self.tree[i] = x
-        while i > 1:
-            left, right = min(i, i^1), max(i, i^1)
-            if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
-                self.tree[i >> 1] = self.tree[left]
-                self.index[i >> 1] = self.index[left]
-            else:
-                self.tree[i >> 1] = self.tree[right]
-                self.index[i >> 1] = self.index[right]
+        while i > 0:
             i >>= 1
+            left, right = i*2, i*2+1
+            if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
+                self.tree[i] = self.tree[left]
+                self.index[i] = self.index[left]
+            else:
+                self.tree[i] = self.tree[right]
+                self.index[i] = self.index[right]
  
     def query(self, a, b):
         """
