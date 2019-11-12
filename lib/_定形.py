@@ -814,6 +814,7 @@ class BipartiteMatching:
 
 
 class BIT:
+    """ Binary Indexed Tree """
 
     def __init__(self, n):
         # 0-indexed
@@ -847,6 +848,38 @@ class BIT:
         if r: res += self.sum(r-1)
         if l: res -= self.sum(l-1)
         return res
+
+    def bisearch_left(self, l, r, x):
+        """ 区間[l,r]で左からx番目の値がある位置 """
+        l_sm = self.sum(l-1)
+        ok = r + 1
+        ng = l - 1
+        while ng+1 < ok:
+            mid = (ok+ng) // 2
+            if self.sum(mid) - l_sm >= x:
+                ok = mid
+            else:
+                ng = mid
+        if ok != r + 1:
+            return ok
+        else:
+            return -1
+
+    def bisearch_right(self, l, r, x):
+        """ 区間[l,r]で右からx番目の値がある位置 """
+        r_sm = self.sum(r)
+        ok = l - 1
+        ng = r + 1
+        while ok+1 < ng:
+            mid = (ok+ng) // 2
+            if r_sm - self.sum(mid-1) >= x:
+                ok = mid
+            else:
+                ng = mid
+        if ok != l - 1:
+            return ok
+        else:
+            return -1
 
 
 class BIT:
