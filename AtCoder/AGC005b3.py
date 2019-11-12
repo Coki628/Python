@@ -6,6 +6,7 @@
 ・ABC140eの類題として練習。
 ・BIT上の二分探索
 ・試しにBITじゃなくてセグ木使ってみた。→TLE
+・最新の非再帰セグ木で再トライ。がしかし変化なくTLE。。
 """
 
 import sys
@@ -29,27 +30,36 @@ MOD = 10 ** 9 + 7
 
 class SegTree:
     """
-    以下のクエリを処理する
+    セグメント木
     1.update:  i番目の値をxに更新する
-    2.get_val: 区間[l, r)の値を得る
+    2.query: 区間[l, r)の値を得る
     """
- 
-    def __init__(self, n, func, init):
+
+    def __init__(self, n, func, intv, A=[]):
         """
         :param n: 要素数(0-indexed)
         :param func: 値の操作に使う関数(min, max, add, gcdなど)
-        :param init: 要素の初期値(単位元)
+        :param intv: 要素の初期値(単位元)
+        :param A: 初期化に使うリスト(オプション)
         """
         self.n = n
         self.func = func
-        self.init = init
+        self.intv = intv
         # nより大きい2の冪数
         n2 = 1
         while n2 < n:
             n2 <<= 1
         self.n2 = n2
-        self.tree = [self.init] * (n2 << 1)
- 
+        self.tree = [self.intv] * (n2 << 1)
+        # 初期化の値が決まっている場合
+        if A:
+            # 1段目(最下段)の初期化
+            for i in range(n):
+                self.tree[n2+i] = A[i]
+            # 2段目以降の初期化
+            for i in range(n2-1, -1, -1):
+                self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
+
     def update(self, i, x):
         """
         i番目の値をxに更新
@@ -58,37 +68,37 @@ class SegTree:
         """
         i += self.n2
         self.tree[i] = x
-        while i > 1:
-            self.tree[i >> 1] = x = self.func(x, self.tree[i ^ 1])
+        while i > 0:
             i >>= 1
+            self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
  
-    def get_val(self, a, b):
+    def query(self, a, b):
         """
         [a, b)の値を得る
         :param a: index(0-indexed)
         :param b: index(0-indexed)
         """
-        return self._get_val(a, b, 1, 0, self.n2)
- 
-    def _get_val(self, a, b, k, l, r):
-        """
-        [a, b)の値を得る内部関数
-        :param k: 現在調べている区間のtree内index
-        :param l, r: kが表す区間の左右端index [l, r)
-        :return: kが表す区間と[a, b)の共通区間内での最小値。共通区間を持たない場合は初期値
-        """
-        # 範囲外なら初期値
-        if r <= a or b <= l:
-            return self.init
-        # [a,b)が完全に[l,r)を包含するならtree[k]の値を採用
-        if a <= l and r <= b:
-            return self.tree[k]
-        # 一部だけ範囲内なら2つに分けて再帰的に調査
-        m = (l + r) // 2
-        return self.func(
-            self._get_val(a, b, k << 1, l, m),
-            self._get_val(a, b, (k << 1) + 1, m, r)
-        )
+        l = a + self.n2
+        r = b + self.n2
+        s = self.intv
+        while l < r:
+            if r & 1:
+                r -= 1
+                s = self.func(s, self.tree[r])
+            if l & 1:
+                s = self.func(s, self.tree[l])
+                l += 1
+            l >>= 1
+            r >>= 1
+        return s
+
+    def get(self, i):
+        """ 一点取得 """
+        return self.tree[i+self.n2]
+
+    def all(self):
+        """ 全区間[0, n)の取得 """
+        return self.tree[1]
 
 def bisearch_min(mn, mx, func):
     """ 条件を満たす最小値を見つける二分探索 """
@@ -120,12 +130,12 @@ def bisearch_max(mn, mx, func):
 
 # m~idxの間に出現済がない(この範囲の中で自分が最小値)かどうか
 def calc1(m):
-    cnt = st.get_val(m, idx+1)
+    cnt = st.query(m, idx+1)
     return cnt == 0
 
 # idx~mの間に出現済がない(この範囲の中で自分が最小値)かどうか
 def calc2(m):
-    cnt = st.get_val(idx, m+1)
+    cnt = st.query(idx, m+1)
     return cnt == 0
 
 N = INT()
