@@ -71,7 +71,7 @@ class UnionFind:
 
 N = INT()
 cities = []
-que = []
+edges2 = []
 for i in range(N):
     x, y = MAP()
     cities.append((x, y))
@@ -83,7 +83,7 @@ for i in range(N):
     x, y = cities[i]
     cities[i] = (x, y, c, k)
     # 各頂点から大元の発電所への辺
-    que.append((c, i, N))
+    edges2.append((c, i, N))
 
 # 各頂点同士の辺
 for i in range(N):
@@ -91,14 +91,14 @@ for i in range(N):
     for j in range(i+1, N):
         x2, y2, c2, k2 = cities[j]
         dist = abs(x1-x2) + abs(y1-y2)
-        que.append((dist * (k1+k2), i, j))
+        edges2.append((dist * (k1+k2), i, j))
 
-que.sort(key=itemgetter(0))
+edges2.sort(key=itemgetter(0))
 uf = UnionFind(N+1)
 total = 0
 stations = []
 edges = []
-for c, a, b in que:
+for c, a, b in edges2:
     if not uf.is_same(a, b):
         uf.union(a, b)
         total += c
