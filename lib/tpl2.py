@@ -14,7 +14,7 @@ def Yes(): print('Yes')
 def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
-sys.setrecursionlimit(10 ** 7)
+sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
