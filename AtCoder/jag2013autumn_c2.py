@@ -4,10 +4,11 @@
 ・蟻本演習3-4-1、自力AC！
 ・bitDP、ワーシャルフロイド
 ・グラフを必要な頂点(ラーメン屋のある駅と出発点)だけに変形してbitDPする。
-・pythonTLE,pypyAC。
+・scipy使えばTLEしないかと思ったけどやっぱりpythonTLE。
 """
 
 import sys
+from scipy.sparse.csgraph import floyd_warshall
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -24,25 +25,6 @@ def NO(): print('NO')
 sys.setrecursionlimit(10 ** 7)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
-
-def warshall_floyd(N: int, graph: list) -> list:
-    """ ワーシャルフロイド(頂点数, 隣接行列(0-indexed)) """
-    from copy import deepcopy
-
-    res = deepcopy(graph)
-    for i in range(N):
-        # 始点 = 終点、は予め距離0にしておく
-        res[i][i] = 0
-    # 全頂点の最短距離
-    for k in range(N):
-        for i in range(N):
-            for j in range(N):
-                res[i][j] = min(res[i][j], res[i][k] + res[k][j])
-    # 負の閉路(いくらでもコストを減らせてしまう場所)がないかチェックする
-    for i in range(N):
-        if res[i][i] < 0:
-            return []
-    return res
 
 def bit_count(i):
     i = i - ((i >> 1) & 0x55555555)
@@ -64,7 +46,7 @@ while True:
         G[a-1][b-1] = c
         G[b-1][a-1] = c
     # 全駅間の最短距離
-    G = warshall_floyd(N, G)
+    G = floyd_warshall(G)
     E = [0] * (L+1)
     # 必要な小さいグラフへのマッピング
     LtoM = {0: S}
