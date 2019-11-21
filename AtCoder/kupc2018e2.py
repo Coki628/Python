@@ -5,7 +5,7 @@
 　　　https://kimiyuki.net/writeup/algo/atcoder/kupc2018-e/
 　　　https://atcoder.jp/contests/kupc2018/submissions/3309665
 ・長らく保留にしてたやつ、やっと噛み砕いて通した。
-・転倒数数え上げ、順列、辞書順、BIT
+・転倒数数え上げ、順列、辞書順、BIT、桁DP
 ・順列の転倒数の総和。まずこれ知らないで導けるのすごいなぁと思う。
 ・辞書順でP以下しか使えないので、桁毎に値が確定したらそれ以下を決めていく感じ。
 ・各桁が決まる毎に3つのグループを足していく。(内容はコメントと自分ノート参照)
@@ -14,6 +14,8 @@
 　演算が全部掛け算なので、+=する前にも常にmod取るようにした。
 ・これでpypyAC0.6秒。
 ・ちなみに事前準備で試しに今回使わない逆元作らないようにもしてみたけど速度変化なし。
+・桁DPっぽいという話もあったので、分かりやすく桁DPっぽくしてみた版。
+・DP配列持つ分、まあ不利だとは思ったけど、やっぱりちょっと遅くなってpypyAC0.8秒。
 """
 
 import sys
@@ -163,25 +165,28 @@ mt = ModTools(N, MOD)
 def calc(n):
     return mt.div(mt.fact[n], 2) * (n*(n-1)//2) % MOD
 
-sm = ans = 0
+# dp[i][j] := i桁目まで見て、作る数がPと等しい(j=0)か小さい(j=1)場合の転倒数の総和
+dp = list2d(N+1, 2, 0)
 bit = BIT(N+1)
 for i, p in enumerate(P):
     # pより右に小さい値が現れる数(現在位置で辞書順をPより小さくするのに使える数)
     cur = p - bit.sum(p) - 1
+    # Pと等しい場合の総和に今回分を足す
+    dp[i+1][0] = dp[i][0] + cur
+    dp[i+1][0] %= MOD
+    # Pより小さい数の転倒数総和を数える
+    cnt = 0
     # 今回位置で使える小さい値の数 * 今後決める部分の転倒数総和
-    ans += cur * calc(N-1-i) % MOD
-    ans %= MOD
+    cnt += cur * calc(N-1-i) % MOD
+    cnt %= MOD
     # 今回決める部分と今後決める部分をまたぐ転倒数 * 今後決める部分の全通り
-    ans += cur*(cur-1)//2 * mt.fact[N-1-i] % MOD
-    ans %= MOD
+    cnt += cur*(cur-1)//2 * mt.fact[N-1-i] % MOD
+    cnt %= MOD
     # 既に決まっている部分の転倒数総和 * 今回位置で使える小さい値の数 * 今後決める部分の全通り
-    ans += sm * cur * mt.fact[N-1-i] % MOD
-    ans %= MOD
-    # 転倒数総和に今回分を足す
-    sm += cur
+    cnt += dp[i][0] * cur * mt.fact[N-1-i] % MOD
+    cnt %= MOD
+    dp[i+1][1] = dp[i][1] + cnt
+    dp[i+1][1] %= MOD
     # pを出現済とする
     bit.add(p, 1)
-# 最終的なsmはPの転倒数になるので答えに足す(ループ内ではPを下回った値から順次足している)
-ans += sm
-ans %= MOD
-print(ans)
+print((dp[N][0]+dp[N][1])%MOD)
