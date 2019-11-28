@@ -41,7 +41,7 @@ sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
 
-# ライブラリのよりこっちのが速い(ただし2次元限定)
+# 標準ライブラリのよりこっちのが速い(ただし2次元限定)
 def deepcopy(li): return [x[:] for x in li]
 
 # numpy系
@@ -108,6 +108,25 @@ directions = ((1,0),(-1,0),(0,1),(0,-1))
 #     row = list(input())
 #     for j in range(1, W+1):
 #         grid[i][j] = row[j-1]
+
+def build_grid(H, W, intv, _type, space=True, padding=False):
+    # 入力がスペース区切りかどうか
+    if space:
+        _input = lambda: input().split()
+    else:
+        _input = lambda: input()
+    _list = lambda: list(map(_type, _input()))
+    # 余白の有無
+    if padding:
+        offset = 1
+    else:
+        offset = 0
+    grid = list2d(H+offset*2, W+offset*2, intv)
+    for i in range(offset, H+offset):
+        row = _list()
+        for j in range(offset, W+offset):
+            grid[i][j] = row[j-offset]
+    return grid
 
 # 余りの切り上げ(3つとも同じ)
 # def ceil(a, b):
@@ -213,47 +232,8 @@ def LIS(A: list, equal=False) -> list:
             L[bisect(L, a)] = a
     return L
 
-def init_fact_inv(MAX: int, MOD: int):
-    """ 階乗たくさん使う時用のテーブル準備
 
-    Parameters
-    ----------
-        MAX：階乗に使う数値の最大以上まで作る
-        MOD
-    Returns
-    -------
-        factorial (list<int>), inverse (list<int>)
-    """
-    
-    MAX += 1
-    # 階乗テーブル
-    factorial = [1] * MAX
-    factorial[0] = factorial[1] = 1
-    for i in range(2, MAX):
-        factorial[i] = factorial[i-1] * i % MOD
-    # 階乗の逆元テーブル
-    inverse = [1] * MAX
-    # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
-    inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
-    for i in range(MAX-2, 0, -1):
-        # 最後から戻っていくこのループならMAX回powするより処理が速い
-        inverse[i] = inverse[i+1] * (i+1) % MOD
-    return factorial, inverse
-
-def nCr(n, r, factorial, inverse):
-    """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
-
-    if n < r: return 0
-    # 10C7 = 10C3
-    r = min(r, n-r)
-    # 分子の計算
-    numerator = factorial[n]
-    # 分母の計算
-    denominator = inverse[r] * inverse[n-r] % MOD
-    return numerator * denominator % MOD
-
-
-class FactInvMOD:
+class ModTools:
     """ 階乗たくさん使う時用のテーブル準備 """
 
     def __init__(self, MAX, MOD):
@@ -301,6 +281,28 @@ class FactInvMOD:
         # r個選ぶところにN-1個の仕切りを入れる
         return self.nCr(r+n-1, r)
 
+    def div(self, x, y):
+        """ MOD除算 """
+
+        return x * pow(y, self.MOD-2, self.MOD) % self.MOD
+
+def nCr(n, r, MOD):
+    """ 組み合わせの数(大きいnに対して定数回だけやる用) """
+
+    if n < r: return 0
+    # 10C7 = 10C3
+    r = min(r, n-r)
+    num = den = 1
+    # 分子の計算
+    for i in range(n, n-r, -1):
+        num *= i % MOD
+        num %= MOD
+    # 分母の計算
+    for i in range(r, 0, -1):
+        den *= i % MOD
+        den %= MOD
+    # logがつくため、MOD除算は最後の1回だけにする
+    return num * pow(den, MOD-2, MOD) % MOD
 
 def init_fact_inv(MAX: int, MOD: int):
     """ 階乗たくさん使う時用のテーブル準備
@@ -340,7 +342,6 @@ def nCr(n, r, factorial, inverse):
     # 分母の計算
     denominator = inverse[r] * inverse[n-r] % MOD
     return numerator * denominator % MOD
-
 
 def init_factorial(MAX: int) -> list:
     """ テーブル準備MODなし版 """
@@ -955,7 +956,7 @@ class SegTree:
         while i > 0:
             i >>= 1
             self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
- 
+
     def query(self, a, b):
         """
         [a, b)の値を得る
