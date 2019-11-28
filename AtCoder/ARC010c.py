@@ -55,7 +55,7 @@ for i in range(N):
             dp[nxt][S|1<<b][b] = max(dp[nxt][S|1<<b][b], dp[cur][S][j] + p)
 
 for j in range(M+1):
-    # 全色揃っている集合について、Zボーナスを加える
+    # 全色揃っている集合について、ボーナスZを加える
     dp[N%2][(1<<M)-1][j] += Z
 
 ans = -INF
