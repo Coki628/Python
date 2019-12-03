@@ -2,7 +2,7 @@
 
 """
 参考：https://ikatakos.com/pot/programming_algorithm/dynamic_programming/inversion
-・BIT、転倒数
+・BIT、転倒数数え上げ
 ・ループ逆にした版
 """
 
@@ -53,13 +53,13 @@ class BIT:
             self.tree[i-1] += x
             i += i & -i
 
-N=INT()
-A=LIST()
+N = INT()
+A = LIST()
 
-bit=BIT(N+1)
-ans=0
+bit = BIT(N+1)
+ans = 0
 for i in range(N-1, -1, -1):
-    bit.add(A[i], 1)
     # 自分より右にある、自分より小さな数の個数
-    ans+=bit.sum(A[i]-1)
+    ans += bit.sum(A[i])
+    bit.add(A[i], 1)
 print(ans)
