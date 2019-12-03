@@ -3,7 +3,7 @@
 """
 参考：https://www.youtube.com/watch?v=7IlBVSglZqc
 ・一応やってみた、貪欲じゃない解。
-・後ろからDP、セグ木で遷移
+・辞書順最小系、後ろからDP、セグ木で遷移
 ・計算量10万log、pythonAC1.6秒、pypyAC0.4秒。やっぱセグ木のlogはpypyのが全然速いね。
 """
 
