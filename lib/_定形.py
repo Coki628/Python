@@ -128,6 +128,14 @@ def build_grid(H, W, intv, _type, space=True, padding=False):
             grid[i][j] = row[j-offset]
     return grid
 
+def rot90(grid, H, W):
+    """ グリッドを90度回転 """
+    res = list2d(W, H, 0)
+    for i in range(H):
+        for j in range(W):
+            res[j][H-i-1] = grid[i][j]
+    return res
+
 # 余りの切り上げ(3つとも同じ)
 # def ceil(a, b):
 #     (a + b - 1) // b
@@ -142,8 +150,8 @@ def lcm_list(nums): return reduce(lcm, nums, initial=1)
 # 1からnまでの等差数列の和
 def get_sum(n): return (1+n)*n//2
 
-# 等差数列の和：(初項a, 末項b, 項数c)
 def get_sum(a, b, c):
+    """ 等差数列の和：(初項a, 末項b, 項数c) """
     return (a+b) * c // 2
 
 def is_prime(num):
@@ -287,7 +295,7 @@ class ModTools:
         return x * pow(y, self.MOD-2, self.MOD) % self.MOD
 
 def nCr(n, r, MOD):
-    """ 組み合わせの数(大きいnに対して定数回だけやる用) """
+    """ 組み合わせの数(大きいnに対して使用する。計算量はr) """
 
     if n < r: return 0
     # 10C7 = 10C3
@@ -851,23 +859,7 @@ class BIT:
         return res
 
     def bisearch_left(self, l, r, x):
-        """ 区間[l,r]で左からx番目の値がある位置 """
-        l_sm = self.sum(l-1)
-        ok = r + 1
-        ng = l - 1
-        while ng+1 < ok:
-            mid = (ok+ng) // 2
-            if self.sum(mid) - l_sm >= x:
-                ok = mid
-            else:
-                ng = mid
-        if ok != r + 1:
-            return ok
-        else:
-            return -1
-
-    def bisearch_right(self, l, r, x):
-        """ 区間[l,r]で右からx番目の値がある位置 """
+        """ 区間[l,r]を右から左に向かってx番目の値がある位置 """
         r_sm = self.sum(r)
         ok = l - 1
         ng = r + 1
@@ -878,6 +870,22 @@ class BIT:
             else:
                 ng = mid
         if ok != l - 1:
+            return ok
+        else:
+            return -1
+
+    def bisearch_right(self, l, r, x):
+        """ 区間[l,r]を左から右に向かってx番目の値がある位置 """
+        l_sm = self.sum(l-1)
+        ok = r + 1
+        ng = l - 1
+        while ng+1 < ok:
+            mid = (ok+ng) // 2
+            if self.sum(mid) - l_sm >= x:
+                ok = mid
+            else:
+                ng = mid
+        if ok != r + 1:
             return ok
         else:
             return -1
