@@ -54,7 +54,6 @@ def SCC(N, edges):
     group = [0] * N
     grpnum = 0
     def rec2(cur):
-        # global grpnum
         group[cur] = grpnum
         visited[cur] = True
         for nxt in nodes2[cur]:
