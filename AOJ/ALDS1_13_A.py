@@ -55,8 +55,8 @@ def delQ(i, j):
 def check(i, j):
     return not (row[i] or col[j] or dpos[i+j] or dneg[i-j+N-1])
 
-N = INT()
-for i in range(N):
+qcnt = INT()
+for i in range(qcnt):
     r, c = MAP()
     putQ(r, c)
 
@@ -76,6 +76,6 @@ def rec(i, j, cnt):
 
 for i in range(8):
     for j in range(8):
-        if rec(i, j, N):
+        if rec(i, j, qcnt):
             [print(''.join(row)) for row in grid]
             exit()
