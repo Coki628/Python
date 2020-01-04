@@ -42,7 +42,7 @@ for i in range(N):
     heappush(A1, A2[i])    
     ansa[i+1] = ansa[i] + A2[i] - heappop(A1)
 
-# 真ん中グループ(A2)を後ろからiまで右に取り込んだ時の右グループ(A1)の最小値
+# 真ん中グループ(A2)を後ろからiまで右に取り込んだ時の右グループ(A3)の最小値
 ansb = [0] * (N+1)
 ansb[N] = -sum(A3)
 for i in range(N-1, -1, -1):
