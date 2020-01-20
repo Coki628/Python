@@ -505,7 +505,8 @@ def shakutori(N, K, A):
             sm -= A[l]
         l += 1
 
-def bit_count(i):
+# 最大32ビット
+def pop_count(i):
     i = i - ((i >> 1) & 0x55555555)
     i = (i & 0x33333333) + ((i >> 2) & 0x33333333)
     i = (i + (i >> 4)) & 0x0f0f0f0f
@@ -513,12 +514,23 @@ def bit_count(i):
     i = i + (i >> 16)
     return i & 0x3f
 
+# 最大128ビット
+def pop_count(n):
+    c = (n & 0x55555555555555555555555555555555) + ((n>>1) & 0x55555555555555555555555555555555)
+    c = (c & 0x33333333333333333333333333333333) + ((c>>2) & 0x33333333333333333333333333333333)
+    c = (c & 0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f) + ((c>>4) & 0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f)
+    c = (c & 0x00ff00ff00ff00ff00ff00ff00ff00ff) + ((c>>8) & 0x00ff00ff00ff00ff00ff00ff00ff00ff)
+    c = (c & 0x0000ffff0000ffff0000ffff0000ffff) + ((c>>16) & 0x0000ffff0000ffff0000ffff0000ffff)
+    c = (c & 0x00000000ffffffff00000000ffffffff) + ((c>>32) & 0x00000000ffffffff00000000ffffffff)
+    c = (c & 0x0000000000000000ffffffffffffffff) + ((c>>64) & 0x0000000000000000ffffffffffffffff)
+    return c
 
 class BIT:
     """ Binary Indexed Tree """
 
     def __init__(self, n):
         # 0-indexed
+        n += 1
         nv = 1
         while nv < n:
             nv *= 2
@@ -549,6 +561,10 @@ class BIT:
         if r: res += self.sum(r-1)
         if l: res -= self.sum(l-1)
         return res
+
+    def update(self, i, x):
+        """ 値の更新：添字i, 値x """
+        self.add(i, x - self.get(i))
 
     def bisearch_fore(self, l, r, x):
         """ 区間[l,r]を左から右に向かってx番目の値がある位置 """
@@ -588,6 +604,7 @@ class BIT:
 
     def __init__(self, n, func, init):
         # 0-indexed
+        n += 1
         nv = 1
         while nv < n:
             nv *= 2
