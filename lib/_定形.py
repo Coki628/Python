@@ -445,12 +445,12 @@ def bisearch_max(mn, mx, func):
             ng = mid
     return ok
 
-def bisearch_min(mn, mx, func):
+def bisearch_min(mn, mx, func, EPS):
     """ 条件を満たす最小値を見つける二分探索(小数用) """
 
     ok = mx
     ng = mn
-    for _ in range(100):
+    while ng+EPS < ok:
         mid = (ok+ng) / 2
         if func(mid):
             # 下を探しに行く
@@ -460,12 +460,12 @@ def bisearch_min(mn, mx, func):
             ng = mid
     return ok
 
-def bisearch_max(mn, mx, func):
+def bisearch_max(mn, mx, func, EPS):
     """ 条件を満たす最大値を見つける二分探索(小数用) """
 
     ok = mn
     ng = mx
-    for _ in range(100):
+    while ok+EPS < ng:
         mid = (ok+ng) / 2
         if func(mid):
             # 上を探しに行く
@@ -506,7 +506,7 @@ def shakutori(N, K, A):
         l += 1
 
 # 最大32ビット
-def pop_count(i):
+def popcount(i):
     i = i - ((i >> 1) & 0x55555555)
     i = (i & 0x33333333) + ((i >> 2) & 0x33333333)
     i = (i + (i >> 4)) & 0x0f0f0f0f
@@ -515,7 +515,7 @@ def pop_count(i):
     return i & 0x3f
 
 # 最大128ビット
-def pop_count(n):
+def popcount(n):
     c = (n & 0x55555555555555555555555555555555) + ((n>>1) & 0x55555555555555555555555555555555)
     c = (c & 0x33333333333333333333333333333333) + ((c>>2) & 0x33333333333333333333333333333333)
     c = (c & 0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f) + ((c>>4) & 0x0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f)
@@ -525,262 +525,43 @@ def pop_count(n):
     c = (c & 0x0000000000000000ffffffffffffffff) + ((c>>64) & 0x0000000000000000ffffffffffffffff)
     return c
 
-class BIT:
-    """ Binary Indexed Tree """
+# 最大65536ビット
+NN = 16
+KK = (1 << (1 << NN)) - 1
+I0 = KK // 3
+I1 = KK // 5
+I2 = KK // 17
+I3 = KK // 257
+def popcount(x):
+    x -= (x >> 1) & I0
+    x = (x & I1) + ((x >> 2) & I1)
+    x = (x + (x >> 4)) & I2
+    x = (x + (x >> 8)) & I3
+    for k in range(4, 16):
+        x += x >> 2**k
+    return x & 0xffff
 
-    def __init__(self, n):
-        # 0-indexed
-        n += 1
-        nv = 1
-        while nv < n:
-            nv *= 2
-        self.size = nv
-        self.tree = [0] * nv
+# 最大262144ビット
+NN = 18
+KK = (1 << (1 << NN)) - 1
+I0 = KK // 3
+I1 = KK // 5
+I2 = KK // 17
+I3 = KK // 257
+I4 = KK // 65537
+def popcount(x):
+    x -= (x >> 1) & I0
+    x = (x & I1) + ((x >> 2) & I1)
+    x = (x + (x >> 4)) & I2
+    x = (x + (x >> 8)) & I3
+    x = (x + (x >> 16)) & I4
+    for k in range(5, 18):
+        x += x >> 2**k
+    return x & 0x3ffff
 
-    def sum(self, i):
-        """ [0, i]を合計する """
-        s = 0
-        i += 1
-        while i > 0:
-            s += self.tree[i-1]
-            i -= i & -i
-        return s
-
-    def add(self, i, x):
-        """ 値の追加：添字i, 値x """
-        i += 1
-        while i <= self.size:
-            self.tree[i-1] += x
-            i += i & -i
-
-    def get(self, l, r=None):
-        """ 区間和の取得 [l, r) """
-        # 引数が1つなら一点の値を取得
-        if r is None: r = l + 1
-        res = 0
-        if r: res += self.sum(r-1)
-        if l: res -= self.sum(l-1)
-        return res
-
-    def update(self, i, x):
-        """ 値の更新：添字i, 値x """
-        self.add(i, x - self.get(i))
-
-    def bisearch_fore(self, l, r, x):
-        """ 区間[l,r]を左から右に向かってx番目の値がある位置 """
-        l_sm = self.sum(l-1)
-        ok = r + 1
-        ng = l - 1
-        while ng+1 < ok:
-            mid = (ok+ng) // 2
-            if self.sum(mid) - l_sm >= x:
-                ok = mid
-            else:
-                ng = mid
-        if ok != r + 1:
-            return ok
-        else:
-            return INF
-
-    def bisearch_back(self, l, r, x):
-        """ 区間[l,r]を右から左に向かってx番目の値がある位置 """
-        r_sm = self.sum(r)
-        ok = l - 1
-        ng = r + 1
-        while ok+1 < ng:
-            mid = (ok+ng) // 2
-            if r_sm - self.sum(mid-1) >= x:
-                ok = mid
-            else:
-                ng = mid
-        if ok != l - 1:
-            return ok
-        else:
-            return -INF
-
-
-class BIT:
-    """ BIT汎用版 """
-
-    def __init__(self, n, func, init):
-        # 0-indexed
-        n += 1
-        nv = 1
-        while nv < n:
-            nv *= 2
-        self.size = nv
-        self.func = func
-        self.init = init
-        self.tree = [init] * nv
-    
-    def query(self, i):
-        """ [0, i]の値を取得 """
-        s = self.init
-        i += 1
-        while i > 0:
-            s = self.func(s, self.tree[i-1])
-            i -= i & -i
-        return s
-    
-    def update(self, i, x):
-        """ 値の更新：添字i, 値x """
-        i += 1
-        while i <= self.size:
-            self.tree[i-1] = self.func(self.tree[i-1], x)
-            i += i & -i
-
-
-class SegTree:
-    """
-    セグメント木
-    1.update:  i番目の値をxに更新する
-    2.query: 区間[l, r)の値を得る
-    """
-
-    def __init__(self, n, func, intv, A=[]):
-        """
-        :param n: 要素数(0-indexed)
-        :param func: 値の操作に使う関数(min, max, add, gcdなど)
-        :param intv: 要素の初期値(単位元)
-        :param A: 初期化に使うリスト(オプション)
-        """
-        self.n = n
-        self.func = func
-        self.intv = intv
-        # nより大きい2の冪数
-        n2 = 1
-        while n2 < n:
-            n2 <<= 1
-        self.n2 = n2
-        self.tree = [self.intv] * (n2 << 1)
-        # 初期化の値が決まっている場合
-        if A:
-            # 1段目(最下段)の初期化
-            for i in range(n):
-                self.tree[n2+i] = A[i]
-            # 2段目以降の初期化
-            for i in range(n2-1, -1, -1):
-                self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
-
-    def update(self, i, x):
-        """
-        i番目の値をxに更新
-        :param i: index(0-indexed)
-        :param x: update value
-        """
-        i += self.n2
-        self.tree[i] = x
-        while i > 0:
-            i >>= 1
-            self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
-
-    def query(self, a, b):
-        """
-        [a, b)の値を得る
-        :param a: index(0-indexed)
-        :param b: index(0-indexed)
-        """
-        l = a + self.n2
-        r = b + self.n2
-        s = self.intv
-        while l < r:
-            if r & 1:
-                r -= 1
-                s = self.func(s, self.tree[r])
-            if l & 1:
-                s = self.func(s, self.tree[l])
-                l += 1
-            l >>= 1
-            r >>= 1
-        return s
-
-    def get(self, i):
-        """ 一点取得 """
-        return self.tree[i+self.n2]
-
-    def all(self):
-        """ 全区間[0, n)の取得 """
-        return self.tree[1]
-
-
-class SegTreeIndex:
-    """
-    セグメント木(index取得対応版)
-    1.update:  i番目の値をxに更新する
-    2.query: 区間[l, r)の値とindex(同値があった場合は一番左)を得る
-    """
- 
-    def __init__(self, n, func, init):
-        """
-        :param n: 要素数(0-indexed)
-        :param func: 値の操作に使う関数(min, max)
-        :param init: 要素の初期値(単位元)
-        """
-        self.n = n
-        self.func = func
-        self.init = init
-        # nより大きい2の冪数
-        n2 = 1
-        while n2 < n:
-            n2 <<= 1
-        self.n2 = n2
-        self.tree = [self.init] * (n2 << 1)
-        self.index = [self.init] * (n2 << 1)
-        # 1段目(最下段)の初期化
-        for i in range(n2):
-            self.index[i+n2] = i
-        # 2段目以降の初期化
-        for i in range(n2-1, -1, -1):
-            # 全部左の子の値に更新
-            self.index[i] = self.index[i*2]
-
-    def update(self, i, x):
-        """
-        i番目の値をxに更新
-        :param i: index(0-indexed)
-        :param x: update value
-        """
-        i += self.n2
-        self.tree[i] = x
-        while i > 0:
-            i >>= 1
-            left, right = i*2, i*2+1
-            if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
-                self.tree[i] = self.tree[left]
-                self.index[i] = self.index[left]
-            else:
-                self.tree[i] = self.tree[right]
-                self.index[i] = self.index[right]
- 
-    def query(self, a, b):
-        """
-        [a, b)の値を得る
-        :param a: index(0-indexed)
-        :param b: index(0-indexed)
-        """
-        l = a + self.n2
-        r = b + self.n2
-        s = (self.init, -1)
-        while l < r:
-            if r & 1:
-                r -= 1
-                res = self.func(s[0], self.tree[r])
-                # 左との一致を優先する
-                if res == s[0]:
-                    pass
-                else:
-                    s = (self.tree[r], self.index[r])
-            if l & 1:
-                res = self.func(self.tree[l], s[0])
-                # 左との一致を優先する
-                if res == self.tree[l]:
-                    s = (self.tree[l], self.index[l])
-                else:
-                    pass
-                l += 1
-            l >>= 1
-            r >>= 1
-        return s
+# 無制限
+def popcount(i):
+    return bin(i).count('1')
 
 
 class Geometry:

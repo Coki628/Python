@@ -117,9 +117,11 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     que = [(0, src)]
     res[src] = 0
     # キューが空になるまで
-    while len(que) != 0:
+    while que:
         # srcからの距離, 現在のノード
         dist, cur = heappop(que)
+        if res[cur] < dist:
+            continue
         # 出発ノードcurの到着ノードでループ
         for nxt, cost in nodes[cur]:
             # 今回の経路のが短い時
@@ -140,12 +142,14 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     que = [src]
     res[src] = 0
     # キューが空になるまで
-    while len(que) != 0:
+    while que:
         # 距離*N + 現在のノード
         cur = heappop(que)
         # 距離とノードに分ける
         dist = cur // N
         cur %= N
+        if res[cur] < dist:
+            continue
         # 出発ノードcurの到着ノードでループ
         for nxt, cost in nodes[cur]:
             # 今回の経路のが短い時
@@ -166,12 +170,14 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     que = [src]
     res[src] = (0, -1)
     # キューが空になるまで
-    while len(que) != 0:
+    while que:
         # 距離*N + 現在のノード
         cur = heappop(que)
         # 距離とノードに分ける
         dist = cur // N
         cur %= N
+        if res[cur][0] < dist:
+            continue
         # 出発ノードcurの到着ノードでループ
         for nxt, cost in nodes[cur]:
             # 今回の経路のが短い時
@@ -182,8 +188,8 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     # ノードsrcからの最短距離と経路のリストを返却
     return res
 
-# s,t間の経路を取得
 def get_route(s, t, res):
+    """ s,t間の経路を取得 """
     prev = t
     StoT = [t]
     while prev != s:
@@ -536,3 +542,119 @@ class Dinic:
             while current_flow > 0:
                 flow += current_flow
                 current_flow = self.dfs(s, t, INF)
+
+
+class MinCostFlow:
+    """ 最小費用流(ダイクストラ版) """
+
+    INF = 10 ** 18
+
+    def __init__(self, N):
+        self.N = N
+        self.G = [[] for i in range(N)]
+
+    def add_edge(self, fr, to, cap, cost):
+        G = self.G
+        G[fr].append([to, cap, cost, len(G[to])])
+        G[to].append([fr, 0, -cost, len(G[fr])-1])
+
+    def flow(self, s, t, f):
+        from heapq import heappush, heappop
+
+        N = self.N; G = self.G
+        INF = MinCostFlow.INF
+
+        res = 0
+        H = [0]*N
+        prv_v = [0]*N
+        prv_e = [0]*N
+
+        while f:
+            dist = [INF]*N
+            dist[s] = 0
+            que = [(0, s)]
+
+            while que:
+                c, v = heappop(que)
+                if dist[v] < c:
+                    continue
+                for i, (w, cap, cost, _) in enumerate(G[v]):
+                    if cap > 0 and dist[w] > dist[v] + cost + H[v] - H[w]:
+                        dist[w] = r = dist[v] + cost + H[v] - H[w]
+                        prv_v[w] = v; prv_e[w] = i
+                        heappush(que, (r, w))
+            if dist[t] == INF:
+                return -1
+
+            for i in range(N):
+                H[i] += dist[i]
+
+            d = f; v = t
+            while v != s:
+                d = min(d, G[prv_v[v]][prv_e[v]][1])
+                v = prv_v[v]
+            f -= d
+            res += d * H[t]
+            v = t
+            while v != s:
+                e = G[prv_v[v]][prv_e[v]]
+                e[1] -= d
+                G[v][e[3]][1] += d
+                v = prv_v[v]
+        return res
+
+
+class MinCostFlow:
+    """ 最小費用流(ベルマンフォード版、負コストに対応可) """
+
+    INF = 10 ** 18
+
+    def __init__(self, N):
+        self.N = N
+        self.G = [[] for i in range(N)]
+
+    def add_edge(self, fr, to, cap, cost):
+        G = self.G
+        G[fr].append([to, cap, cost, len(G[to])])
+        G[to].append([fr, 0, -cost, len(G[fr])-1])
+
+    def flow(self, s, t, f):
+
+        N = self.N; G = self.G
+        INF = MinCostFlow.INF
+
+        res = 0
+        prv_v = [0]*N
+        prv_e = [0]*N
+
+        while f:
+            dist = [INF]*N
+            dist[s] = 0
+            update = True
+
+            while update:
+                update = False
+                for v in range(N):
+                    if dist[v] == INF:
+                        continue
+                    for i, (to, cap, cost, _) in enumerate(G[v]):
+                        if cap > 0 and dist[to] > dist[v] + cost:
+                            dist[to] = dist[v] + cost
+                            prv_v[to] = v; prv_e[to] = i
+                            update = True
+            if dist[t] == INF:
+                return -1
+
+            d = f; v = t
+            while v != s:
+                d = min(d, G[prv_v[v]][prv_e[v]][1])
+                v = prv_v[v]
+            f -= d
+            res += d * dist[t]
+            v = t
+            while v != s:
+                e = G[prv_v[v]][prv_e[v]]
+                e[1] -= d
+                G[v][e[3]][1] += d
+                v = prv_v[v]
+        return res
