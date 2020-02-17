@@ -107,7 +107,7 @@ dinic=Dinic(H2*W2)
 for i in range(1,H+1):
     for j in range(1, W+1):
         if grid[i][j]=='.':
-            # 始点～(i,j)と(i,j)～終点を2部のどっちかによってつなぐ
+            # 始点～(i,j)と(i,j)～終点を二部のどっちかによってつなぐ
             if (i+j)%2==0:
                 dinic.add_link(0, i*W2+j, 1)
             else:
@@ -116,7 +116,7 @@ for i in range(1,H+1):
             ans+=1
             if grid[i][j-1]=='.':
                 # i,jを1次元で表した値で管理する(ようは各頂点に一意な値が振れればいい)
-                # 位置の偶奇で2部のどっちに入れるか決まる
+                # 位置の偶奇で二部のどっちに入れるか決まる
                 if (i+j)%2==0: 
                     dinic.add_link(i*W2+j, i*W2+j-1, 1)
                 else: 
