@@ -488,15 +488,22 @@ class BipartiteMatching:
 
 
 class Dinic:
-    """ 最大流(Dinic) """
+    """ 最大流(Dinic)：O(E*V^2) """
+
+    INF = 10 ** 18
 
     def __init__(self, n):
         self.n = n
         self.links = [[] for _ in range(n)]
         self.depth = None
         self.progress = None
+
+    def copy(self):
+        res = Dinic(self.n)
+        res.links = [[a[:] for a in b] for b in self.links]
+        return res
  
-    def add_link(self, _from, to, cap):
+    def add_edge(self, _from, to, cap):
         self.links[_from].append([cap, to, len(self.links[to])])
         self.links[to].append([0, _from, len(self.links[_from]) - 1])
  
@@ -531,7 +538,8 @@ class Dinic:
             return d
         return 0
  
-    def max_flow(self, s, t):
+    def flow(self, s, t):
+        INF = Dinic.INF
         flow = 0
         while True:
             self.bfs(s)
@@ -545,7 +553,7 @@ class Dinic:
 
 
 class MinCostFlow:
-    """ 最小費用流(ダイクストラ版) """
+    """ 最小費用流(ダイクストラ版)：O(F*E*logV) """
 
     INF = 10 ** 18
 
@@ -565,12 +573,12 @@ class MinCostFlow:
         INF = MinCostFlow.INF
 
         res = 0
-        H = [0]*N
-        prv_v = [0]*N
-        prv_e = [0]*N
+        H = [0] * N
+        prv_v = [0] * N
+        prv_e = [0] * N
 
         while f:
-            dist = [INF]*N
+            dist = [INF] * N
             dist[s] = 0
             que = [(0, s)]
 
@@ -578,13 +586,13 @@ class MinCostFlow:
                 c, v = heappop(que)
                 if dist[v] < c:
                     continue
-                for i, (w, cap, cost, _) in enumerate(G[v]):
-                    if cap > 0 and dist[w] > dist[v] + cost + H[v] - H[w]:
-                        dist[w] = r = dist[v] + cost + H[v] - H[w]
-                        prv_v[w] = v; prv_e[w] = i
-                        heappush(que, (r, w))
+                for i, (to, cap, cost, _) in enumerate(G[v]):
+                    if cap > 0 and dist[to] > dist[v] + cost + H[v] - H[to]:
+                        dist[to] = r = dist[v] + cost + H[v] - H[to]
+                        prv_v[to] = v; prv_e[to] = i
+                        heappush(que, (r, to))
             if dist[t] == INF:
-                return -1
+                return INF
 
             for i in range(N):
                 H[i] += dist[i]
@@ -605,7 +613,7 @@ class MinCostFlow:
 
 
 class MinCostFlow:
-    """ 最小費用流(ベルマンフォード版、負コストに対応可) """
+    """ 最小費用流(ダイクストラ版2)：O(F*V^2) """
 
     INF = 10 ** 18
 
@@ -624,11 +632,74 @@ class MinCostFlow:
         INF = MinCostFlow.INF
 
         res = 0
-        prv_v = [0]*N
-        prv_e = [0]*N
+        H = [0] * N
+        prv_v = [0] * N
+        prv_e = [0] * N
 
         while f:
-            dist = [INF]*N
+            dist = [INF] * N
+            dist[s] = 0
+            used = [False] * N
+
+            while True:
+                v = -1
+                for u in range(N):
+                    if not used[u] and (v == -1 or dist[u] < dist[v]):
+                        v = u
+                if v == -1:
+                    break
+                used[v] = True
+                for i, (to, cap, cost, _) in enumerate(G[v]):
+                    if cap > 0 and dist[to] > dist[v] + cost + H[v] - H[to]:
+                        dist[to] = dist[v] + cost + H[v] - H[to]
+                        prv_v[to] = v; prv_e[to] = i
+
+            if dist[t] == INF:
+                return INF
+
+            for i in range(N):
+                H[i] += dist[i]
+
+            d = f; v = t
+            while v != s:
+                d = min(d, G[prv_v[v]][prv_e[v]][1])
+                v = prv_v[v]
+            f -= d
+            res += d * H[t]
+            v = t
+            while v != s:
+                e = G[prv_v[v]][prv_e[v]]
+                e[1] -= d
+                G[v][e[3]][1] += d
+                v = prv_v[v]
+        return res
+
+
+class MinCostFlow:
+    """ 最小費用流(ベルマンフォード版、負コストに対応可)：O(F*E*V) """
+
+    INF = 10 ** 18
+
+    def __init__(self, N):
+        self.N = N
+        self.G = [[] for i in range(N)]
+
+    def add_edge(self, fr, to, cap, cost):
+        G = self.G
+        G[fr].append([to, cap, cost, len(G[to])])
+        G[to].append([fr, 0, -cost, len(G[fr])-1])
+
+    def flow(self, s, t, f):
+
+        N = self.N; G = self.G
+        INF = MinCostFlow.INF
+
+        res = 0
+        prv_v = [0] * N
+        prv_e = [0] * N
+
+        while f:
+            dist = [INF] * N
             dist[s] = 0
             update = True
 
@@ -643,7 +714,7 @@ class MinCostFlow:
                             prv_v[to] = v; prv_e[to] = i
                             update = True
             if dist[t] == INF:
-                return -1
+                return INF
 
             d = f; v = t
             while v != s:
