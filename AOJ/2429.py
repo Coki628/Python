@@ -4,7 +4,7 @@
 参考：https://jag-icpc.org/?plugin=attach&refer=2012%2FPractice%2F%E5%A4%8F%E5%90%88%E5%AE%BF%2F%E8%AC%9B%E8%A9%95&openfile=2-F.pdf
 　　　http://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=3255978#1
 ・蟻本演習3-5-5
-・グリッドで二部グラフ、最小費用流
+・グリッドで二部グラフ、最小費用流、復元
 ・負のコストを扱うのでベルマンフォード版の最小費用流を使う。
 ・辺の張り方は知っていれば典型(ABC131F,ARC074Fなどと同様)だけど、コストの持たせ方に工夫が必要なのと、
 　どの辺を使ったのかの復元が必要になる。
