@@ -43,12 +43,13 @@ def build_grid(H, W, intv, _type, space=True, padding=False):
             grid[i][j] = row[j-offset]
     return grid
 
-def bfs(H, W, grid, src):
+def bfs(grid, src):
     """ BFS(グリッド、重みなし) """
     from collections import deque
 
+    H, W = len(grid), len(grid[0])
     h, w = src
-    directions = ((1,0),(-1,0),(0,1),(0,-1))
+    directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
     que = deque([(h, w, 0)])
     dist = list2d(H+2, W+2, -1)
     while que:
@@ -72,7 +73,7 @@ for i in range(1, H+1):
     for j in range(1, W+1):
         if grid[i][j] != '#':
             # 有効な全マスから最短距離試す
-            res = bfs(H, W, grid, (i, j))
+            res = bfs(grid, (i, j))
             for k in range(1, H+1):
                 for l in range(1, W+1):
                     # 一番遠い場所

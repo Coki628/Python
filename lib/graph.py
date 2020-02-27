@@ -86,14 +86,15 @@ def bfs(N, nodes, src):
             que.append((v, c+1))
     return dist
 
-def bfs(H, W, grid, src):
+def bfs(grid, src):
     """ BFS(グリッド、重みなし) """
     from collections import deque
 
+    H, W = len(grid), len(grid[0])
     h, w = src
-    directions = ((1,0),(-1,0),(0,1),(0,-1))
+    directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
     que = deque([(h, w, 0)])
-    dist = list2d(H+2, W+2, INF)
+    dist = list2d(H, W, INF)
     while que:
         h, w, c = que.popleft()
         if dist[h][w] != INF:
@@ -653,7 +654,6 @@ class MinCostFlow:
                     if cap > 0 and dist[to] > dist[v] + cost + H[v] - H[to]:
                         dist[to] = dist[v] + cost + H[v] - H[to]
                         prv_v[to] = v; prv_e[to] = i
-
             if dist[t] == INF:
                 return INF
 

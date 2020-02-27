@@ -46,13 +46,14 @@ def build_grid(H, W, intv, _type, space=True, padding=False):
             grid[i][j] = row[j-offset]
     return grid
 
-def bfs(H, W, grid, src):
+def bfs(grid, src):
     """ BFS(グリッド、重みなし) """
     from collections import deque
 
+    H, W = len(grid), len(grid[0])
     h, w = src
     # 向いている方向 0:右, 1:左, 2:下, 3:上  
-    directions = ((0,1),(0,-1),(1,0),(-1,0))
+    directions = ((0, 1), (0, -1), (1, 0), (-1, 0))
     que = deque([(0, 0, h, w, 2)])
     # memo[i][j][k][l][m] := 右からi人、左からj人落として、グリッド[k][l]にいて、今向いている方向がmの状態が到達可能か
     memo = list5d(A+1, B+1, H, W, 4, 0)
@@ -90,7 +91,7 @@ A, B = MAP()
 H, W = MAP()
 grid = build_grid(H, W, '', str, space=0)
 
-ans = bfs(H, W, grid, (1, 1))
+ans = bfs(grid, (1, 1))
 if ans:
     Yes()
 else:
