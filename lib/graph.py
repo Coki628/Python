@@ -19,9 +19,10 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
 
-def dfs(N, nodes, src):
+def dfs(nodes, src):
     """ DFS(木、再帰、重みなし) """
 
+    N = len(nodes)
     dist = [INF] * N
     def rec(u, prev, c):
 
@@ -32,9 +33,10 @@ def dfs(N, nodes, src):
         return
     rec(src, -1, 0)
 
-def dfs(N, nodes, src):
+def dfs(nodes, src):
     """ DFS(木、再帰、重みあり) """
 
+    N = len(nodes)
     dist = [INF] * N
     def rec(u, prev, c1):
 
@@ -45,9 +47,10 @@ def dfs(N, nodes, src):
         return
     rec(src, -1, 0)
 
-def dfs(N, nodes, src):
+def dfs(nodes, src):
     """ DFS(木、スタック、重みなし) """
 
+    N = len(nodes)
     stack = [(src, -1, 0)]
     dist = [INF] * N
     while stack:
@@ -58,9 +61,10 @@ def dfs(N, nodes, src):
                 stack.append((v, u, c+1))
     return dist
 
-def dfs(N, nodes, src):
+def dfs(nodes, src):
     """ DFS(木、スタック、重みあり) """
 
+    N = len(nodes)
     stack = [(src, -1, 0)]
     dist = [INF] * N
     while stack:
@@ -71,10 +75,11 @@ def dfs(N, nodes, src):
                 stack.append((v, u, c1+c2))
     return dist
 
-def bfs(N, nodes, src):
+def bfs(nodes, src):
     """ BFS(一般グラフ、重みなし) """
     from collections import deque
 
+    N = len(nodes)
     que = deque([(src, 0)])
     dist = [INF] * N
     while que:
@@ -108,10 +113,11 @@ def bfs(grid, src):
             que.append((h2, w2, c+1))
     return dist
 
-def dijkstra(N: int, nodes: list, src: int) -> list:
-    """ ダイクストラ(頂点数, 隣接リスト(0-indexed), 始点) """
+def dijkstra(nodes: list, src: int) -> list:
+    """ ダイクストラ(隣接リスト(0-indexed), 始点) """
     from heapq import heappush, heappop
 
+    N = len(nodes)
     # 頂点[ある始点からの最短距離] (経路自体を知りたい時はここに前の頂点も持たせる)
     res = [INF] * N
     # スタート位置
@@ -133,10 +139,11 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     # ノードsrcからの最短距離リストを返却
     return res
 
-def dijkstra(N: int, nodes: list, src: int) -> list:
-    """ ダイクストラ高速化版(頂点数, 隣接リスト(0-indexed), 始点) """
+def dijkstra(nodes: list, src: int) -> list:
+    """ ダイクストラ高速化版(隣接リスト(0-indexed), 始点) """
     from heapq import heappush, heappop
 
+    N = len(nodes)
     # 頂点[ある始点からの最短距離]
     res = [INF] * N
     # スタート位置
@@ -161,10 +168,11 @@ def dijkstra(N: int, nodes: list, src: int) -> list:
     # ノードsrcからの最短距離リストを返却
     return res
 
-def dijkstra(N: int, nodes: list, src: int) -> list:
-    """ ダイクストラ高速化版経路付き(頂点数, 隣接リスト(0-indexed), 始点) """
+def dijkstra(nodes: list, src: int) -> list:
+    """ ダイクストラ高速化版経路付き(隣接リスト(0-indexed), 始点) """
     from heapq import heappush, heappop
 
+    N = len(nodes)
     # 頂点(ある始点からの最短距離, 前の頂点)
     res = [(INF, -1) for i in range(N)]
     # スタート位置
@@ -229,10 +237,11 @@ def bellman_ford(N: int, edges: list, src: int) -> list:
             res[i] = -INF
     return res
 
-def warshall_floyd(N: int, graph: list) -> list:
+def warshall_floyd(graph: list) -> list:
     """ ワーシャルフロイド(頂点数, 隣接行列(0-indexed)) """
     from copy import deepcopy
 
+    N = len(graph)
     res = deepcopy(graph)
     for i in range(N):
         # 始点 = 終点、は予め距離0にしておく
