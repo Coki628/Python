@@ -567,7 +567,8 @@ def popcount(i):
 class Geometry:
     """ 幾何学計算用クラス """
 
-    EPS = 10 ** -9
+    def __init__(self, EPS):
+        self.EPS = EPS
 
     def add(self, a, b):
         x1, y1 = a
@@ -686,12 +687,18 @@ class Geometry:
         dist2 = abs(self.cross(base, self.sub(p2, p3)))
         t = dist1 / (dist1+dist2)
         return self.add(p1, self.mul(self.sub(p2, p1), t))
+    
+    def intersectCL(self, c, line):
+        """ 円cと直線lineの交差判定 """
+
+        x, y, r = c
+        return self.get_distance_SP(line, (x, y)) <= r
 
     def get_cross_pointCL(self, c, line):
         """ 円cと直線lineの交点 """
-
         from math import sqrt
-        # if not intersect(c, line): return -1
+
+        if not self.intersectCL(c, line): return -1
         x, y, r = c
         p1, p2 = line
         pr = self.project(line, (x, y))
@@ -708,14 +715,26 @@ class Geometry:
         from math import sin, cos
         return (cos(r)*a, sin(r)*a)
     
-    def get_cross_pointCC(self, c1, c2):
-        """ 円c1と円c2の交点 """
+    def intersectCC(self, c1, c2):
+        """ 円c1と円c2の交差判定 """
+        from math import hypot
 
-        from math import acos
-        # if not intersect(c1, c2): return -1
         x1, y1, r1 = c1
         x2, y2, r2 = c2
-        d = self.abs(self.sub((x1, y1), (x2, y2)))
-        a = acos((r1*r1+d*d-r2*r2) / (2*r1*d))
-        t = self.arg(self.sub((x2, y2), (x1, y1)))
-        return [self.add((x1, y1), self.polar(r1, t+a)), self.add((x1, y1), self.polar(r1, t-a))]
+        return hypot(x1-x2, y1-y2) <= r1 + r2
+    
+    def get_cross_pointCC(self, c1, c2):
+        """ 円c1と円c2の交点 """
+        from math import acos
+
+        if not self.intersectCC(c1, c2): return -1
+        x1, y1, r1 = c1
+        x2, y2, r2 = c2
+        try:
+            d = self.abs(self.sub((x1, y1), (x2, y2)))
+            a = acos((r1*r1+d*d-r2*r2) / (2*r1*d))
+            t = self.arg(self.sub((x2, y2), (x1, y1)))
+            return [self.add((x1, y1), self.polar(r1, t+a)), self.add((x1, y1), self.polar(r1, t-a))]
+        except:
+            # 一方が他方を内包しちゃってる場合等はここに飛ぶ(はず)
+            return -1
