@@ -399,3 +399,31 @@ class BIT2:
 
         return self._get(self.data1, r-1) * (r-1) + self._get(self.data0, r-1) \
              - self._get(self.data1, l-1) * (l-1) - self._get(self.data0, l-1)
+
+
+class SparseTable:
+
+    def __init__(self, A, func):
+        self.N = len(A)
+        self.func = func
+        h = 0
+        while 1<<h < self.N:
+            h += 1
+        self.dat = list2d(h, 1<<h, 0)
+        self.height = [0] * (self.N+1)
+
+        for i in range(2, self.N+1):
+            self.height[i] = self.height[i>>1] + 1
+        for i in range(self.N):
+            self.dat[0][i] = A[i]
+        for i in range(1, h):
+            for j in range(self.N):
+                self.dat[i][j] = self.func(self.dat[i-1][j], self.dat[i-1][min(j+(1<<(i-1)), self.N-1)])
+        
+    def get(self, l, r):
+        """ 区間[l,r)でのmin,maxを取得 """
+
+        if l >= r:
+            raise Exception
+        a = self.height[r-l]
+        return self.func(self.dat[a][l], self.dat[a][r-(1<<a)])
