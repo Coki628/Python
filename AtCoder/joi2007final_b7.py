@@ -108,9 +108,11 @@ class SuffixArray:
         #         self.tmp[self.sa[i]] = self.tmp[self.sa[i-1]] + (1 if self.compare_sa(self.sa[i-1], self.sa[i]) else 0)
         #     for i in range(self.N+1):
         #         self.rank[i] = self.tmp[i]
-        suffix_arr = [(self.S[i:], i) for i in range(self.N)]
-        suffix_arr.sort()
-        for i in range(self.N):
+        from operator import itemgetter
+
+        suffix_arr = [(self.S[i:], i) for i in range(self.N+1)]
+        suffix_arr.sort(key=itemgetter(0))
+        for i in range(self.N+1):
             self.sa[i] = suffix_arr[i][1]
 
     def build_lcp(self):
@@ -135,7 +137,9 @@ class SuffixArray:
                 h += 1
             self.lcp[self.rsa[i]-1] = h
 
-        # 区間取得のためSparseTableを構築
+    def build_st(self):
+        """ 区間取得のためSparseTableを構築 """
+
         self.st = SparseTable(self.lcp, min)
 
     def getLCP(self, i, j):

@@ -103,7 +103,15 @@ class SuffixArray:
                 self.tmp[self.sa[i]] = self.tmp[self.sa[i-1]] + (1 if self.compare_sa(self.sa[i-1], self.sa[i]) else 0)
             for i in range(self.N+1):
                 self.rank[i] = self.tmp[i]
-    
+
+        # 文字列が陽に持てる量ならこっちのが速い
+        # from operator import itemgetter
+
+        # suffix_arr = [(self.S[i:], i) for i in range(self.N+1)]
+        # suffix_arr.sort(key=itemgetter(0))
+        # for i in range(self.N+1):
+        #     self.sa[i] = suffix_arr[i][1]
+
     def build_lcp(self):
         """ LCP配列の構築 """
 
@@ -126,8 +134,10 @@ class SuffixArray:
                 h += 1
             self.lcp[self.rsa[i]-1] = h
 
-        # 区間取得のためSparseTableを構築
-        self.st = SparseTable(self.lcp, min)
+    def build_st(self):
+        """ 区間取得のためSparseTableを構築 """
+
+        self.st = self.SparseTable(self.lcp, min)
 
     def getLCP(self, i, j):
         """ S[i:]とS[j:]の共通文字数を取得 """
@@ -161,6 +171,8 @@ class RollingHash:
 
 
 def Z_algorithm(S):
+    """ Z-algorithm(SとS[i:]の共通文字数をのリストを返す)：O(N) """
+
     N = len(S)
     res = [0] * N
     res[0] = N
