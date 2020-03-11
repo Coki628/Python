@@ -26,7 +26,7 @@ sys.setrecursionlimit(10 ** 9)
 INF = 2 ** 31 - 1
 MOD = 10 ** 9 + 7
 
-class SegTreeLazy:
+class LazySegTree:
     """ 遅延評価セグメント木(区間更新・区間合計取得) """
 
     def __init__(self, N, func, intv):
@@ -101,15 +101,15 @@ class SegTreeLazy:
         return s
 
 N, Q = MAP()
-stl = SegTreeLazy(N+1, add, 0)
+lst = LazySegTree(N+1, add, 0)
 
 ans = []
 for i in range(Q):
     cmd, *arg = MAP()
     if cmd == 0:
         s, t, x = arg
-        stl.update(s, t+1, x)
+        lst.update(s, t+1, x)
     else:
         s, t = arg
-        ans.append(str(stl.query(s, t+1)))
+        ans.append(str(lst.query(s, t+1)))
 print('\n'.join(ans))
