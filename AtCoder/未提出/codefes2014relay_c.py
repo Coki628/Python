@@ -20,5 +20,5 @@ MOD = 10 ** 9 + 7
 
 a, b = MAP()
 
-ans = a // b - 1
+ans = a // (b + 1)
 print(ans)

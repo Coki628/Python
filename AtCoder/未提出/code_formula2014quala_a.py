@@ -17,12 +17,15 @@ def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
+EPS = 10 ** -10
 
 n = INT()
 
 # 3乗根 = 1/3乗
 res = n**(1/3)
-if res.is_integer():
+# 誤差対策
+rounded = round(res)
+if abs(res - rounded) < EPS:
     YES()
 else:
     NO()

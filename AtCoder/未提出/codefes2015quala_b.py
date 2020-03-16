@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-・組み合わせ全探索
-・2つ以上から、とあるが、辞書順最小が見込めるのは2つの場合のみなので、
-　3つ以上からなる組はやらなくていい。
+・再帰探索
+・所定の配列をそのまま持つと死ぬので、合計値を持って潜っていく。
 """
 
 import sys
-from itertools import combinations
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,12 +24,12 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
 N = INT()
-A = [input() for i in range(N)]
+A = LIST()
 
-B = []
-for comb in combinations(A, 2):
-    B.append(comb[0] + comb[1])
-    B.append(comb[1] + comb[0])
-B.sort()
-ans = B[0]
+def rec(i, sm):
+    if i == N:
+        return sm
+    return rec(i + 1, sm + A[i] + sm)
+
+ans = rec(0, 0)
 print(ans)

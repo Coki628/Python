@@ -3,6 +3,8 @@
 """
 ・いもす法
 ・縦横独立で考えられる。
+・なんかWA取れなくて結局人の見た。H,W上は範囲内に含まないみたいだ。
+　これは多分マスH,Wじゃなくて座標H,Wだから、終端は含まなくていいんだと思う。
 """
 
 import sys
@@ -25,27 +27,27 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
 N, W, H = MAP()
-imosx = [0] * (W+2)
-imosy = [0] * (H+2)
+imosx = [0] * (W+1)
+imosy = [0] * (H+1)
 for i in range(N):
     x, y, w = MAP()
-    imosx[max(1, x-w)] += 1
-    imosx[min(W+1, x+w+1)] -= 1
-    imosy[max(1, y-w)] += 1
-    imosy[min(H+1, y+w+1)] -= 1
+    imosx[max(0, x-w)] += 1
+    imosx[min(W, x+w)] -= 1
+    imosy[max(0, y-w)] += 1
+    imosy[min(H, y+w)] -= 1
 
 # 縦横独立でいもす
 imosx = list(accumulate(imosx))
 imosy = list(accumulate(imosy))
 
 # 縦か横どちらかが0の区間なしならOK
-for i in range(1, W+1):
+for i in range(W):
     if imosx[i] == 0:
         break
 else:
     Yes()
     exit()
-for i in range(1, H+1):
+for i in range(H):
     if imosy[i] == 0:
         break
 else:

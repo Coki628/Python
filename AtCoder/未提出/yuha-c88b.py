@@ -27,18 +27,18 @@ MOD = 10 ** 9 + 7
 N = INT()
 
 # memo[i] := 残りコイン数i枚で勝てるか
-memo = [-1] * (N+1)
-def rec(cnt):
-    if cnt <= 0:
-        return False
-    if memo[cnt] != -1:
-        return memo[cnt]
-    for i in range(1, 4):
-        if not rec(cnt-i):
-            memo[cnt] = True
-            return True
-    memo[cnt] = False
-    return False
+# memo = [-1] * (N+1)
+# def rec(cnt):
+#     if cnt <= 0:
+#         return False
+#     if memo[cnt] != -1:
+#         return memo[cnt]
+#     for i in range(1, 4):
+#         if not rec(cnt-i):
+#             memo[cnt] = True
+#             return True
+#     memo[cnt] = False
+#     return False
 
 if N % 4 == 0:
     print('GO')

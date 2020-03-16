@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+・スタックでうまくやる。
+"""
+
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -20,8 +24,24 @@ MOD = 10 ** 9 + 7
 
 S = input()
 
-obj = eval(S)
-if isinstance(obj, dict):
+if S == '{}':
     print('dict')
-elif isinstance(obj, set):
+    exit()
+
+stack = []
+is_dict = False
+for s in S:
+    if s == '{' or s == ',' or s == ':':
+        stack.append(s)
+    elif s == '}':
+        is_dict = False
+        while stack[-1] != '{':
+            # 一番外側の{}にコロンが含まれていればdict
+            if stack[-1] == ':':
+                is_dict = True
+            stack.pop()
+        stack.pop()
+if is_dict:
+    print('dict')
+else:
     print('set')

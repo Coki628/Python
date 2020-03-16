@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+・条件整えたつもりだったけどWAだったので、全探索にした。
+"""
+
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -18,7 +22,8 @@ sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
-def check(hm1, hm2):
+# 時刻の比較関数
+def comp(hm1, hm2):
     if hm1[0] < hm2[0]:
         return True
     elif hm1[0] == hm2[0] and hm1[1] <= hm2[1]:
@@ -26,15 +31,23 @@ def check(hm1, hm2):
     else:
         return False
 
+# 時計を反転させる操作
+def rev(h, m):
+    return ((h+6)%12, (m+30)%60)
+
 limit = LIST()
-h2, m2 = MAP()
+cur = LIST()
 
-h3 = (h2+6) % 12
-m3 = (m2+30) % 60
-h4 = (h2+6) % 12
-m4 = m2 % 60
-
-if check((h2, m2), limit) or check((h3, m3), limit) or check((h4, m4), limit):
-    Yes()
-else:
-    No()
+# 考えうる時刻を全部調べる
+for h in range(12):
+    for m in range(60):
+        # この時刻が現在時刻以降なら使える
+        if comp(cur, (h, m)):
+            # 時計の反転
+            revhm = rev(h, m)
+            # 間に合うかどうか
+            if comp(revhm, limit):
+                Yes()
+                exit()
+# 全部試してダメならNG
+No()

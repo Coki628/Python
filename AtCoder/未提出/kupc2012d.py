@@ -4,6 +4,8 @@
 ・区間管理系
 ・セグ木でDP
 ・ARC026cのコストが重みなしになった版って感じ。
+・WAしてちょっと修正。
+　区間は重ならなくてもよくて、接していればOKなので、左端の取得をl-1からにした。これでAC。
 """
 
 import sys
@@ -103,10 +105,10 @@ for i in range(M):
     LR.append((l, r))
 
 st = SegTree(N+1, min, INF)
-st.update(1, 0)
+st.update(0, 0)
 LR.sort()
 for l, r in LR:
-    cur = st.query(l, r+1)
+    cur = st.query(l-1, r+1)
     st.update(r, min(st.get(r), cur+1))
 ans = st.get(N)
 if ans == INF:

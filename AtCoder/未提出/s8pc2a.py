@@ -20,6 +20,10 @@ MOD = 10 ** 9 + 7
 
 S = input()
 
+if not S.count('I'):
+    print(0)
+    exit()
+
 cnt = 0
 for s in S:
     if cnt % 2 == 0 and s == 'I' or cnt % 2 == 1 and s == 'O':

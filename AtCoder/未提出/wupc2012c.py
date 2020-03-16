@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+"""
+・グリッドBFS、最短経路
+・経由地を起点にすると一発で出るやつ。
+"""
+
 import sys
 
 def input(): return sys.stdin.readline().strip()

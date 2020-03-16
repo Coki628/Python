@@ -24,9 +24,12 @@ N = len(S)
 cnt = 0
 for i in range(N//2):
     j = N - i - 1
-    if not (S[i] == '(' and S[j] == ')') and S[i] != S[j]:
-        cnt += 2
+    # ペアが成立する4つを列挙、これら以外なら要変更
+    if not S[i] == S[j] == 'w' and not S[i] == S[j] == 'i' \
+            and not (S[i] == '(' and S[j] == ')') \
+            and not (S[i] == ')' and S[j] == '('):
+        cnt += 1
 if N % 2 == 1:
-    if S[ceil(N, 2)] != 'i' and S[ceil(N, 2)] != 'w':
+    if S[N//2] != 'i' and S[N//2] != 'w':
         cnt += 1
 print(cnt)
