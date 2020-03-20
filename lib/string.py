@@ -171,7 +171,7 @@ class RollingHash:
 
 
 def Z_algorithm(S):
-    """ Z-algorithm(SとS[i:]の共通文字数をのリストを返す)：O(N) """
+    """ Z-algorithm(SとS[i:]の共通文字数のリストを返す)：O(N) """
 
     N = len(S)
     res = [0] * N
@@ -221,4 +221,51 @@ def KMP(S: str, T: str) -> list:
             m = m + i - table[i]
             if i > 0:
                 i = table[i]
+    return res
+
+def Manacher(S):
+    """ Manacher(文字iを中心とする最長の回文の半径を返す)：O(N) """
+
+    N = len(S)
+    R = [0] * N
+    i = j = 0
+    while i < N:
+        while i-j >= 0 and i+j < N and S[i-j] == S[i+j]:
+            j += 1
+        R[i] = j
+        k = 1
+        while i-k >= 0 and i+k < N and k+R[i-k] < j:
+            R[i+k] = R[i-k]
+            k += 1
+        i += k
+        j -= k
+    return R
+
+def Manacher_even(_S):
+    """ Manacher偶数長(文字iとi+1の間を中心とする最長の回文の半径を返す)：O(N) """
+
+    _N = len(_S)
+    S = []
+    for i in range(_N-1):
+        S.append(_S[i])
+        S.append('$')
+    S.append(_S[-1])
+    N = len(S)
+    R = [0] * N
+    i = j = 0
+    while i < N:
+        while i-j >= 0 and i+j < N and S[i-j] == S[i+j]:
+            j += 1
+        R[i] = j
+        k = 1
+        while i-k >= 0 and i+k < N and k+R[i-k] < j:
+            R[i+k] = R[i-k]
+            k += 1
+        i += k
+        j -= k
+    res = [0] * (_N-1)
+    j = 0
+    for i in range(1, N, 2):
+        res[j] = R[i] // 2
+        j += 1
     return res

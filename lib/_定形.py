@@ -101,7 +101,8 @@ np.prod([1, 2, 3])
 # 右左上下
 # directions = [(0,1),(0,-1),(1,0),(-1,0)]
 # directions = ((0,1),(1,0),(0,-1),(-1,0))
-directions = ((1,0),(-1,0),(0,1),(0,-1))
+directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
+directions = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, -1), (1, 1), (-1, 1))
 # 四方に一回り大きいグリッドを作る
 # grid = list2d(H+2, W+2, '*')
 # for i in range(1, H+1):
@@ -153,6 +154,15 @@ def get_sum(n): return (1+n)*n//2
 def get_sum(a, b, c):
     """ 等差数列の和：(初項a, 末項b, 項数c) """
     return (a+b) * c // 2
+
+def digit_sum(n):
+    """ 桁和：O(logN) """
+
+    ans = 0
+    while n > 0:
+        ans += n % 10
+        n //= 10
+    return ans
 
 def is_prime(num):
     """ 素数判定 """
@@ -256,6 +266,34 @@ def fft(A, B, L):
     res = np.rint(res).astype(np.int64)
     return res
 
+def fft(A, B):
+    """ 
+    高速フーリエ変換(FFT)
+    """
+    import numpy as np
+    from numpy.fft import rfft, irfft
+
+    # 出現数カウント
+    MAXA = max(A)
+    MAXB = max(B)
+    C1 = [0] * (MAXA+1)
+    C2 = [0] * (MAXB+1)
+    for a in A:
+        C1[a] += 1
+    for b in B:
+        C2[b] += 1
+    # max(A)+max(B)より大きい2冪
+    L = 1
+    k = 0
+    while L <= MAXA + MAXB:
+        k += 1
+        L = 2**k
+    # FFT
+    res = irfft(rfft(C1, L) * rfft(C2, L), L)
+    # 四捨五入して整数に
+    res = np.rint(res).astype(np.int64)
+    return res
+
 
 class ModTools:
     """ 階乗たくさん使う時用のテーブル準備 """
@@ -293,22 +331,23 @@ class ModTools:
         denominator = self.inv[r] * self.inv[n-r] % self.MOD
         return numerator * denominator % self.MOD
 
-    def nPr(self, n, r):
-        """ 順列 """
-
-        if n < r: return 0
-        return self.fact[n] * self.inv[n-r] % self.MOD
-
     def nHr(self, n, r):
         """ 重複組み合わせ """
 
         # r個選ぶところにN-1個の仕切りを入れる
         return self.nCr(r+n-1, r)
 
+    def nPr(self, n, r):
+        """ 順列 """
+
+        if n < r: return 0
+        return self.fact[n] * self.inv[n-r] % self.MOD
+
     def div(self, x, y):
         """ MOD除算 """
 
         return x * pow(y, self.MOD-2, self.MOD) % self.MOD
+
 
 def nCr(n, r, MOD):
     """ 組み合わせの数(大きいnに対して使用する。計算量はr) """
