@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
+・実験用
 """
 
 import sys
