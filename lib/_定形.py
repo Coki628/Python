@@ -98,45 +98,6 @@ def prod(nums): return reduce(mul, nums, 1)
 prod([1, 2, 3])
 np.prod([1, 2, 3])
 
-# 右左上下
-# directions = [(0,1),(0,-1),(1,0),(-1,0)]
-# directions = ((0,1),(1,0),(0,-1),(-1,0))
-directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
-directions = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, -1), (1, 1), (-1, 1))
-# 四方に一回り大きいグリッドを作る
-# grid = list2d(H+2, W+2, '*')
-# for i in range(1, H+1):
-#     row = list(input())
-#     for j in range(1, W+1):
-#         grid[i][j] = row[j-1]
-
-def build_grid(H, W, intv, _type, space=True, padding=False):
-    # 入力がスペース区切りかどうか
-    if space:
-        _input = lambda: input().split()
-    else:
-        _input = lambda: input()
-    _list = lambda: list(map(_type, _input()))
-    # 余白の有無
-    if padding:
-        offset = 1
-    else:
-        offset = 0
-    grid = list2d(H+offset*2, W+offset*2, intv)
-    for i in range(offset, H+offset):
-        row = _list()
-        for j in range(offset, W+offset):
-            grid[i][j] = row[j-offset]
-    return grid
-
-def rot90(grid, H, W):
-    """ グリッドを90度回転 """
-    res = list2d(W, H, 0)
-    for i in range(H):
-        for j in range(W):
-            res[j][H-i-1] = grid[i][j]
-    return res
-
 # 余りの切り上げ(3つとも同じ)
 # def ceil(a, b):
 #     (a + b - 1) // b
@@ -151,9 +112,13 @@ def lcm_list(nums): return reduce(lcm, nums, initial=1)
 # 1からnまでの等差数列の和
 def get_sum(n): return (1+n)*n//2
 
-def get_sum(a, b, c):
-    """ 等差数列の和：(初項a, 末項b, 項数c) """
-    return (a+b) * c // 2
+def get_sum(a, l, n):
+    """ 等差数列の和：(初項a, 末項l, 項数n) """
+    return (a+l) * n // 2
+
+def get_sum(a, d, n):
+    """ 等差数列の和：(初項a, 公差d, 項数n) """
+    return (2*a + (n-1)*d) * n // 2
 
 def digit_sum(n):
     """ 桁和：O(logN) """

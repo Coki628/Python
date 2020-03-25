@@ -91,28 +91,6 @@ def bfs(nodes, src):
             que.append((v, c+1))
     return dist
 
-def bfs(grid, src):
-    """ BFS(グリッド、重みなし) """
-    from collections import deque
-
-    H, W = len(grid), len(grid[0])
-    h, w = src
-    directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
-    que = deque([(h, w, 0)])
-    dist = list2d(H, W, INF)
-    while que:
-        h, w, c = que.popleft()
-        if dist[h][w] != INF:
-            continue
-        dist[h][w] = c
-        for dh, dw in directions:
-            h2 = h + dh
-            w2 = w + dw
-            if grid[h2][w2] == '#':
-                continue
-            que.append((h2, w2, c+1))
-    return dist
-
 def dijkstra(nodes: list, src: int) -> list:
     """ ダイクストラ(隣接リスト(0-indexed), 始点) """
     from heapq import heappush, heappop
