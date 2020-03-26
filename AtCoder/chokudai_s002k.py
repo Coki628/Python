@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 """
-参考：http://www.utpc.jp/2012/slides/mori.pdf
-・森の判定、閉路検出
-・始まりが完全グラフなので、辺が多すぎる場合は最初に除外する。
-・するとやる必要があるのは頂点がだいぶ少ない時に限られる。
-・具体的には3~400くらいになるはずで、10万クエリに毎回BFSしても3~4000万くらいの
-　計算量になると思うんだけど、pypyでもTLE。。。
-・UnionFindにしてみたけど、これもダメ。
-・titiaさんのツイートから、pypy2だと通るかもって話でやってみたらAC1.1秒。
-・リスト内包表記がREになったとこがあったので、そこだけ修正。
+参考：https://betrue12.hateblo.jp/entry/2019/06/05/213138
+・自力ならず。
+・グラフに帰着
+・各数値を頂点、2値からどちらかを選ぶことを辺として、グラフを構築する。
+・すると連結成分毎に、辺が頂点数以上あれば(つまり閉路があれば)、
+　その集合の数値を全て選択できることが分かる。
+・これにはUnionFindで集合の状態を管理しつつ、木かどうかと集合の要素数も持っておけばいい。
+・このグラフの考え方、頭いいなー。気付けるようにしたい。
+・計算量は20万頂点へのUnionFindで、pythonAC1.9秒、pypyAC1.0秒。
 """
 
 import sys
@@ -99,44 +99,46 @@ class UnionFind:
         """ 木かどうかの判定 """
         return self.tree[self.find(x)]
 
-def check():
-    uf = UnionFind(N)
-    for a, b in edges:
-        if not uf.is_same(a, b):
-            uf.union(a, b)
-        else:
-            return False
-    return True
+def compress(S):
+    """ 座標圧縮 """
 
-N, M = MAP()
-cnt = N*(N-1) // 2
-# 全クエリで減らしても辺数がN-1以下にならない
-if cnt - M > N-1:
-    for i in range(M):
-        print('no')
-    exit()
-# 完全グラフの構築
-edges = set()
-for a in range(N):
-    for b in range(a+1, N):
-        edges.add((a, b))
+    zipped, unzipped = {}, {}
+    for i, a in enumerate(sorted(S)):
+        zipped[a] = i
+        unzipped[i] = a
+    return zipped, unzipped
 
-for _ in range(M):
+N = INT()
+AB = []
+S = set()
+for i in range(N):
     a, b = MAP()
-    a -= 1; b -= 1
-    if a > b: a, b = b, a
-    # 辺の増減
-    if (a, b) in edges:
-        edges.remove((a, b))
-        cnt -= 1
+    AB.append((a, b))
+    S.add(a)
+    S.add(b)
+
+# 座標圧縮
+zipped, _ = compress(S)
+M = len(zipped)
+for i in range(N):
+    a, b = AB[i]
+    AB[i] = (zipped[a], zipped[b])
+
+# とりあえず全ペアを連結
+uf = UnionFind(M)
+for a, b in AB:
+    uf.union(a, b)
+
+# 連結成分毎に見たいので、根を集める
+roots = set()
+for i in range(M):
+    roots.add(uf.find(i))
+
+ans = 0
+for root in roots:
+    # 連結成分が木なら、どれか1つは使えない
+    if uf.is_tree(root):
+        ans += uf.get_size(root) - 1
     else:
-        edges.add((a, b))
-        cnt += 1
-    # 辺数がN-1以下なら判定する
-    if cnt <= N-1:
-        if check():
-            print('yes')
-        else:
-            print('no')
-    else:
-        print('no')
+        ans += uf.get_size(root)
+print(ans)
