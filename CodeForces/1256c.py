@@ -4,10 +4,10 @@
 ・自力AC！バチャ終了5分前くらいで通した！
 ・実装重め、結構みんな通してなかったので嬉しい。これでBも通せてれば。。
 """
- 
+
 import sys
 from itertools import accumulate
- 
+
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]

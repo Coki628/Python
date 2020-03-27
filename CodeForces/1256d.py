@@ -4,10 +4,10 @@
 ・結構すんなり自力AC
 ・辞書順最小
 """
- 
+
 import sys
 from collections import Counter
- 
+
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]

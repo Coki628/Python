@@ -6,10 +6,10 @@
 ・3は桁和が3の倍数にならなければいいので、5を3,6,9..回使いそうな時は3を1つ増やして調整。
 ・ってこれ書いてて思ったけど、最初だけ5にして後全部3にすれば万事OKなんじゃあ…。
 """
- 
+
 import sys
 from collections import Counter
- 
+
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]

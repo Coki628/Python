@@ -6,10 +6,10 @@
 ・貪欲に自分のindexを目指していいと思ったけど、それだと自分より小さい値を抜かしてしまう場合があるぽい。
 　(多分、4,2,1,3みたいので、1,4,2,3から3が2を抜かせてしまうとかそういう感じ)
 """
- 
+
 import sys
 from collections import Counter
- 
+
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]

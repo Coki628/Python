@@ -7,10 +7,10 @@
 ・ってこれ書いてて思ったけど、最初だけ5にして後全部3にすれば万事OKなんじゃあ…。
 ・はい、それでOKでした。だいたいみんなこれと似た感じでやってるぽい。
 """
- 
+
 import sys
 from collections import Counter
- 
+
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
