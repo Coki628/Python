@@ -22,7 +22,7 @@ def YES(): print('YES')
 def NO(): print('NO')
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
- 
+
 H, W, K = MAP()
 for _ in range(K*2):
     MAP()

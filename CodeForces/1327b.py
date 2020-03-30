@@ -26,7 +26,7 @@ def check(A):
                     ans = (i+1, x)
                     return ans
     return ()
- 
+
 for _ in range(INT()):
     N = INT()
     A = [-1] * N

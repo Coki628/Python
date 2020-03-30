@@ -25,7 +25,7 @@ MOD = 10 ** 9 + 7
 
 def get_sum(a, d, n):
     return (2*a + (n-1)*d) * n // 2
- 
+
 for _ in range(INT()):
     N, K = MAP()
     if N >= get_sum(1, 2, K) and N % 2 == K % 2:
