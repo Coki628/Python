@@ -6,10 +6,10 @@
 ・最小の方はだいたい合ってたけど、最大の方がうまくいかなかった。
 ・最終的に、左から貪欲に、左と自分位置が0だったら1ずつ残す、残ったら右に渡す、で通った。
 """
- 
+
 import sys
 from collections import Counter
- 
+
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
