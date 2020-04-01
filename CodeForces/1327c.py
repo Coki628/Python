@@ -25,6 +25,7 @@ MOD = 10 ** 9 + 7
 
 H, W, K = MAP()
 for _ in range(K*2):
+    # 入力が無意味
     MAP()
 
 ans = 'L'*(W-1) + 'U'*(H-1)
