@@ -327,16 +327,26 @@ class UnionFind:
         self.size = [1] * (n+1)
         # あるノードを根とする集合が木かどうか
         self.tree = [True] * (n+1)
+        # 集合の数
+        self.grpcnt = n
 
     def find(self, x):
         """ 根の検索(グループ番号と言えなくもない) """
-        # 根ならその番号を返す
-        if self.par[x] == x:
-            return x
-        else:
-            # 走査していく過程で親を書き換える
-            self.par[x] = self.find(self.par[x])
-            return self.par[x]
+        # 非再帰版
+        t = []
+        while self.par[x] != x:
+            t.append(x)
+            x = self.par[x]
+        for i in t:
+            self.par[i] = x
+        return self.par[x]
+        # # 根ならその番号を返す
+        # if self.par[x] == x:
+        #     return x
+        # else:
+        #     # 走査していく過程で親を書き換える
+        #     self.par[x] = self.find(self.par[x])
+        #     return self.par[x]
 
     def union(self, x, y):
         """ 併合 """
@@ -351,6 +361,7 @@ class UnionFind:
         if not self.tree[x] or not self.tree[y]:
             self.tree[x] = self.tree[y] = False
 
+        self.grpcnt -= 1
         # 木の高さを比較し、低いほうから高いほうに辺を張る
         if self.rank[x] < self.rank[y]:
             self.par[x] = y
@@ -372,11 +383,7 @@ class UnionFind:
             return self.size[self.find(x)]
         else:
             """ 集合の数 """
-            res = set()
-            for i in range(self.n+1):
-                res.add(self.find(i))
-            # グループ0の分を引いて返却
-            return len(res) - 1
+            return self.grpcnt
     
     def is_tree(self, x):
         """ 木かどうかの判定 """
@@ -716,3 +723,62 @@ class MinCostFlow:
                 G[v][e[3]][1] += d
                 v = prv_v[v]
         return res
+
+
+class LCA:
+    """ LCA(最小共通祖先) """
+
+    def __init__(self, nodes, root):
+        self.N = len(nodes)
+        nv = 1
+        MAX = 0
+        while nv < N:
+            nv *= 2
+            MAX += 1
+        self.MAX = MAX
+        # nxt[k][v] := 頂点vから2^k遡った祖先
+        self.nxt = list2d(MAX, N, -1)
+        # dfsで各頂点の深さと親を取得
+        self.depths = self.dfs(N, nodes, root)
+        # ダブリングのテーブル構築
+        for k in range(1, MAX):
+            for v in range(N):
+                if self.nxt[k-1][v] == -1: 
+                    continue
+                self.nxt[k][v] = self.nxt[k-1][self.nxt[k-1][v]]
+
+    def dfs(self, N, nodes, src):
+        stack = [(src, -1, 0)]
+        dist = [INF] * N
+        while stack:
+            u, prev, c = stack.pop()
+            dist[u] = c
+            self.nxt[0][u] = prev
+            for v in nodes[u]:
+                if v != prev:
+                    stack.append((v, u, c+1))
+        return dist
+
+    def get_lca(self, a, b):
+        # 深い方をbにする
+        if self.depths[a] > self.depths[b]:
+            a, b = b, a
+        # bをaと同じ高さまで持ってくる
+        gap = self.depths[b] - self.depths[a]
+        for i in range(self.MAX):
+            # ビットの立っている所を辿れば、好きな高さに移動できる
+            if gap & 1<<i:
+                b = self.nxt[i][b]
+        # この時点で一致すればそこがLCA
+        if a == b:
+            return a
+        else:
+            # aとbが一致する直前の高さまで持ってくる
+            for i in range(self.MAX-1, -1, -1):
+                a2 = self.nxt[i][a]
+                b2 = self.nxt[i][b]
+                if a2 != b2:
+                    a = a2
+                    b = b2
+            # その親がLCA
+            return self.nxt[0][a]

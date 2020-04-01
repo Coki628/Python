@@ -278,7 +278,7 @@ class ModTools:
         inverse = [1] * MAX
         # powに第三引数入れると冪乗のmod付計算を高速にやってくれる
         inverse[MAX-1] = pow(factorial[MAX-1], MOD-2, MOD)
-        for i in range(MAX-2, 0, -1):
+        for i in range(MAX-2, -1, -1):
             # 最後から戻っていくこのループならMAX回powするより処理が速い
             inverse[i] = inverse[i+1] * (i+1) % MOD
         self.fact = factorial
