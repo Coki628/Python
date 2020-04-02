@@ -43,7 +43,7 @@ def mat_dot(A, B):
     n2 = len(A[0])
     _ = len(B)
     m2 = len(B[0])
-    res=list2d(n1, m2, 0)
+    res = list2d(n1, m2, 0)
     for i in range(n1):
         for j in range(m2):
             for k in range(n2):
