@@ -82,12 +82,13 @@ def bfs(nodes, src):
     N = len(nodes)
     que = deque([(src, 0)])
     dist = [INF] * N
+    dist[src] = 0
     while que:
         u, c = que.popleft()
-        if dist[u] != INF:
-            continue
-        dist[u] = c
         for v in nodes[u]:
+            if dist[v] != INF:
+                continue
+            dist[v] = c + 1
             que.append((v, c+1))
     return dist
 

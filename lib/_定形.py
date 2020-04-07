@@ -567,6 +567,49 @@ def popcount(x):
 def popcount(i):
     return bin(i).count('1')
 
+def mat_pow(mat, init, K, MOD):
+    """ 行列累乗 """
+
+    def mat_dot(A, B, MOD):
+        """ 行列の積 """
+
+        # 1次元リストが来たら2次元の行列にする
+        if not isinstance(A[0], list) and not isinstance(A[0], tuple):
+            A = [A]
+        if not isinstance(B[0], list) and not isinstance(A[0], tuple):
+            B = [[b] for b in B]
+        n1 = len(A)
+        n2 = len(A[0])
+        _ = len(B)
+        m2 = len(B[0])
+        res = list2d(n1, m2, 0)
+        for i in range(n1):
+            for j in range(m2):
+                for k in range(n2):
+                    res[i][j] += A[i][k] * B[k][j]
+                    res[i][j] %= MOD
+        return res
+
+    def _mat_pow(mat, k, MOD):
+        """ 行列matをk乗する """
+
+        n = len(mat)
+        res = list2d(n, n, 0)
+        for i in range(n):
+            res[i][i] = 1
+        # 繰り返し二乗法
+        while k > 0:
+            if k & 1:
+                res = mat_dot(res, mat, MOD)
+            mat = mat_dot(mat, mat, MOD)
+            k >>= 1
+        return res
+
+    # 行列累乗でK項先へ    
+    res = _mat_pow(mat, K, MOD)
+    # 最後に初期値と掛ける
+    res = mat_dot(res, init, MOD)
+    return [a[0] for a in res]
 
 class Geometry:
     """ 幾何学計算用クラス """

@@ -66,16 +66,17 @@ def bfs(grid, src):
     directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
     que = deque([(h, w, 0)])
     dist = list2d(H, W, INF)
+    dist[h][w] = 0
     while que:
         h, w, c = que.popleft()
-        if dist[h][w] != INF:
-            continue
-        dist[h][w] = c
         for dh, dw in directions:
             h2 = h + dh
             w2 = w + dw
             if grid[h2][w2] == '#':
                 continue
+            if dist[h2][w2] != INF:
+                continue
+            dist[h2][w2] = c + 1
             que.append((h2, w2, c+1))
     return dist
 

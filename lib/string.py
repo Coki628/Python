@@ -269,3 +269,30 @@ def Manacher_even(_S):
         res[j] = R[i] // 2
         j += 1
     return res
+
+# 文字列TがSの(連続でない)部分列になっているか
+def is_subsequence(S, T):
+    N = len(S)
+    M = len(T)
+    i = j = 0
+    # 両方のindexを並行で進める
+    while i < M:
+        while j < N and T[i] != S[j]:
+            j += 1
+        # Sのが先に最後まで行ったらNG
+        if j == N:
+            return False
+        j += 1
+        i += 1
+    return True
+
+# アルファベット26文字についての次回出現位置
+def get_nxlist(S):
+    N = len(S)
+    # nxt[i][c] := 位置i以降で最初に文字cが登場するindex(存在しないときはN)
+    nxt = list2d(N+1, 26, N)
+    for i in range(N-1, -1, -1):
+        for c in range(26):
+            nxt[i][c] = nxt[i+1][c]
+        nxt[i][S[i]] = i
+    return nxt
