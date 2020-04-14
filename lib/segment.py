@@ -168,6 +168,9 @@ class SegTree:
             i >>= 1
             self.tree[i] = self.func(self.tree[i*2], self.tree[i*2+1])
 
+    def add(self, i, x):
+        self.update(i, self.get(i) + x)
+
     def query(self, a, b):
         """
         [a, b)の値を得る
@@ -209,11 +212,12 @@ class SegTreeIndex:
     2.query: 区間[l, r)の値とindex(同値があった場合は一番左)を得る
     """
  
-    def __init__(self, n, func, init):
+    def __init__(self, n, func, init, A=[]):
         """
         :param n: 要素数(0-indexed)
         :param func: 値の操作に使う関数(min, max)
         :param init: 要素の初期値(単位元)
+        :param A: 初期化に使うリスト(オプション)
         """
         self.n = n
         self.func = func
@@ -232,6 +236,20 @@ class SegTreeIndex:
         for i in range(n2-1, -1, -1):
             # 全部左の子の値に更新
             self.index[i] = self.index[i*2]
+        # 初期化の値が決まっている場合
+        if A:
+            # 1段目(最下段)の初期化
+            for i in range(n):
+                self.tree[n2+i] = A[i]
+            # 2段目以降の初期化
+            for i in range(n2-1, -1, -1):
+                left, right = i*2, i*2+1
+                if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
+                    self.tree[i] = self.tree[left]
+                    self.index[i] = self.index[left]
+                else:
+                    self.tree[i] = self.tree[right]
+                    self.index[i] = self.index[right]
 
     def update(self, i, x):
         """
@@ -250,7 +268,10 @@ class SegTreeIndex:
             else:
                 self.tree[i] = self.tree[right]
                 self.index[i] = self.index[right]
- 
+
+    def add(self, i, x):
+        self.update(i, self.get(i) + x)
+
     def query(self, a, b):
         """
         [a, b)の値を得る
@@ -280,6 +301,19 @@ class SegTreeIndex:
             l >>= 1
             r >>= 1
         return s
+
+    def get(self, i):
+        """ 一点取得 """
+        return self.tree[i+self.n2]
+
+    def all(self):
+        """ 全区間[0, n)の取得 """
+        return (self.tree[1], self.index[1])
+
+    def print(self):
+        for i in range(self.n):
+            print(self.get(i)[0], end=' ')
+        print()
 
 
 class StarrySkyTree:
