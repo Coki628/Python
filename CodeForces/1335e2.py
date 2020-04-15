@@ -15,6 +15,7 @@
 ・でも今度はMLE。累積和はaccumulate使う方が速いはずだけど、どうやらメモリは食うらしい。
 　200*20万=4000万の配列に256MB制限だと無理だった。
 ・累積和の処理を普通のループにして、これでAC1.8秒。
+・考えたら2つめのcontinueはbreakでいいと気づいた。でもあんま変わらずAC1.7秒。
 """
 
 import sys
@@ -69,7 +70,7 @@ for _ in range(INT()):
             prevx = x
             r = bisearch_max(-1, N+1, lambda m: acc[a][N] - acc[a][m] >= x)
             if l > r:
-                continue
+                break
             y = 0
             for b in range(MAX):
                 y = max(y, acc[b][r] - acc[b][l])
