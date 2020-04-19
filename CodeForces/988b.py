@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+
+"""
+・文字数の多い方からチェック。
+・自分より1つ大きいやつに自分が含まれてるかを見ていけばOK。
+"""
+
+import sys
+from collections import Counter
+
+def input(): return sys.stdin.readline().strip()
+def list2d(a, b, c): return [[c] * b for i in range(a)]
+def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
+def list4d(a, b, c, d, e): return [[[[e] * d for j in range(c)] for j in range(b)] for i in range(a)]
+def ceil(x, y=1): return int(-(-x // y))
+def INT(): return int(input())
+def MAP(): return map(int, input().split())
+def LIST(N=None): return list(MAP()) if N is None else [INT() for i in range(N)]
+def Yes(): print('Yes')
+def No(): print('No')
+def YES(): print('YES')
+def NO(): print('NO')
+INF = 10 ** 18
+MOD = 10 ** 9 + 7
+
+N = INT()
+A = [input() for i in range(N)]
+
+A = [(len(s), s) for s in A]
+A.sort()
+for i in range(N-2, -1, -1):
+    s1 = A[i][1]
+    s2 = A[i+1][1]
+    if not s2.count(s1):
+        NO()
+        exit()
+YES()
+[print(a[1]) for a in A]
