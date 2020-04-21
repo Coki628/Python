@@ -479,6 +479,12 @@ def bisearch_max(mn, mx, func, EPS):
             ng = mid
     return ok
 
+def RLE(data):
+    """ ランレングス圧縮 """
+    from itertools import groupby
+
+    return [(x, len(list(grp))) for x, grp in groupby(data)]
+
 def compress(S):
     """ 座標圧縮 """
 
