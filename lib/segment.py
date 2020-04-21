@@ -211,45 +211,43 @@ class SegTreeIndex:
     1.update:  i番目の値をxに更新する
     2.query: 区間[l, r)の値とindex(同値があった場合は一番左)を得る
     """
- 
-    def __init__(self, n, func, init, A=[]):
+
+    def __init__(self, n, func, intv, A=[]):
         """
         :param n: 要素数(0-indexed)
         :param func: 値の操作に使う関数(min, max)
-        :param init: 要素の初期値(単位元)
+        :param intv: 要素の初期値(単位元)
         :param A: 初期化に使うリスト(オプション)
         """
         self.n = n
         self.func = func
-        self.init = init
+        self.intv = (intv, -1)
         # nより大きい2の冪数
         n2 = 1
         while n2 < n:
             n2 <<= 1
         self.n2 = n2
-        self.tree = [self.init] * (n2 << 1)
-        self.index = [self.init] * (n2 << 1)
-        # 1段目(最下段)の初期化
-        for i in range(n2):
-            self.index[i+n2] = i
-        # 2段目以降の初期化
-        for i in range(n2-1, -1, -1):
-            # 全部左の子の値に更新
-            self.index[i] = self.index[i*2]
+        self.tree = [self.intv] * (n2 << 1)
         # 初期化の値が決まっている場合
         if A:
             # 1段目(最下段)の初期化
             for i in range(n):
-                self.tree[n2+i] = A[i]
-            # 2段目以降の初期化
+                self.tree[n2+i] = (A[i], i)
+                # 2段目以降の初期化
             for i in range(n2-1, -1, -1):
-                left, right = i*2, i*2+1
-                if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
-                    self.tree[i] = self.tree[left]
-                    self.index[i] = self.index[left]
-                else:
-                    self.tree[i] = self.tree[right]
-                    self.index[i] = self.index[right]
+                self.tree[i] = self.compare(self.tree[i*2], self.tree[i*2+1])
+
+    def compare(self, a, b):
+        if a[0] == b[0]:
+            # 同値はindexが小さい方優先
+            if a[1] <= b[1]:
+                return a
+            else:
+                return b
+        elif self.func(a[0], b[0]) == a[0]:
+            return a
+        else:
+            return b
 
     def update(self, i, x):
         """
@@ -258,16 +256,10 @@ class SegTreeIndex:
         :param x: update value
         """
         i += self.n2
-        self.tree[i] = x
+        self.tree[i] = (x, i-self.n2)
         while i > 0:
             i >>= 1
-            left, right = i*2, i*2+1
-            if self.func(self.tree[left], self.tree[right]) == self.tree[left]:
-                self.tree[i] = self.tree[left]
-                self.index[i] = self.index[left]
-            else:
-                self.tree[i] = self.tree[right]
-                self.index[i] = self.index[right]
+            self.tree[i] = self.compare(self.tree[i*2], self.tree[i*2+1])
 
     def add(self, i, x):
         self.update(i, self.get(i) + x)
@@ -280,23 +272,13 @@ class SegTreeIndex:
         """
         l = a + self.n2
         r = b + self.n2
-        s = (self.init, -1)
+        s = self.intv
         while l < r:
             if r & 1:
                 r -= 1
-                res = self.func(s[0], self.tree[r])
-                # 左との一致を優先する
-                if res == s[0]:
-                    pass
-                else:
-                    s = (self.tree[r], self.index[r])
+                s = self.compare(s, self.tree[r])
             if l & 1:
-                res = self.func(self.tree[l], s[0])
-                # 左との一致を優先する
-                if res == self.tree[l]:
-                    s = (self.tree[l], self.index[l])
-                else:
-                    pass
+                s = self.compare(s, self.tree[l])
                 l += 1
             l >>= 1
             r >>= 1
@@ -304,15 +286,15 @@ class SegTreeIndex:
 
     def get(self, i):
         """ 一点取得 """
-        return self.tree[i+self.n2]
+        return self.tree[i+self.n2][0]
 
     def all(self):
         """ 全区間[0, n)の取得 """
-        return (self.tree[1], self.index[1])
+        return self.tree[1]
 
     def print(self):
         for i in range(self.n):
-            print(self.get(i)[0], end=' ')
+            print(self.get(i), end=' ')
         print()
 
 
@@ -434,6 +416,11 @@ class BIT2:
         return self._get(self.data1, r-1) * (r-1) + self._get(self.data0, r-1) \
              - self._get(self.data1, l-1) * (l-1) - self._get(self.data0, l-1)
 
+    def get(self, i):
+        return self.query(i, i+1)
+    
+    def update(self, i, x):
+        self.add(i, i+1, x - self.get(i))
 
 class SparseTable:
 
