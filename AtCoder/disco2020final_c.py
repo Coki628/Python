@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+・せっかく作ったSuffix Arrayを使ってみようと思って挑むも撃沈TLE。。
+"""
+
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -17,7 +21,6 @@ def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
-
 
 class SuffixArray:
 
@@ -147,155 +150,74 @@ class SuffixArray:
 
         return self.st.get(min(self.rsa[i], self.rsa[j]), max(self.rsa[i], self.rsa[j]))
 
+class BIT:
+    """ Binary Indexed Tree """
 
-class RollingHash:
+    def __init__(self, n):
+        # 0-indexed
+        n += 1
+        nv = 1
+        while nv < n:
+            nv *= 2
+        self.size = nv
+        self.tree = [0] * nv
 
-    MOD = 2 ** 64
-    b = 10 ** 8 + 7
-
-    def __init__(self, S):
-        # 各文字を数値に変換しておく
-        S = [ord(s)-97 for s in S]
-
-        self.len = len(S)
-        self.pow = [1] * (self.len+1)
-        for i in range(self.len):
-            self.pow[i+1] = self.pow[i] * self.b
-            self.pow[i+1] %= self.MOD
-        # ハッシュの生成
-        self.hash = [0] * (self.len+1)
-        for i in range(self.len):
-            self.hash[i+1] = self.hash[i] * self.b + S[i]
-            self.hash[i+1] %= self.MOD
-    
-    # 区間[i,j)のハッシュ値を取得
-    def get(self, l, r):
-        return (self.hash[r] - self.hash[l] * self.pow[r-l]) % self.MOD
-
-
-def Z_algorithm(S):
-    """ Z-algorithm(SとS[i:]の共通文字数のリストを返す)：O(N) """
-
-    N = len(S)
-    res = [0] * N
-    res[0] = N
-    i = 1
-    j = 0
-    while i < N:
-        while i+j < N and S[j] == S[i+j]:
-            j += 1
-        res[i] = j
-        if j == 0:
-            i += 1
-            continue
-        k = 1
-        while i+k < N and k+res[k] < j:
-            res[i+k] = res[k]
-            k += 1
-        i += k
-        j -= k
-    return res
-
-def KMP(S: str, T: str) -> list:
-    """ KMP法(Sの中にTとマッチする場所のindexのリストを返す)：O(|S|+|T|) """
-
-    N = len(S)
-    M = len(T)
-    # KMPをやるための前計算テーブルを構築
-    table = [0] * (M+1)
-    table[0] = -1
-    j = -1
-    for i in range(M):
-        while j >= 0 and T[i] != T[j]:
-            j = table[j]
-        j += 1
-        table[i+1] = j
-    # KMP法
-    res = []
-    m = i = 0
-    while m+i < N:
-        if T[i] == S[m+i]:
-            i += 1
-            if i == M:
-                res.append(m)
-                m = m + i - table[i]
-                i = table[i]
-        else:
-            m = m + i - table[i]
-            if i > 0:
-                i = table[i]
-    return res
-
-def Manacher(S):
-    """ Manacher(文字iを中心とする最長の回文の半径を返す)：O(N) """
-
-    N = len(S)
-    R = [0] * N
-    i = j = 0
-    while i < N:
-        while i-j >= 0 and i+j < N and S[i-j] == S[i+j]:
-            j += 1
-        R[i] = j
-        k = 1
-        while i-k >= 0 and i+k < N and k+R[i-k] < j:
-            R[i+k] = R[i-k]
-            k += 1
-        i += k
-        j -= k
-    return R
-
-def Manacher_even(_S):
-    """ Manacher偶数長(文字iとi+1の間を中心とする最長の回文の半径を返す)：O(N) """
-
-    _N = len(_S)
-    S = []
-    for i in range(_N-1):
-        S.append(_S[i])
-        S.append('$')
-    S.append(_S[-1])
-    N = len(S)
-    R = [0] * N
-    i = j = 0
-    while i < N:
-        while i-j >= 0 and i+j < N and S[i-j] == S[i+j]:
-            j += 1
-        R[i] = j
-        k = 1
-        while i-k >= 0 and i+k < N and k+R[i-k] < j:
-            R[i+k] = R[i-k]
-            k += 1
-        i += k
-        j -= k
-    res = [0] * (_N-1)
-    j = 0
-    for i in range(1, N, 2):
-        res[j] = R[i] // 2
-        j += 1
-    return res
-
-# 文字列TがSの(連続でない)部分列になっているか
-def is_subsequence(S, T):
-    N = len(S)
-    M = len(T)
-    i = j = 0
-    # 両方のindexを並行で進める
-    while i < M:
-        while j < N and T[i] != S[j]:
-            j += 1
-        # Sのが先に最後まで行ったらNG
-        if j == N:
-            return False
-        j += 1
+    def sum(self, i):
+        """ [0, i]を合計する """
+        s = 0
         i += 1
-    return True
+        while i > 0:
+            s += self.tree[i-1]
+            i -= i & -i
+        return s
 
-# アルファベット26文字についての次回出現位置
-def get_nxlist(S):
-    N = len(S)
-    # nxt[i][c] := 位置i以降で最初に文字cが登場するindex(存在しないときはN)
-    nxt = list2d(N+1, 26, N)
-    for i in range(N-1, -1, -1):
-        for c in range(26):
-            nxt[i][c] = nxt[i+1][c]
-        nxt[i][S[i]] = i
-    return nxt
+    def add(self, i, x):
+        """ 値の追加：添字i, 値x """
+        i += 1
+        while i <= self.size:
+            self.tree[i-1] += x
+            i += i & -i
+
+    def get(self, l, r=None):
+        """ 区間和の取得 [l, r) """
+        # 引数が1つなら一点の値を取得
+        if r is None: r = l + 1
+        res = 0
+        if r: res += self.sum(r-1)
+        if l: res -= self.sum(l-1)
+        return res
+
+    def update(self, i, x):
+        """ 値の更新：添字i, 値x """
+        self.add(i, x - self.get(i))
+
+    def bisearch_fore(self, l, r, x):
+        """ 区間[l,r]を左から右に向かってx番目の値がある位置 """
+        l_sm = self.sum(l-1)
+        ok = r + 1
+        ng = l - 1
+        while ng+1 < ok:
+            mid = (ok+ng) // 2
+            if self.sum(mid) - l_sm >= x:
+                ok = mid
+            else:
+                ng = mid
+        if ok != r + 1:
+            return ok
+        else:
+            return INF
+
+N = INT()
+A = LIST()
+
+sa = SuffixArray(A)
+
+ans = [0] * N
+bit = BIT(N+1)
+bit.add(N, 1)
+for idx in sa.sa[1:]:
+    # 自分より大きい最小のindex
+    res = bit.bisearch_fore(idx+1, N, 1)
+    ans[idx] = res
+    bit.add(idx, 1)
+for a in ans: print(a)
