@@ -515,6 +515,13 @@ def shakutori(N, K, A):
             sm -= A[l]
         l += 1
 
+# 最大8ビット
+def popcount(x):
+    x -= (x >> 1) & 0x55
+    x = (x & 0x33) + ((x >> 2) & 0x33)
+    x = (x + (x >> 4)) & 0xf
+    return x & 0xf
+
 # 最大32ビット
 def popcount(i):
     i = i - ((i >> 1) & 0x55555555)
@@ -523,6 +530,16 @@ def popcount(i):
     i = i + (i >> 8)
     i = i + (i >> 16)
     return i & 0x3f
+
+# 最大64ビット
+def popcount(n):
+    c = (n & 0x5555555555555555) + ((n>>1) & 0x5555555555555555)
+    c = (c & 0x3333333333333333) + ((c>>2) & 0x3333333333333333)
+    c = (c & 0x0f0f0f0f0f0f0f0f) + ((c>>4) & 0x0f0f0f0f0f0f0f0f)
+    c = (c & 0x00ff00ff00ff00ff) + ((c>>8) & 0x00ff00ff00ff00ff)
+    c = (c & 0x0000ffff0000ffff) + ((c>>16) & 0x0000ffff0000ffff)
+    c = (c & 0x00000000ffffffff) + ((c>>32) & 0x00000000ffffffff)
+    return c
 
 # 最大128ビット
 def popcount(n):
