@@ -5,6 +5,7 @@
 ・bitset高速化、ビットで累積和っぽいもの
 ・多倍長いけないかなーって思ったけど、20万ビットはさすがにTLE。。
 　てか多分ビットカウントが間に合わないんだと思う。
+・ビットカウント文字列通さないやつにしてみたけど、変わらず。。
 """
 
 import sys
@@ -25,9 +26,22 @@ sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
-def bit_count(i):
-
-    return bin(i).count('1')
+NN = 18
+KK = (1 << (1 << NN)) - 1
+I0 = KK // 3
+I1 = KK // 5
+I2 = KK // 17
+I3 = KK // 257
+I4 = KK // 65537
+def popcount(x):
+    x -= (x >> 1) & I0
+    x = (x & I1) + ((x >> 2) & I1)
+    x = (x + (x >> 4)) & I2
+    x = (x + (x >> 8)) & I3
+    x = (x + (x >> 16)) & I4
+    for k in range(5, 18):
+        x += x >> 2**k
+    return x & 0x3ffff
 
 N, M, Q = MAP()
 
@@ -48,4 +62,4 @@ for i in range(Q):
     p, q = MAP()
     p -= 1; q -= 1
     pq = S1[p] & S2[q]
-    print(bit_count(pq))
+    print(popcount(pq))

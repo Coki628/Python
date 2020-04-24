@@ -6,6 +6,7 @@
 　　　https://qiita.com/norioc/items/cb533d009aa63453df40
 ・Suffix Array, Sparse Tableの動作確認
 ・計算量5000^2でpypyAC1.1秒。
+・saの構築パートの実装を変更。pypyAC0.9秒に高速化。
 """
 
 import sys
@@ -88,26 +89,30 @@ class SuffixArray:
 
     def build_sa(self):
         """ Suffix Arrayの構築 """
-        from functools import cmp_to_key
+        # from functools import cmp_to_key
 
-        # 最初は1文字、ランクは文字コード
+        # # 最初は1文字、ランクは文字コード
+        # for i in range(self.N+1):
+        #     self.sa[i] = i
+        #     self.rank[i] = ord(self.S[i]) if i < self.N else -1
+
+        # # k文字についてソートされているところから、　2k文字でソートする
+        # k = 1
+        # while k <= self.N:
+        #     self.k = k
+        #     self.sa = sorted(self.sa, key=cmp_to_key(self.compare_sa))
+        #     k *= 2
+
+        #     # いったんtmpに次のランクを計算し、それからrankに移す
+        #     self.tmp[self.sa[0]] = 0
+        #     for i in range(1, self.N+1):
+        #         self.tmp[self.sa[i]] = self.tmp[self.sa[i-1]] + (1 if self.compare_sa(self.sa[i-1], self.sa[i]) else 0)
+        #     for i in range(self.N+1):
+        #         self.rank[i] = self.tmp[i]
+        suffix_arr = [(self.S[i:], i) for i in range(self.N+1)]
+        suffix_arr.sort()
         for i in range(self.N+1):
-            self.sa[i] = i
-            self.rank[i] = ord(self.S[i]) if i < self.N else -1
-
-        # k文字についてソートされているところから、　2k文字でソートする
-        k = 1
-        while k <= self.N:
-            self.k = k
-            self.sa = sorted(self.sa, key=cmp_to_key(self.compare_sa))
-            k *= 2
-
-            # いったんtmpに次のランクを計算し、それからrankに移す
-            self.tmp[self.sa[0]] = 0
-            for i in range(1, self.N+1):
-                self.tmp[self.sa[i]] = self.tmp[self.sa[i-1]] + (1 if self.compare_sa(self.sa[i-1], self.sa[i]) else 0)
-            for i in range(self.N+1):
-                self.rank[i] = self.tmp[i]
+            self.sa[i] = suffix_arr[i][1]
 
     def build_lcp(self):
         """ LCP配列の構築 """
