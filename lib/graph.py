@@ -24,55 +24,59 @@ def dfs(nodes, src):
 
     N = len(nodes)
     dist = [INF] * N
-    def rec(u, prev, c):
+    def rec(u, prev):
 
-        dist[u] = c
         for v in nodes[u]:
             if v != prev:
-                rec(v, u, c+1)
+                dist[v] = dist[u] + 1
+                rec(v, u)
         return
-    rec(src, -1, 0)
+    dist[src] = 0
+    rec(src, -1)
 
 def dfs(nodes, src):
     """ DFS(木、再帰、重みあり) """
 
     N = len(nodes)
     dist = [INF] * N
-    def rec(u, prev, c1):
+    def rec(u, prev):
 
-        dist[u] = c1
-        for v, c2 in nodes[u]:
+        for v, c in nodes[u]:
             if v != prev:
-                rec(v, u, c1+c2)
+                dist[v] = dist[u] + c
+                rec(v, u)
         return
-    rec(src, -1, 0)
+    dist[src] = 0
+    rec(src, -1)
 
 def dfs(nodes, src):
     """ DFS(木、スタック、重みなし) """
 
     N = len(nodes)
-    stack = [(src, -1, 0)]
+    stack = [(src, -1)]
     dist = [INF] * N
+    dist[src] = 0
     while stack:
-        u, prev, c = stack.pop()
-        dist[u] = c
+        u, prev = stack.pop()
         for v in nodes[u]:
             if v != prev:
-                stack.append((v, u, c+1))
+                dist[v] = dist[u] + 1
+                stack.append((v, u))
     return dist
 
 def dfs(nodes, src):
     """ DFS(木、スタック、重みあり) """
 
     N = len(nodes)
-    stack = [(src, -1, 0)]
+    stack = [(src, -1)]
     dist = [INF] * N
+    dist[src] = 0
     while stack:
-        u, prev, c1 = stack.pop()
-        dist[u] = c1
-        for v, c2 in nodes[u]:
+        u, prev = stack.pop()
+        for v, c in nodes[u]:
             if v != prev:
-                stack.append((v, u, c1+c2))
+                dist[v] = dist[u] + c
+                stack.append((v, u))
     return dist
 
 def bfs(nodes, src):
@@ -80,16 +84,16 @@ def bfs(nodes, src):
     from collections import deque
 
     N = len(nodes)
-    que = deque([(src, 0)])
+    que = deque([src])
     dist = [INF] * N
     dist[src] = 0
     while que:
-        u, c = que.popleft()
+        u = que.popleft()
         for v in nodes[u]:
             if dist[v] != INF:
                 continue
-            dist[v] = c + 1
-            que.append((v, c+1))
+            dist[v] = dist[u] + 1
+            que.append(v)
     return dist
 
 def dijkstra(nodes: list, src: int) -> list:

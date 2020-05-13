@@ -57,27 +57,29 @@ def rot90(grid, H, W):
             res[j][H-i-1] = grid[i][j]
     return res
 
+# ※多点スタート対応のためsrcにはlistを渡す
 def bfs(grid, src):
     """ BFS(グリッド、重みなし) """
     from collections import deque
 
     H, W = len(grid), len(grid[0])
-    h, w = src
     directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
-    que = deque([(h, w, 0)])
     dist = list2d(H, W, INF)
-    dist[h][w] = 0
+    que = deque()
+    for h, w in src:
+        que.append((h, w))
+        dist[h][w] = 0
     while que:
-        h, w, c = que.popleft()
+        h, w = que.popleft()
         for dh, dw in directions:
             h2 = h + dh
             w2 = w + dw
-            if grid[h2][w2] == '#':
+            if grid[h2][w2] == -1:
                 continue
             if dist[h2][w2] != INF:
                 continue
-            dist[h2][w2] = c + 1
-            que.append((h2, w2, c+1))
+            dist[h2][w2] = dist[h][w] + 1
+            que.append((h2, w2))
     return dist
 
 def dijkstra(grid: list, src: tuple) -> list:

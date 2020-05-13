@@ -123,7 +123,7 @@ def LIS(A: list, equal=False) -> list:
             L[bisect(L, a)] = a
     return L
 
-def fft(A, B, L):
+def FFT(A, B, L):
     """ 
     高速フーリエ変換(FFT)
         A：出現回数をカウントしたリスト
@@ -137,9 +137,9 @@ def fft(A, B, L):
     res = irfft(rfft(A, L) * rfft(B, L), L)
     # 四捨五入して整数に
     res = np.rint(res).astype(np.int64)
-    return res
+    return list(res)
 
-def fft(A, B):
+def FFT(A, B):
     """ 
     高速フーリエ変換(FFT)
     """
@@ -165,7 +165,7 @@ def fft(A, B):
     res = irfft(rfft(C1, L) * rfft(C2, L), L)
     # 四捨五入して整数に
     res = np.rint(res).astype(np.int64)
-    return res
+    return list(res)
 
 
 class ModTools:
@@ -295,12 +295,12 @@ def bisearch_max(mn, mx, func):
             ng = mid
     return ok
 
-def bisearch_min(mn, mx, func, EPS):
+def bisearch_min(mn, mx, func, times):
     """ 条件を満たす最小値を見つける二分探索(小数用) """
 
     ok = mx
     ng = mn
-    while ng+EPS < ok:
+    for _ in range(times):
         mid = (ok+ng) / 2
         if func(mid):
             # 下を探しに行く
@@ -310,12 +310,12 @@ def bisearch_min(mn, mx, func, EPS):
             ng = mid
     return ok
 
-def bisearch_max(mn, mx, func, EPS):
+def bisearch_max(mn, mx, func, times):
     """ 条件を満たす最大値を見つける二分探索(小数用) """
 
     ok = mn
     ng = mx
-    while ok+EPS < ng:
+    for _ in range(times):
         mid = (ok+ng) / 2
         if func(mid):
             # 上を探しに行く
@@ -360,6 +360,18 @@ def shakutori(N, K, A):
             # 左を動かす分、合計から引く
             sm -= A[l]
         l += 1
+
+def doubling(MAX, A):
+    """ ダブリング """
+
+    N = len(A)
+    nxt = list2d(MAX, N, -1)
+    for i, a in enumerate(A):
+        nxt[0][i] = a
+    for k in range(1, MAX):
+        for i in range(N):
+            nxt[k][i] = nxt[k-1][nxt[k-1][i]]
+    return nxt
 
 # 最大8ビット
 def popcount(x):

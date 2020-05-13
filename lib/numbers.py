@@ -26,6 +26,12 @@ def lcm(x, y): return (x * y) // gcd(x, y)
 def lcm_list(li): return reduce(lcm, li, 1)
 def gcd_list(li): return reduce(gcd, li, 0)
 
+# 素数冪LCM
+def lcm(C1, C2):
+    for k, v in C2.items():
+        C1[k] = max(C1[k], v)
+    return C1
+
 # 1からnまでの等差数列の和
 def get_sum(n): return (1+n)*n//2
 
