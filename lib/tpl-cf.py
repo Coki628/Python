@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -14,7 +12,9 @@ def Yes(): print('Yes')
 def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
-sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
+EPS = 10 ** -10
 
+for _ in range(INT()):
+    
