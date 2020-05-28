@@ -169,11 +169,11 @@ def FFT(A, B):
 
 
 class ModTools:
-    """ 階乗たくさん使う時用のテーブル準備 """
+    """ 階乗・逆元用のテーブルを構築する """
 
     def __init__(self, MAX, MOD):
-        """ MAX：階乗に使う数値の最大以上まで作る """
-        
+
+        # nCrならn、nHrならn+rまで作る
         MAX += 1
         self.MAX = MAX
         self.MOD = MOD
@@ -191,9 +191,9 @@ class ModTools:
             inverse[i] = inverse[i+1] * (i+1) % MOD
         self.fact = factorial
         self.inv = inverse
-    
+
     def nCr(self, n, r):
-        """ 組み合わせの数 (必要な階乗と逆元のテーブルを事前に作っておく) """
+        """ 組み合わせ """
 
         if n < r: return 0
         # 10C7 = 10C3
@@ -491,3 +491,42 @@ def mat_pow(mat, init, K, MOD):
     # 最後に初期値と掛ける
     res = mat_dot(res, init, MOD)
     return [a[0] for a in res]
+
+def gauss_jordan(A, b):
+    """ ガウス・ジョルダン法(連立方程式の解) """
+
+    N = len(A)
+    B = list2d(N, N+1, 0)
+    for i in range(N):
+        for j in range(N):
+            B[i][j] = A[i][j]
+    # 行列Aの後ろにbを並べ同時に処理する
+    for i in range(N):
+        B[i][N] = b[i]
+    
+    for i in range(N):
+        # 注目している変数の係数の絶対値が大きい式をi番目に持ってくる
+        pivot = i
+        for j in range(i, N):
+            if abs(B[j][i]) > abs(B[pivot][i]):
+                pivot = j
+        B[i], B[pivot] = B[pivot], B[i]
+
+        # 解がないか、一意でない
+        if abs(B[i][i]) < EPS:
+            return []
+
+        # 注目している変数の係数を1にする
+        for j in range(i+1, N+1):
+            B[i][j] /= B[i][i]
+        for j in range(N):
+            if i != j:
+                # j番目の式からi番目の変数を消去
+                for k in range(i+1, N+1):
+                    B[j][k] -= B[j][i] * B[i][k]
+    
+    res = [0] * N
+    # 後ろに並べたbが解になる
+    for i in range(N):
+        res[i] = B[i][N]
+    return res

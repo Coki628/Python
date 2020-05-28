@@ -61,7 +61,7 @@ class BIT:
         self.add(i, x - self.get(i))
 
     def bisearch_fore(self, l, r, x):
-        """ 区間[l,r]を左から右に向かってx番目の値がある位置 """
+        """ 区間[l, r]を左から右に向かってx番目の値がある位置 """
         l_sm = self.sum(l-1)
         ok = r + 1
         ng = l - 1
@@ -77,7 +77,7 @@ class BIT:
             return INF
 
     def bisearch_back(self, l, r, x):
-        """ 区間[l,r]を右から左に向かってx番目の値がある位置 """
+        """ 区間[l, r]を右から左に向かってx番目の値がある位置 """
         r_sm = self.sum(r)
         ok = l - 1
         ng = r + 1

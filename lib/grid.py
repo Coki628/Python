@@ -50,11 +50,20 @@ def build_grid(H, W, intv, _type, space=True, padding=False):
     return grid
 
 def rot90(grid, H, W):
-    """ グリッドを90度回転 """
+    """ グリッドを時計回りに90度回転 """
     res = list2d(W, H, 0)
     for i in range(H):
         for j in range(W):
             res[j][H-i-1] = grid[i][j]
+    return res
+
+def scale(grid, K):
+    """ グリッドをK倍に拡大 """
+    H, W = len(grid), len(grid[0])
+    res = list2d(H*K, W*K, '')
+    for i in range(H*K):
+        for j in range(W*K):
+            res[i][j] = grid[i//K][j//K]
     return res
 
 # ※多点スタート対応のためsrcにはlistを渡す

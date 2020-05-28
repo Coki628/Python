@@ -43,6 +43,7 @@ def get_sum(a, d, n):
     """ 等差数列の和：(初項a, 公差d, 項数n) """
     return (2*a + (n-1)*d) * n // 2
 
+# 数値として見れるくらいの値を10万とか100万回くらいやる時はこっち
 def digit_sum(n):
     """ 桁和：O(logN) """
 
@@ -51,6 +52,15 @@ def digit_sum(n):
         ans += n % 10
         n //= 10
     return ans
+
+# 10万桁とかある時はこっち
+def digit_sum(S):
+    """ 桁和：O(|S|) """
+
+    res = 0
+    for s in S:
+        res += int(s)
+    return res
 
 def is_prime(num):
     """ 素数判定 """
@@ -76,12 +86,12 @@ def is_prime(num):
 def eratosthenes_sieve(n):
     """ 素数列挙(エラトステネスの篩) """
 
-    table = [0] * (n + 1)
+    table = [0] * (n+1)
     prime_list = []
-    for i in range(2, n + 1):
+    for i in range(2, n+1):
         if table[i] == 0:
             prime_list.append(i)
-            for j in range(i + i, n + 1, i):
+            for j in range(i+i, n+1, i):
                 table[j] = 1
     return prime_list
 
@@ -118,3 +128,22 @@ def divisors(N: int) -> set:
             s.add(i)
             s.add(N // i)
     return s
+
+# N進数文字列Sを10進数に
+def ntod(S, n):
+    res = 0
+    for k, s in enumerate(S[::-1]):
+        res += n**k * int(s)
+    return res
+
+# 10進数をN進数文字列に
+def dton(num, n):
+    res = []
+    while num > 0:
+        num, m = divmod(num, n)
+        res.append(m)
+    res = ''.join(map(str, res))[::-1]
+    if res:
+        return res
+    else:
+        return '0'
