@@ -37,6 +37,7 @@ dp = list2d(N+1, S+1, 0)
 dp[0][0] = 1
 for i, a in enumerate(A):
     for j in range(S+1):
+        # 使わない遷移を2通り分やる
         dp[i+1][j] += dp[i][j] * 2
         dp[i+1][j] %= MOD
         if j+a <= S:
