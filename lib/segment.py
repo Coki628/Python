@@ -428,7 +428,7 @@ class SparseTable:
         self.N = len(A)
         self.func = func
         h = 0
-        while 1<<h < self.N:
+        while 1<<h <= self.N:
             h += 1
         self.dat = list2d(h, 1<<h, 0)
         self.height = [0] * (self.N+1)

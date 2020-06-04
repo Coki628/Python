@@ -227,6 +227,62 @@ def bisearch_max(mn, mx, func, times):
             ng = mid
     return ok
 
+def trisearch_min(lo, hi, func):
+    """ 三分探索 """
+
+    while lo+2 < hi:
+        m1 = (lo*2+hi) // 3
+        m2 = (lo+hi*2) // 3
+        res1 = func(m1)
+        res2 = func(m2)
+        if res1 <= res2:
+            hi = m2
+        else:
+            lo = m1
+    return m1, m2
+
+def trisearch_max(lo, hi, func):
+    """ 三分探索 """
+
+    while lo+2 < hi:
+        m1 = (lo*2+hi) // 3
+        m2 = (lo+hi*2) // 3
+        res1 = func(m1)
+        res2 = func(m2)
+        if res1 >= res2:
+            hi = m2
+        else:
+            lo = m1
+    return m1, m2
+
+def trisearch_min(lo, hi, func, times):
+    """ 三分探索(小数) """
+
+    for _ in range(times):
+        m1 = (lo*2+hi) / 3
+        m2 = (lo+hi*2) / 3
+        res1 = func(m1)
+        res2 = func(m2)
+        if res1 <= res2:
+            hi = m2
+        else:
+            lo = m1
+    return m1, m2
+
+def trisearch_max(lo, hi, func, times):
+    """ 三分探索(小数) """
+
+    for _ in range(times):
+        m1 = (lo*2+hi) / 3
+        m2 = (lo+hi*2) / 3
+        res1 = func(m1)
+        res2 = func(m2)
+        if res1 >= res2:
+            hi = m2
+        else:
+            lo = m1
+    return m1, m2
+
 def RLE(data):
     """ ランレングス圧縮 """
     from itertools import groupby

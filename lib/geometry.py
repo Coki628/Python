@@ -143,6 +143,9 @@ class Geometry:
 
         p1, p2 = seg1
         p3, p4 = seg2
+        if not self.intersect(seg1, seg2): return (INF, INF)
+        if p1 == p2: return p2
+        if p3 == p4: return p3
         base = self.sub(p4, p3)
         dist1 = abs(self.cross(base, self.sub(p1, p3)))
         dist2 = abs(self.cross(base, self.sub(p2, p3)))

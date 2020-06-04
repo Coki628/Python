@@ -27,7 +27,7 @@ class SuffixArray:
             self.N = len(A)
             self.func = func
             h = 0
-            while 1<<h < self.N:
+            while 1<<h <= self.N:
                 h += 1
             self.dat = list2d(h, 1<<h, 0)
             self.height = [0] * (self.N+1)
@@ -150,12 +150,12 @@ class SuffixArray:
 
 class RollingHash:
 
-    MOD = 2 ** 64
-    b = 10 ** 8 + 7
+    MOD = 10 ** 9 + 7
+    b = 10 ** 5 + 7
 
     def __init__(self, S):
         # 各文字を数値に変換しておく
-        S = [ord(s)-97 for s in S]
+        S = [ord(s) for s in S]
 
         self.len = len(S)
         self.pow = [1] * (self.len+1)
