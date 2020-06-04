@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・結構さくっと自力AC
+・負数も使えるので、各桁で+1か-1を使って桁に7が出ないようにうまく帳尻を合わせる。
+・基本は上にずらして、上にずらすと7になってしまう6と繰り上がってしまう9だけ下にずらせばOK。
 """
 
 import sys
@@ -26,14 +23,15 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+S = input()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+a = b = 0
+for k, s in enumerate(S[::-1]):
+    num = int(s)
+    if num in [6, 9]:
+        a += (num-1) * 10**k
+        b += 1 * 10**k
+    else:
+        a += (num+1) * 10**k
+        b += -1 * 10**k
+print(a, b)

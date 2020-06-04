@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・この手の桁DP系で通り数じゃなくて小数になるの珍しいなー、って思ったら違った。
+・総WAで誤差の条件書いてないし、何かおかしいと思ったらサンプルが既にめっちゃ周期作ってた。ギャグ。。
 """
 
 import sys
@@ -28,12 +25,25 @@ EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
+# mod = 7
+# dp = list2d(N+1, mod, 0)
+# dp[0][0] = 1
+# for i in range(N):
+#     for j in range(mod):
+#         for k in range(10):
+#             nxt = (j*10+k) % mod
+#             dp[i+1][nxt] += dp[i][j]
+#     for j in range(mod):
+#         dp[i+1][j] /= 10
+# ans = dp[N][0] - 10**-N
+# print(ans)
+
+if N == 0:
     print(0)
+else:
+    ans = '0.'
+    s = '142857'
+    while len(ans) <= N+2:
+        ans += s
+    ans = ans[:N+2]
+    print(ans)

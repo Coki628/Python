@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・速攻自力AC
+・すごく基本的なDP。
 """
 
 import sys
@@ -28,12 +24,11 @@ EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+dp = [0] * (N+1)
+dp[0] = 1
+for i in range(N):
+    dp[i+1] += dp[i]
+    if i+2 <= N:
+        dp[i+2] += dp[i]
+ans = dp[N]
+print(ans)

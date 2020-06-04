@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・N進数系、N進数→10進数
+・桁数は膨大で、最終的に3か5の倍数判定ができればいいので、15でMOD取りながら計算する。
+・4進数文字列の桁数が最大で200万あって、pythonTLE,pypyAC1.2秒。
 """
 
 import sys
@@ -26,14 +24,19 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+S = input()
+MOD = 15
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+num = 0
+for k, s in enumerate(S[::-1]):
+    num += pow(4, k, MOD) * int(s)
+    num %= MOD
+
+if num % 3 == 0 and num % 5 == 0:
+    print('FizzBuzz')
+elif num % 3 == 0:
+    print('Fizz')
+elif num % 5 == 0:
+    print('Buzz')
 else:
-    print(0)
+    print(S)

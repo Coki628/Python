@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+参考：https://yukicoder.me/problems/no/374/editorial
+　　　http://mayokoex.hatenablog.com/entry/2016/06/05/100800
+・自力ならず。全然分かんなかった。。
+・ゲーム
+・対称な状況を作り相手の真似をする戦略、というのがある。
+　今回はそれを適用することで、初手さえ置ければ先手必勝の状況を作れる。
+・具体的には、初手を中心に置いて、後は全部後手番の対象位置に置けばいい。
+　…聞けばああなるほど、だけど、気づくかな、こんなの。。
 """
 
 import sys
@@ -22,18 +24,13 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+ar, br = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+if ar >= br:
+    print('S')
 else:
-    print(0)
+    print('K')

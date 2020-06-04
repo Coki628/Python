@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・2の補数
+・久々に聞いたから思い出すのに問題よく読んだ。一番上のビットで正負管理するやつね。
 """
 
 import sys
@@ -27,13 +24,14 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+MAX = 2**(N-1)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+x = INT()
+a = INT()
+b = INT()
+
+def check(x, a):
+    return ceil(x, a)
+
+ans = min(check(x, a), check(MAX-x, b))
+print(ans)

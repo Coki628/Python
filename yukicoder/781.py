@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・C++で自力ACしたあと、こっちでもAC確認。
+・やっぱ上が1000万くらいならCounterより配列で持った方が全然速くていいんだ。。
+・完全にTLEだったやつが、pypyAC0.4秒。
 """
 
 import sys
+from math import sqrt
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +24,17 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+lo, hi = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+N = int(sqrt(hi)) + 1
+C = [0] * (hi+1)
+for i in range(N):
+    for j in range(N):
+        r = i**2 + j**2
+        if lo <= r <= hi:
+            if i == 0 or j == 0:
+                C[r] += 2
+            else:
+                C[r] += 4
+ans = max(C)
+print(ans)

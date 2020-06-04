@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・まず桁数、同じなら上の桁から各数字で比較、4と7の関係だけ例外処理。
 """
 
 import sys
@@ -22,18 +18,26 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+S, T = input().split()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+if len(S) > len(T):
+    print(S)
+elif len(S) < len(T):
+    print(T)
 else:
-    print(0)
+    N = len(S)
+    for i in range(N):
+        if S[i] != T[i]:
+            if S[i] == '4' and T[i] == '7':
+                print(S)
+            elif S[i] == '7' and T[i] == '4':
+                print(T)
+            elif S[i] > T[i]:
+                print(S)
+            else:
+                print(T)
+            break

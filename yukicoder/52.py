@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・再帰探索
+・制約が小さいので、区間DPみたいな探索を愚直に全通り見るでOK。
 """
 
 import sys
@@ -22,18 +19,22 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+S = input()
+N = len(S)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+se = set()
+def rec(l, r, cur):
+    if l > r:
+        se.add(cur)
+        return
+    rec(l+1, r, cur+S[l])
+    rec(l, r-1, cur+S[r])
+    return
+
+rec(0, N-1, '')
+ans = len(se)
+print(ans)

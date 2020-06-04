@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・門松列、構築
 """
 
 import sys
@@ -22,18 +18,26 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+N, K = MAP()
 
+# まず完全なやつを作る
+a = 0
+b = 10 ** 9 // 2
 ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+for i in range(N):
+    if i % 2 == 0:
+        ans.append(a)
+        a += 1
+    else:
+        ans.append(b)
+        b += 1
+
+# Kの値に応じて門松列を減らす
+for i in range(N-K, N):
+    ans[i] = ans[i-1]
+
+print(*ans)

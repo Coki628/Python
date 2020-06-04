@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・場合の数、全探索、構築
+・数列の長さは30以内と小さいので、0,1それぞれ何個あるかを全探索でOK。
 """
 
 import sys
@@ -26,14 +23,18 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def nC2(n):
+    return n*(n-1) // 2
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+K = INT()
+N = 30
+for i in range(1, N+1):
+    for j in range(i+1):
+        k = i - j
+        # 0がj個、1がk個ある場合の通り数を調べる
+        cnt = 2**j * nC2(k)
+        if cnt == K:
+            ans = [0] * j + [1] * k
+            print(i)
+            print(*ans)
+            exit()

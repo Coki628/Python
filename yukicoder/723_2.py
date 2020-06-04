@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・タグにあったのでこっちで。無事、問題なくAC。
+・二分探索、式変形
 """
 
 import sys
+from bisect import bisect_left, bisect_right
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +23,14 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+N, X = MAP()
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+A.sort()
+ans = 0
+for a in A:
+    # a + b = X → b = X - a
+    l = bisect_left(A, X-a)
+    r = bisect_right(A, X-a)
+    ans += r - l
+print(ans)

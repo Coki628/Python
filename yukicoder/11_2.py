@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・なんとか自力AC
+・H,Wが大きいので、全体を数えるのは無理。何とか手持ちの情報から工夫して答えを出す。疲れた。
 """
 
 import sys
+from collections import defaultdict
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -22,18 +19,26 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
+W = INT()
+H = INT()
 N = INT()
+row = defaultdict(set)
+col = defaultdict(set)
+for i in range(N):
+    s, k = MAP()
+    s -= 1; k -= 1
+    row[k].add(s)
+    col[s].add(k)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+ans = 0
+# まず各行から獲得できるマスを取る
+for k, se in row.items():
+    ans += W - len(se)
+# 列側からは行で取らなかったマスだけを取りたいので、取った行数を引く
+for s, se in col.items():
+    ans += H - len(row)
+print(ans)

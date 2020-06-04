@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・それぞれ行か列を取っていくんだけど、最後だけは行列両方取る感じになる。
+　ので、最終的にかかるターン数はH+W-1。0-indexedにして、mod Nすれば誰で終わるか分かる。
 """
 
 import sys
@@ -22,18 +19,15 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+H, W, N, K = MAP()
+K -= 1
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+x = (H+W-2) % N
+if x == K:
+    YES()
 else:
-    print(0)
+    NO()

@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・二分探索、等差数列の和
 """
 
 import sys
@@ -26,14 +22,28 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def bisearch_min(mn, mx, func):
+    """ 条件を満たす最小値を見つける二分探索 """
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+    ok = mx
+    ng = mn
+    while ng+1 < ok:
+        mid = (ok+ng) // 2
+        if func(mid):
+            ok = mid
+        else:
+            ng = mid
+    return ok
+
+def get_sum(a, d, n):
+    """ 等差数列の和：(初項a, 公差d, 項数n) """
+    return (2*a + (n-1)*d) * n // 2
+
+N = INT()
+res = bisearch_min(0, INF, lambda x: get_sum(1, 1, x) >= N)
+ans = get_sum(1, 1, res)
+if ans == N:
+    YES()
+    print(res)
 else:
-    print(0)
+    NO()

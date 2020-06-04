@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+参考：https://yukicoder.me/problems/no/701/editorial
+　　　https://qiita.com/Scstechr/items/c3b2eb291f7c5b81902a
+・公式解より
+・文字列のランダム生成をやる。
 """
 
 import sys
+from random import choices
+from string import ascii_lowercase
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -28,12 +28,23 @@ EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+# n文字の英小文字の文字列をランダム生成する
+def generate(n):
+    return ''.join(choices(ascii_lowercase, k=n))
+
+used = set()
+cur = 'a'
+ans = ['a']
+for i in range(N-1):
+    while 1:
+        nxt = cur[-1] + generate(19)
+        if nxt[-1] != 'n' and nxt not in used:
+            break
+    used.add(nxt)
+    ans.append(nxt)
+    cur = nxt
+nxt = cur[-1] + generate(18) + 'n'
+ans.append(nxt)
+
+for s in ans[1:]:
+    print(s)

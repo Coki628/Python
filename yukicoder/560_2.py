@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・なんとか自力AC
+・期待値
+・最初ダメ元でDPしてみて破滅。M円の時、の状態持ったらそりゃきつい。
+・そういえば期待値って1回毎まとめちゃってよかったんじゃないかな、って思って
+　毎回その時の期待値みたいのを出してそこを次の遷移元にしたらうまくいった。
 """
 
 import sys
@@ -26,14 +25,12 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+M, N = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+cur = M
+for i in range(N):
+    nxt = 0
+    nxt += cur*2 / 3
+    nxt += (cur+1) / 3
+    cur = nxt
+print(cur)

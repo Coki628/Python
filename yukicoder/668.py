@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・繰り上がりに気をつけて体裁を整える。
 """
 
 import sys
@@ -26,14 +22,18 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+num = input()
+N = len(num)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+if int(num[2]) < 5:
+    a = num[0]
+    b = num[1]
+    c = N - 1
 else:
-    print(0)
+    ab = int(num[:2])
+    ab += 1
+    ab = str(ab)
+    a, b = ab[0], ab[1]
+    c = N - 1 + (len(ab) == 3)
+ans = '{0}.{1}*10^{2}'.format(a, b, c)
+print(ans)

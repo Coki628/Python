@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+参考：http://rsujskf.s602.xrea.com/?yukicoder_118
+・色々考えなくても、普通に3重ループにするだけでもよかった。。
 """
 
 import sys
+from collections import Counter
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -22,18 +19,19 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+C = sorted(Counter(A).items())
+M = len(C)
+ans = 0
+for i, (k1, v1) in enumerate(C):
+    for j, (k2, v2) in enumerate(C[i+1:], i+1):
+        for k, (k3, v3) in enumerate(C[j+1:], j+1):
+            ans += v1 * v2 * v3
+            ans %= MOD
+print(ans)

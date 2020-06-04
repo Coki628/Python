@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・間違ってる演算子の位置は「符号符号数字」の左か「数字符号数字」の真ん中のどちらか。
+・そこさえ正しく修正すれば後はevalでよしなに計算できる。
 """
 
 import sys
+from string import digits
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -22,18 +20,24 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+S = list(input())
+N = len(S)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+for i in range(N-2):
+    if S[i] not in digits and S[i+1] not in digits and S[i+2] in digits:
+        if S[i] == '+':
+            S[i] = '-'
+        else:
+            S[i] = '+'
+    if S[i] in digits and S[i+1] not in digits and S[i+2] in digits:
+        if S[i+1] == '+':
+            S[i+1] = '-'
+        else:
+            S[i+1] = '+'
+
+ans = eval(''.join(S))
+print(ans)

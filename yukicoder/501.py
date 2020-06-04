@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・辞書順最小、場合分け
+・とにかくAを最優先。辞書順最小だから。
 """
 
 import sys
@@ -23,17 +20,16 @@ def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
-MOD = 10 ** 9 + 7
+MOD = 10 ** 12
 EPS = 10 ** -10
 
-N = INT()
+N, D = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+diff = N - D
+if diff == 0:
+    ans = 'A' * N
+elif diff < 0:
+    ans = 'A' * (N-abs(diff)) + 'B' * abs(diff)
 else:
-    print(0)
+    ans = 'A' * (N-diff) + 'C' * diff
+print(ans)

@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・左右に行って帰ってするやつ。ソートして、連続するN個を拾う場合を全部見る。
 """
 
 import sys
@@ -22,18 +18,22 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+N, M = MAP()
+A = LIST(M)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+A.sort()
+ans = INF
+for i in range(M-N+1):
+    j = i + N - 1
+    l, r = A[i], A[j]
+    if (l < 0) ^ (r < 0):
+        # 正負が分かれていたら、短い方を往復して長い方へ進むとする
+        ans = min(ans, min(abs(l), abs(r))*2 + max(abs(l), abs(r)))
+    else:
+        # 正負が片方ならそっち側に進むだけ
+        ans = min(ans, max(abs(l), abs(r)))
+print(ans)

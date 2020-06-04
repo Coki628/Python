@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・素因数分解
+・素数冪にして、2乗にできる分を全部ルートの外に出す。
 """
 
 import sys
@@ -22,18 +19,32 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
+def factorize(num: int) -> dict:
+    """ 素因数分解 """
+    from math import sqrt
+    from collections import Counter
+
+    d = Counter()
+    for i in range(2, int(sqrt(num))+1):
+        while num % i == 0:
+            num //= i
+            d[i] += 1
+        if num == 1:
+            break
+    if num != 1:
+        d[num] += 1
+    return d
+
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+fact = factorize(N)
+a = b = 1
+for k, v in fact.items():
+    a *= k**(v//2)
+    if v % 2 == 1:
+        b *= k
+print(a, b)

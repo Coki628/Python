@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・日付時刻管理系
+・python標準ライブラリにありがとう。
 """
 
 import sys
+from datetime import datetime, timedelta
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +24,27 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+h, m, s = input().split()
+h = int(h)
+m = int(m)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+# 分に統一して差分を取る
+a = 9 * 60
+b = 0
+if s.count('.'):
+    b += int(s[-1]) * 6
+    s = s[:-2]
+if len(s) == 6:
+    b += int(s[-2:]) * 60
+    s = s[:-2]
 else:
-    print(0)
+    b += int(s[-1:]) * 60
+    s = s[:-1]
+if s[-1] == '-':
+    b = -b
+diff = b - a
+
+now = datetime(2020, 5, 19, h, m)
+now += timedelta(minutes=diff)
+ans = '{0}:{1}'.format(str(now.hour).zfill(2), str(now.minute).zfill(2))
+print(ans)

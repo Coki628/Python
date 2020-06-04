@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・確率系
+・時間かかった。このくらい手早く解きたいよなぁ。
 """
 
 import sys
@@ -22,18 +19,23 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+# 100万人当たりに合わせる
+N *= 100
+# 構成員の人口に対する比率
+rateA = N / 1000000
+# 一般市民の比率
+rateB = 1 - rateA
+
+# 逮捕される確率をかける
+rateA *= 0.99
+rateB *= 0.01
+
+# 一般市民 / 全体 * 100
+ans = rateB / (rateA+rateB) * 100
+print(ans)

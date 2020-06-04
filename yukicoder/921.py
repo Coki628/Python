@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・状態持つ1次元DP
+・最初貪欲やろうとしてコケたので、正解の考察にもっと素早く辿り着けるようにしたい。
 """
 
 import sys
@@ -27,13 +24,19 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+# dp0[i] := i番目の餅まで見ての最大値(直前をずんだにしてない)
+dp0 = [-INF] * (N+1)
+# dp1[i] := i番目の餅まで見ての最大値(直前をずんだにした)
+dp1 = [-INF] * (N+1)
+dp0[0] = 0
+for i in range(N):
+    dp0[i+1] = max(dp0[i+1], dp0[i])
+    dp0[i+1] = max(dp0[i+1], dp1[i])
+    dp1[i+1] = max(dp1[i+1], dp0[i] + 1)
+    # 連続でずんだにする遷移は、同じ数が続く時だけ
+    if i == 0 or A[i-1] == A[i]:
+        dp1[i+1] = max(dp1[i+1], dp1[i] + 1)
+ans = max(dp0[N], dp1[N])
+print(ans)

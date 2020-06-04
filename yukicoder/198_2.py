@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+参考：http://sugarknri.hatenablog.com/entry/2016/05/18/152712
+・中央値から求める解。
+・手持ち数から、達成できる値の上限を(sum(A)+b)//Nとする。これと中央値でmin取ればOK。
 """
 
 import sys
@@ -22,18 +19,30 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
+b = INT()
 N = INT()
+A = LIST(N)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
+limit = (sum(A)+b) // N
+A.sort()
+if N % 2 == 1:
+    mid = A[N//2]
+    mid = min(mid, limit)
+    ans = 0
+    for i in range(N):
+        ans += abs(mid - A[i])
     print(ans)
 else:
-    print(0)
+    mid1 = A[N//2-1]
+    mid2 = A[N//2]
+    mid1 = min(mid1, limit)
+    mid2 = min(mid2, limit)
+    ans1 = ans2 = 0
+    for i in range(N):
+        ans1 += abs(mid1 - A[i])
+        ans2 += abs(mid2 - A[i])
+    print(min(ans1, ans2))

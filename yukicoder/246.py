@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・インタラクティブ、二分探索
+・インタラクティブ問題ですごくありそうな二分探索問題。
 """
 
 import sys
@@ -22,18 +19,27 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def bisearch_max(mn, mx, func):
+    """ 条件を満たす最大値を見つける二分探索 """
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+    ok = mn
+    ng = mx
+    while ok+1 < ng:
+        mid = (ok+ng) // 2
+        if func(mid):
+            ok = mid
+        else:
+            ng = mid
+    return ok
+
+def check(x):
+    print('? {0}'.format(x), flush=1)
+    res = INT()
+    return res
+
+res = bisearch_max(0, 10**9+1, check)
+print('! {0}'.format(res))

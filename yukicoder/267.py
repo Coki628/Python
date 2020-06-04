@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・ちゃんとソートがよしなにやってくれるようなkey,valueを予め割り当てておけばOK。
 """
 
 import sys
@@ -22,18 +18,28 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
+kton1 = {'D': 0, 'C': 1, 'H': 2, 'S': 3}
+ntok1 = {0: 'D', 1: 'C', 2: 'H', 3: 'S'}
+kton2 = {'A': 1, 'T': 10, 'J': 11, 'Q': 12, 'K': 13}
+ntok2 = {1: 'A', 10: 'T', 11: 'J', 12: 'Q', 13: 'K'}
+for i in range(2, 10):
+    kton2[str(i)] = i
+    ntok2[i] = str(i)
+
 N = INT()
+S = list(input().split())
 
 ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+for i in range(N):
+    s, n = S[i]
+    ans.append((kton1[s], kton2[n]))
+
+ans.sort()
+for i in range(N):
+    s, n = ans[i]
+    ans[i] = ntok1[s] + ntok2[n]
+print(*ans)

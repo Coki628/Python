@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・盛大にTLE。。多分メモリもやばい。
 """
 
 import sys
+from collections import defaultdict
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +22,16 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+M, N = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+dp = [defaultdict(float) for i in range(N+1)]
+dp[0][M] = 1.0
+for i in range(N):
+    for k, v in dp[i].items():
+        dp[i+1][k*2] += v / 3
+        dp[i+1][k+1] += v / 3
+        dp[i+1][0] += v / 3
+ans = 0.0
+for k, v in dp[N].items():
+    ans += k * v
+print(ans)

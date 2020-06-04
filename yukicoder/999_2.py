@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+参考：https://yukicoder.me/problems/no/999/editorial
+・公式解
+・前計算、累積和
 """
 
 import sys
+from itertools import accumulate
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -27,13 +25,18 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+NN = N * 2
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+# 左からi個取った場合と右からi個取った場合を前計算する
+accl = []
+accr = []
+for i in range(0, NN, 2):
+    accl.append(A[i] - A[i+1])
+    accr.append(A[i+1] - A[i])
+accl = [0] + list(accumulate(accl))
+accr = list(accumulate(accr[::-1]))[::-1] + [0]
+ans = -INF
+for i in range(N+1):
+    ans = max(ans, accl[i] + accr[i])
+print(ans)

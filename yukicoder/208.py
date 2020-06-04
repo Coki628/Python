@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC、条件漏れてて1ペナしたけど。。
+・場合分け
+・将棋の王が動くあの斜めありの距離はチェビシェフ距離って言うらしい。
+・邪魔な駒は1つだけなので、条件整えて場合分けする。
 """
 
 import sys
@@ -22,18 +20,16 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+x1, y1 = MAP()
+x2, y2 = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+dist = max(x1, y1)
+if abs(x1) == abs(y1) and abs(x2) == abs(y2):
+    if 0 < x2 < x1 and 0 < y2 < y1 \
+            or x1 < x2 < 0 and y1 < y2 < 0:
+        dist += 1
+print(dist)

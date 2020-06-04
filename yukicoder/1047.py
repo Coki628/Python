@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・実験する。すると、0に戻ってくるケースはそう多くなさそう、となる。
+・むしろもしかするとサンプルにある1になるやつと2になるやつ以外ないんじゃないか、となる。
+・念のため適当に10回くらいまでループ回して、終わったらそこ、終わらなければ-1、をやってみる。無事AC。
 """
 
 import sys
@@ -22,18 +20,16 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+a, b = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+n = 0
+for i in range(1, 11):
+    n = a*n + b
+    if n == 0:
+        print(i)
+        exit()
+print(-1)

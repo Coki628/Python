@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・割とすんなり自力AC
+・階乗、場合分け
+・12桁しか映らない→10^12でMOD取る。
+・12桁オーバーした状態ではleading zeroを表示させる。
+・ひたすら掛け算なので、一度0になったらずっと0。
 """
 
 import sys
@@ -23,17 +22,21 @@ def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
-MOD = 10 ** 9 + 7
+MOD = 10 ** 12
 EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+ans = 1
+over = False
+for i in range(1, N+1):
+    ans *= i
+    if ans >= MOD:
+        over = True
+        ans %= MOD
+    if ans == 0:
+        break
+if over:
+    print(str(ans).zfill(12))
 else:
-    print(0)
+    print(ans)

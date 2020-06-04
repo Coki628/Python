@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・約数列挙
+・Cの候補はA+Bの約数に限られるので、約数列挙して全部試す。
+・なぜかWAで、ん？？ってなってたけど、条件の「相異なる」が太字なのに見落としてた。。
 """
 
 import sys
@@ -26,14 +24,23 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def divisors(N: int) -> set:
+    """ 約数の列挙・個数 """
+    from math import sqrt
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+    s = {1, N}
+    for i in range(2, int(sqrt(N))+1):
+        if N % i == 0:
+            s.add(i)
+            s.add(N // i)
+    return s
+
+a, b = MAP()
+
+divs = sorted(divisors(a+b))
+for c in divs:
+    if a != b and b != c and c != a \
+            and (a + c) % b == 0 and (b + c) % a == 0:
+        print(c)
+        exit()
+print(-1)

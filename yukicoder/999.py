@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・左から総取りした場合から、1つずつ右にずらしていく感じ。
 """
 
 import sys
@@ -27,13 +23,19 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+N *= 2
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+cnta = cntb = 0
+for i in range(N):
+    if i % 2 == 0:
+        cnta += A[i]
+    else:
+        cntb += A[i]
+
+ans = cnta - cntb
+for i in range(N-2, -1, -2):
+    cnta += A[i+1] - A[i]
+    cntb += A[i] - A[i+1]
+    ans = max(ans, cnta - cntb)
+print(ans)

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・分数の扱い
+・分数を分数の形のまま持つ。
+・でもこれ公式解説に実はaN/a1ってなってたけど、確かに途中全部約分で打ち消し合っちゃうからそうなるね。。
 """
 
 import sys
@@ -22,18 +20,15 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+cur = (1, 1)
+for i in range(N-1):
+    cur = (cur[0]*A[i+1], cur[1]*A[i])
+ans = '{0}/{1}'.format(*cur)
+print(ans)

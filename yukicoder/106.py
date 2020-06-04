@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・結構すんなり自力AC
+・素数列挙応用
+・素数列挙をちょっといじって、素数があったら自身と自身の倍数に+1するような集計を取る。
+　あとはK以上になってる場所数えるだけ。
+・計算量200万のNにlogつくくらいだと思うんだけど、意外とpythonでもAC1.2秒。
 """
 
 import sys
@@ -22,18 +21,23 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def eratosthenes_sieve(n):
+    res = [0] * (n+1)
+    for i in range(2, n+1):
+        if res[i] == 0:
+            for j in range(i, n+1, i):
+                res[j] += 1
+    return res
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+N, K = MAP()
+
+res = eratosthenes_sieve(N)
+ans = 0
+for i in range(2, N+1):
+    if res[i] >= K:
+        ans += 1
+print(ans)

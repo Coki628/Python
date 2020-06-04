@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・結構すんなり自力AC
+・場合分け
+・縦横どっちかが1の場合は例外処理。それ意外はマス数が偶数なら戻ってこれるし奇数なら無理。
 """
 
 import sys
@@ -22,18 +19,26 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+H, W, C = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+if H == 1:
+    if W == 2:
+        YES()
+    else:
+        NO()
+    exit()
+if W == 1:
+    if H == 2:
+        YES()
+    else:
+        NO()
+    exit()
+
+if H * W % 2 == 0:
+    YES()
 else:
-    print(0)
+    NO()

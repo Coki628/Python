@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・好きに操作できるので下限lをK回やるのと上限rをK回やるのの間は全部網羅できるってやつ。
+・後はその範囲内にMの倍数があるかどうか。
 """
 
 import sys
@@ -22,18 +19,17 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+l, r, M, K = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+mn = l * K
+mx = r * K
+l2 = mn if mn % M == 0 else mn - mn%M + M
+r2 = mx - mx%M
+if l2 <= r2:
+    Yes()
 else:
-    print(0)
+    No()

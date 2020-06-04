@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・素数列挙応用、期待値
 """
 
 import sys
@@ -22,18 +18,25 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def eratosthenes_sieve(n, p):
+    # exp[i] := iが素数として消されずに生き残る確率
+    exp = [1] * (n+1)
+    for i in range(2, n+1):
+        for j in range(i+i, n+1, i):
+            # 処理が行われない(この数が消されずに生き残る)確率を掛ける
+            exp[j] *= (1-p)
+    return exp
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+N, p = input().split()
+N = int(N)
+p = float(p)
+
+res = eratosthenes_sieve(N, p)
+ans = 0
+for i in range(2, N+1):
+    ans += res[i]
+print(ans)

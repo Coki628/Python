@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・二分探索(小数)
+・最近EPS使ったにぶたんでバグってTLEみたいなツイート見かけてたけど多分これのことかな。
+　実際そうなって、回数決め打ちにしたら通った。
 """
 
 import sys
+from math import log2
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +25,20 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def bisearch_max(mn, mx, func, times):
+    """ 条件を満たす最大値を見つける二分探索(小数用) """
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+    ok = mn
+    ng = mx
+    for _ in range(times):
+        mid = (ok+ng) / 2
+        if func(mid):
+            ok = mid
+        else:
+            ng = mid
+    return ok
+
+p, q = MAP()
+
+res = bisearch_max(1, INF, lambda n: n**2 <= p+q*n*log2(n), 1000)
+print(res)

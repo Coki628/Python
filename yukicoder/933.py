@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+参考：https://yukicoder.me/problems/no/933/editorial
+　　　https://scrapbox.io/ganariya/YukicoderContest232_B%e5%95%8f%e9%a1%8cP1.5_%e3%80%8c%e3%81%8a%e3%81%be%e3%82%8f%e3%82%8a%e3%81%95%e3%82%93%e3%81%93%e3%81%84%e3%81%a4%e3%81%a7%e3%81%99%e3%80%8d
+・自力ならず。
+・数字根
+・これは知らなかったからしょうがない。mod 9すると求められる。0の時は場合分け。
 """
 
 import sys
@@ -27,13 +26,18 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
+if A.count(0):
     print(0)
+    exit()
+
+mod = 9
+ans = 1
+for a in A:
+    ans *= a
+    ans %= mod
+if ans == 0:
+    print(mod)
+else:
+    print(ans)

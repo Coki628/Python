@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・全要素-1して0を目指す方針で、差分を持ち回る感じにしたらスッキリまとまった。
 """
 
 import sys
@@ -27,13 +23,10 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = [a-1 for a in LIST()]
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+diff = ans = 0
+for a in A:
+    diff += a
+    ans += abs(diff)
+print(ans)

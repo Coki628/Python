@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・優先度付きキュー
+・なるべく小さい方から貪欲にやる。切り捨て除算で1WA。半分にした時小数にもなる。
 """
 
 import sys
+from heapq import heapify, heappush, heappop
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +24,18 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+x, y, h = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+x *= 1000
+y *= 1000
+que = [x, y]
+heapify(que)
+ans = 0
+while que:
+    cur = heappop(que)
+    if cur > h:
+        h *= 2
+        cur /= 2
+        heappush(que, cur)
+        ans += 1
+print(ans)

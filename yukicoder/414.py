@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・約数列挙
+・M=1の時で1ペナ。約数常に2つ以上ある気がしてた。。
 """
 
 import sys
@@ -22,18 +19,26 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def divisors(N: int) -> set:
+    """ 約数の列挙・個数 """
+    from math import sqrt
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+    s = {1, N}
+    for i in range(2, int(sqrt(N))+1):
+        if N % i == 0:
+            s.add(i)
+            s.add(N // i)
+    return s
+
+M = INT()
+
+divs = sorted(divisors(M))
+if len(divs) <= 2:
+    ans = (divs[0], divs[-1])
 else:
-    print(0)
+    ans = (divs[1], divs[-2])
+print(*ans)

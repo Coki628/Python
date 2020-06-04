@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・実装、シミュレーションする。
 """
 
 import sys
+from collections import Counter
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -26,14 +23,25 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+Q = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+M = 20
+C = [Counter() for i in range(M)]
+for _ in range(Q):
+    q, *arg = input().split()
+    if q == '0':
+        n, m, *li = arg
+        n = int(n) - 1
+        C[n] = Counter(li)
+    elif q == '1':
+        s = arg[0]
+        for i in range(M):
+            if C[i][s]:
+                C[i][s] -= 1
+                print(i+1)
+                break
+        else:
+            print(-1)
+    else:
+        n = int(arg[0]) - 1
+        C[n].clear()

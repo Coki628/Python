@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・ソートの実装
+・門松列を無くす、なのでようはソートすればいいんだけど、操作過程を示さないといけない。
+・制約は軽いので、ぱっと思いついた実装しやすそうなN^2のソートとかすればいい。
+・何かよく分からんけど設定上リアクティブらしいのでflushしないとTLEだった。
 """
 
 import sys
@@ -22,18 +21,22 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST()
 
 ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+for i in range(N-1):
+    if A[i] > A[i+1]:
+        j = i
+        while j >= 0 and A[j] > A[j+1]:
+            A[j], A[j+1] = A[j+1], A[j]
+            ans.append((j, j+1))
+            j -= 1
+print(len(ans), flush=1)
+for a, b in ans:
+    print(a, b, flush=1)
+input()

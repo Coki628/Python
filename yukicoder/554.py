@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・奇数番目と偶数番目でそれぞれ和を変数に持ちながらやればいい。
 """
 
 import sys
@@ -28,12 +24,20 @@ EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+evsm = odsm = 0
+dp = [0] * N
+dp[0] = 1
+evsm += 1
+for i in range(1, N):
+    if i % 2 == 1:
+        dp[i] = (i+1) * evsm
+        dp[i] %= MOD
+        odsm += dp[i]
+        odsm %= MOD
+    else:
+        dp[i] = (i+1) * odsm
+        dp[i] %= MOD
+        evsm += dp[i]
+        evsm %= MOD
+ans = dp[N-1]
+print(ans)

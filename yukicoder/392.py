@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・2分木の構造、BFSに帰着
+・想定解と違ったけど、採番の仕方がBFSっぽかったので根からBFSした。
 """
 
 import sys
@@ -22,18 +19,29 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def bfs():
+    from collections import deque
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+    N = 4095
+    que = deque([''])
+    res = [''] * N
+    num = 0
+    while que:
+        s = que.popleft()
+        res[num] = s
+        num += 1
+        if num == N:
+            break
+        que.append(s+'L')
+        que.append(s+'R')
+    return res
+ans = bfs()
+
+M = INT()
+for _ in range(M):
+    a = INT()
+    print(ans[a])

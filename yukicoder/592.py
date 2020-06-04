@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・括弧系、スタック
+・indexをスタックに保持しておく。
 """
 
 import sys
@@ -27,13 +24,16 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+S = input()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+stack = []
+ans = [0] * N
+for i, s in enumerate(S):
+    if s == '(':
+        stack.append(i)
+    else:
+        j = stack.pop()
+        ans[i] = j + 1
+        ans[j] = i + 1
+for a in ans:
+    print(a)

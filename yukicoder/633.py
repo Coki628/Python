@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・10万でも解けると思うけどなぜか制約100。
+・想定解累積和だったけど、愚直シミュレーションでも線形なので累積和要らないのでは。。
 """
 
 import sys
@@ -27,13 +24,13 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST(N-1)
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+cur = 0
+ans = 0
+for i in range(N-1):
+    b, c = MAP()
+    cur -= b
+    cur += c
+    ans += A[i] * cur
+print(ans)

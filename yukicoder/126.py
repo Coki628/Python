@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・自力ならず。。悔しい。
+・場合分け
+・考えたけど詰めきれず。。条件あと1つ足りないのが出なかった。
 """
 
 import sys
@@ -22,18 +19,21 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+a, b, x = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+if x == 1 or abs(x-a) <= abs(x-b):
+    ans = abs(x-a) + x
 else:
-    print(0)
+    # Aが地下1階にいる時はBがそこに行けないので1階に行くしかない
+    if a == 0:
+        ans = abs(x-b) + abs(x-1) + abs(a-1) + 1
+    else:
+        ans = min(
+            abs(x-b) + abs(x-a) + a,
+            abs(x-b) + abs(x-1) + abs(a-1) + 1,
+        )
+print(ans)

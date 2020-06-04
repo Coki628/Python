@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・自力AC！
+・累積和、二分探索
+・こういう典型は数学っぽくないから解きやすいよね。
+・計算量2000*2000=400万にlog乗ってるけど、pypyAC0.6秒。
 """
 
 import sys
+from itertools import accumulate
+from bisect import bisect_right
 
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
@@ -27,13 +27,22 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+S = input()
+A = LIST()
+M = INT()
+Q = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
+enemy = [0] * N
+for i, s in enumerate(S):
+    if s == 'E':
+        enemy[i] = 1
+enemy = [0] + list(accumulate(enemy))
+acc = [0] + list(accumulate(A))
+
+for k in Q:
+    ans = 0
+    for l in range(N):
+        r = bisect_right(acc, acc[l]+k, lo=l) - 1
+        cnt = enemy[r] - enemy[l]
+        ans = max(ans, cnt)
     print(ans)
-else:
-    print(0)

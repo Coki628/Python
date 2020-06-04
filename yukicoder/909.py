@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・割とスムーズに想定解の考察にいけたのでいい感じ。
 """
 
 import sys
@@ -27,13 +23,19 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+X = LIST()
+Y = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+# 一番短いやつに合わせる
+mn = INF
+for i, (x, y) in enumerate(zip(X, Y)):
+    mn = min(mn, x + y)
+
+ans = [0] * N
+for i in range(N):
+    # xで目一杯伸ばして、yは適当に短くすればいい(0でもいいので)
+    ans[i] = min(X[i], mn)
+ans = [0] + ans + [mn]
+print(mn)
+for a in ans:
+    print(a)

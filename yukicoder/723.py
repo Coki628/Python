@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・FFTでぶん殴った。
 """
 
 import sys
@@ -26,14 +22,35 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def FFT(A, B):
+    """ 
+    高速フーリエ変換(FFT)
+    """
+    import numpy as np
+    from numpy.fft import rfft, irfft
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+    MAXA = max(A)
+    MAXB = max(B)
+    C1 = [0] * (MAXA+1)
+    C2 = [0] * (MAXB+1)
+    for a in A:
+        C1[a] += 1
+    for b in B:
+        C2[b] += 1
+    L = 1
+    k = 0
+    while L <= MAXA + MAXB:
+        k += 1
+        L = 2**k
+    res = irfft(rfft(C1, L) * rfft(C2, L), L)
+    res = np.rint(res).astype(np.int64)
+    return res
+
+N, X = MAP()
+A = LIST()
+
+res = FFT(A, A)
+if X < len(res):
+    print(res[X])
 else:
     print(0)

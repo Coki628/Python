@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・グラフ、木の走査
+・色々方針ミスってちょっと時間食った。。
+・結局、3本以上枝分かれしてる所は付け替えが要るからカウントする、でOK。
 """
 
 import sys
@@ -26,14 +24,26 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+def dfs(nodes, src):
+    """ DFS(木、スタック、重みなし) """
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+    stack = [(src, -1)]
+    ans = 0
+    while stack:
+        u, prev = stack.pop()
+        ans += max(len(nodes[u]) - 2, 0)
+        for v in nodes[u]:
+            if v != prev:
+                stack.append((v, u))
+    return ans
+
+N = INT()
+nodes = [[] for i in range(N)]
+for i in range(N-1):
+    a, b = MAP()
+    a -= 1; b -= 1
+    nodes[a].append(b)
+    nodes[b].append(a)
+
+ans = dfs(nodes, 0)
+print(ans)

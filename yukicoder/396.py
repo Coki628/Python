@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・想定解は周期2倍にしてたから、ちょっと違う解法。
+・何番目の周期にいるかが(0-indexedで)奇数なら反転、ってやった。
+　これで向きが同じになって周期内での位置が一致してるか判定できる。
 """
 
 import sys
@@ -22,18 +20,23 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+N, M = MAP()
+x, y = MAP()
+x -= 1; y -= 1
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+dx, mx = divmod(x, M)
+dy, my = divmod(y, M)
+# 奇数番目の周期にいたら反転させる
+if dx % 2 == 1:
+    mx = M - mx - 1
+if dy % 2 == 1:
+    my = M - my - 1
+
+if mx == my:
+    YES()
 else:
-    print(0)
+    NO()

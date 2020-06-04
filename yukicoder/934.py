@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・自力AC！
+・インタラクティブ問題
+・少ない方からでなく、多い方から1つずつ減らしていく方針で行けば必要なものを特定できる。
 """
 
 import sys
@@ -28,12 +25,15 @@ EPS = 10 ** -10
 
 N = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+A = list(range(1, N+1))
+i = 0
+while 2 < len(A) and i < len(A):
+    tmp = A.pop(i)
+    print('? {0}'.format(len(A)), flush=1)
+    print(*A, flush=1)
+    res = INT()
+    if not res:
+        A.insert(i, tmp)
+        i += 1
+print('! {0}'.format(len(A)), flush=1)
+print(*A, flush=1)

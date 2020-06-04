@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・確率・期待値系
+・まず1回分の期待値を出す。で、今回は各サイコロの目の積が欲しいので、1回期待値^回数の形になる。
 """
 
 import sys
@@ -22,18 +19,21 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+p, c = MAP()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+A = [2, 3, 5, 7, 11, 13]
+B = [4, 6, 8, 9, 10, 12]
+
+ans1 = 0
+for a in A:
+    ans1 += a / 6
+ans2 = 0
+for b in B:
+    ans2 += b / 6
+
+ans = ans1**p * ans2**c
+print(ans)

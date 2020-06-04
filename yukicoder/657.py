@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・素直にDPする。
 """
 
 import sys
@@ -26,14 +22,14 @@ INF = 10 ** 18
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+MAX = 10**6
+MOD = 17
+dp = [0] * MAX
+dp[3] = 1
+for i in range(4, MAX):
+    dp[i] = (dp[i-1] + dp[i-2] + dp[i-3] + dp[i-4]) % MOD
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+Q = INT()
+for i in range(Q):
+    n = INT()
+    print(dp[n-1])

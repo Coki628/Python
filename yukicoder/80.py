@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・場合分け、と思ったけどしなくてもいいのか。floor(1, 2)したら勝手に0になるもんな。
+・合計が決まってて、なるべく積大きくしたい時は、なるべく各値の大きさが同じに近い方がいいってやつ。
+　(1*5<2*4<3*3みたいなこと)
 """
 
 import sys
@@ -22,18 +20,15 @@ def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
-INF = 10 ** 18
+INF = 10 ** 19
 MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
-N = INT()
+D = INT()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+D //= 2
+if D < 2:
+    ans = 0
 else:
-    print(0)
+    ans = D // 2 * ceil(D, 2)
+print(ans)

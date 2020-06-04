@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 """
-・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・さくっと自力AC
+・全探索
+・2冪で表される数は限られてる。数が大きくなれば、a,bが両方2冪じゃない場合なんてたくさんある。
 """
 
 import sys
@@ -27,13 +24,18 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+MAX = 10 ** 18
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
+ng = set()
+k = 0
+while 2**k <= MAX:
+    ng.add(2**k)
+    k += 1
+
+for a in range(1, N):
+    b = N - a
+    if a not in ng and b not in ng:
+        print(a, b)
+        break
 else:
-    print(0)
+    print(-1)

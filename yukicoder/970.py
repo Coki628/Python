@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-
 """
 ・自力AC
-・N進数系、10進数→N進数
-・これは7進数だから多分pythonの機能でも変換できるんだけど、
-　Nが大きいと前に無理だったから、汎用的に使えるようにちゃんと割り算した。
+・式変形
+・全員が自分以外の全体から平均を取っているので、均すと全体の平均と同じになると思う。
+　なので、元の数列と総和は等しいはず。
+　すると、*(N-1)で自分以外の総和は分かるので、総和 - 自分*(N-1)
+　をそれぞれについてやればいい。
 """
 
 import sys
@@ -27,13 +27,10 @@ MOD = 10 ** 9 + 7
 EPS = 10 ** -10
 
 N = INT()
+A = LIST()
 
-ans = []
-while N > 0:
-    N, m = divmod(N, 7)
-    ans.append(m)
-ans = ''.join(map(str, ans))[::-1]
-if ans:
-    print(ans)
-else:
-    print(0)
+sm = sum(A)
+ans = [0] * N
+for i, a in enumerate(A):
+    ans[i] = sm - A[i] * (N-1)
+print(*ans)
