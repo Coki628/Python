@@ -19,7 +19,11 @@ from fractions import Fraction
 from string import ascii_lowercase, ascii_uppercase, digits
 from os.path import commonprefix
 
+# 入出力高速化1(数値のみ)
 # def input(): return sys.stdin.buffer.readline().strip()
+# 入出力高速化2
+# import io, os
+# input = io.BytesIO(os.read(0,os.fstat(0).st_size)).readline
 def input(): return sys.stdin.readline().strip()
 def list2d(a, b, c): return [[c] * b for i in range(a)]
 def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
@@ -40,6 +44,7 @@ def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = float('inf')
 MOD = 10 ** 9 + 7
+EPS = 10 ** -10
 
 # 標準ライブラリのよりこっちのが速い(ただし2次元限定)
 def deepcopy(li): return [x[:] for x in li]
@@ -450,6 +455,7 @@ def mat_pow(mat, init, K, MOD):
     res = mat_dot(res, init, MOD)
     return [a[0] for a in res]
 
+# 実数用
 def gauss_jordan(A, b):
     """ ガウス・ジョルダン法(連立方程式の解) """
 
@@ -488,3 +494,59 @@ def gauss_jordan(A, b):
     for i in range(N):
         res[i] = B[i][N]
     return res
+
+# 2値用
+def gauss_jordan(A, extended=False):
+    """ ガウス・ジョルダン法(連立方程式の解) """
+
+    N, M = len(A), len(A[0])
+    res = [x[:] for x in A]
+    rank = 0
+    for col in range(M):
+        if extended and col == M-1:
+            break
+        pivot = -1
+        for row in range(rank, N):
+            if res[row][col] != 0:
+                pivot = row
+                break
+        if pivot == -1:
+            continue
+        res[rank], res[pivot] = res[pivot], res[rank]
+        for row in range(N):
+            if row != rank and res[row][col]:
+                for i in range(M):
+                    res[row][i] ^= res[rank][i]
+        rank += 1
+    for row in range(rank, N):
+        if res[row][-1]:
+            return (-1, [])
+    return (rank, res)
+
+# 2値用(ビット高速化版)
+def gauss_jordan(A, extended=False):
+    """ ガウス・ジョルダン法(連立方程式の解) """
+
+    N, M = len(A), max(A).bit_length()
+    res = A[:]
+    rank = 0
+    for col in range(M):
+        if extended and col == M-1:
+            break
+        pivot = -1
+        for row in range(rank, N):
+            if res[row]>>col & 1:
+                pivot = row
+                break
+        if pivot == -1:
+            continue
+        res[rank], res[pivot] = res[pivot], res[rank]
+        for row in range(N):
+            if row != rank and res[row]>>col & 1:
+                res[row] ^= res[rank]
+        rank += 1
+    # 解があるか確認
+    for row in range(rank, N):
+        if res[row]>>(M-1) & 1:
+            return (-1, [])
+    return (rank, res)
