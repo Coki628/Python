@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import sys
 
 def input(): return sys.stdin.readline().strip()
@@ -59,6 +57,11 @@ class BIT:
     def update(self, i, x):
         """ 値の更新：添字i, 値x """
         self.add(i, x - self.get(i))
+
+    def print(self, N):
+        for i in range(N):
+            print(self.get(i), end=' ')
+        print()
 
     def bisearch_fore(self, l, r, x):
         """ 区間[l, r]を左から右に向かってx番目の値がある位置 """
@@ -127,7 +130,7 @@ class BIT:
 class SegTree:
     """
     セグメント木
-    1.update:  i番目の値をxに更新する
+    1.update: i番目の値をxに更新する
     2.query: 区間[l, r)の値を得る
     """
 
@@ -208,7 +211,7 @@ class SegTree:
 class SegTreeIndex:
     """
     セグメント木(index取得対応版)
-    1.update:  i番目の値をxに更新する
+    1.update: i番目の値をxに更新する
     2.query: 区間[l, r)の値とindex(同値があった場合は一番左)を得る
     """
 
@@ -444,7 +447,7 @@ class SparseTable:
     def get(self, l, r):
         """ 区間[l,r)でのmin,maxを取得 """
 
-        if l >= r:
+        if l >= r or r > self.N:
             raise Exception
         a = self.height[r-l]
         return self.func(self.dat[a][l], self.dat[a][r-(1<<a)])
