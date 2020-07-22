@@ -1,0 +1,44 @@
+"""
+・自力AC
+・S先頭の01をT末尾と合わせて全体をリバース、これで末尾は合うので1短くしてをN回やる。
+"""
+
+import sys
+
+def input(): return sys.stdin.readline().strip()
+def list2d(a, b, c): return [[c] * b for i in range(a)]
+def list3d(a, b, c, d): return [[[d] * c for j in range(b)] for i in range(a)]
+def list4d(a, b, c, d, e): return [[[[e] * d for j in range(c)] for j in range(b)] for i in range(a)]
+def ceil(x, y=1): return int(-(-x // y))
+def INT(): return int(input())
+def MAP(): return map(int, input().split())
+def LIST(N=None): return list(MAP()) if N is None else [INT() for i in range(N)]
+def Yes(): print('Yes')
+def No(): print('No')
+def YES(): print('YES')
+def NO(): print('NO')
+INF = 10 ** 19
+MOD = 10 ** 9 + 7
+
+for _ in range(INT()):
+    N = INT()
+    S = list(map(int, input()))
+    T = list(map(int, input()))
+
+    ans = []
+    r = N
+    for i in range(N):
+        if S[0] == T[-1]:
+            if len(S) == 1:
+                break
+            ans.append(1)
+            S[0] ^= 1
+        ans.append(r)
+        for i in range(len(S)):
+            S[i] ^= 1
+        S = S[::-1]
+        S.pop()
+        T.pop()
+        r -= 1
+    ans.insert(0, len(ans))
+    print(*ans)
