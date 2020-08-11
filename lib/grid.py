@@ -49,8 +49,10 @@ def build_grid(H, W, intv, _type, space=True, padding=False):
             grid[i][j] = row[j-offset]
     return grid
 
-def rot90(grid, H, W):
+def rot90(grid):
     """ グリッドを時計回りに90度回転 """
+    H = len(grid)
+    W = len(grid[0])
     res = list2d(W, H, 0)
     for i in range(H):
         for j in range(W):
@@ -81,14 +83,14 @@ def bfs(grid, src):
     while que:
         h, w = que.popleft()
         for dh, dw in directions:
-            h2 = h + dh
-            w2 = w + dw
-            if grid[h2][w2] == -1:
+            nh = h + dh
+            nw = w + dw
+            if grid[nh][nw] == -1:
                 continue
-            if dist[h2][w2] != INF:
+            if dist[nh][nw] != INF:
                 continue
-            dist[h2][w2] = dist[h][w] + 1
-            que.append((h2, w2))
+            dist[nh][nw] = dist[h][w] + 1
+            que.append((nh, nw))
     return dist
 
 def dijkstra(grid: list, src: tuple) -> list:

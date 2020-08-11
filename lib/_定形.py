@@ -288,6 +288,22 @@ def trisearch_max(lo, hi, func, times):
             lo = m1
     return m1, m2
 
+def bucket_sort(A, M, key):
+    from itertools import accumulate
+    """ バケットソート(タプルのソートが遅い時に使える) """
+
+    N = len(A)
+    C = [0] * (M+1)
+    res = [()] * N
+    for i in range(N):
+        C[A[i][key]] += 1
+    C = list(accumulate(C))
+
+    for i in range(N-1, -1, -1):
+        res[C[A[i][key]]-1] = A[i]
+        C[A[i][key]] -= 1
+    return res
+
 def RLE(data):
     """ ランレングス圧縮 """
     from itertools import groupby

@@ -96,6 +96,22 @@ def bfs(nodes, src):
             que.append(v)
     return dist
 
+def bfs(src):
+    """ BFS(整数) """
+    from collections import deque
+
+    que = deque([src])
+    dist = {}
+    dist[src] = 0
+    while que:
+        u = que.popleft()
+        # ここで遷移先への演算
+        v = u
+        if v not in dist:
+            dist[v] = dist[u] + 1
+            que.append(v)
+    return dist
+
 def dijkstra(nodes: list, src: int) -> list:
     """ ダイクストラ(隣接リスト(0-indexed), 始点) """
     from heapq import heappush, heappop
@@ -772,31 +788,31 @@ class LCA:
         self.N = len(nodes)
         nv = 1
         MAX = 0
-        while nv < N:
+        while nv < self.N:
             nv *= 2
             MAX += 1
         self.MAX = MAX
         # nxt[k][v] := 頂点vから2^k遡った祖先
-        self.nxt = list2d(MAX, N, -1)
+        self.nxt = list2d(MAX, self.N, -1)
         # dfsで各頂点の深さと親を取得
-        self.depths = self.dfs(N, nodes, root)
+        self.depths = self.dfs(self.N, nodes, root)
         # ダブリングのテーブル構築
         for k in range(1, MAX):
-            for v in range(N):
+            for v in range(self.N):
                 if self.nxt[k-1][v] == -1: 
                     continue
                 self.nxt[k][v] = self.nxt[k-1][self.nxt[k-1][v]]
 
     def dfs(self, N, nodes, src):
-        stack = [(src, -1, 0)]
-        dist = [INF] * N
+        stack = [(src, -1)]
+        dist = [0] * N
         while stack:
-            u, prev, c = stack.pop()
-            dist[u] = c
-            self.nxt[0][u] = prev
+            u, prev = stack.pop()
             for v in nodes[u]:
                 if v != prev:
-                    stack.append((v, u, c+1))
+                    self.nxt[0][v] = u
+                    dist[v] = dist[u] + 1
+                    stack.append((v, u))
         return dist
 
     def get_lca(self, a, b):

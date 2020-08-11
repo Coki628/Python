@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from math import gcd
+# from math import gcd
 from functools import reduce
 
 def input(): return sys.stdin.readline().strip()
@@ -19,6 +19,11 @@ def NO(): print('NO')
 sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
+
+# 非再帰GCD(多分純正は再帰っぽいからこっちのが速いはず)
+def gcd(a, b):
+    while b: a, b = b, a % b
+    return a
 
 # 最小公倍数
 def lcm(x, y): return (x * y) // gcd(x, y)
