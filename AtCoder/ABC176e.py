@@ -105,7 +105,6 @@ H, W, M = MAP()
 # 各列に何個あるかを保持するセグ木
 seg = SegTree(W+1, max, -INF, [0]*(W+1))
 adjli = [[] for i in range(H+1)]
-C = [0] * (W+1)
 for i in range(M):
     h, w = MAP()
     seg.add(w, 1)
