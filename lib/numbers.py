@@ -142,11 +142,24 @@ def ntod(S, n):
     return res
 
 # 10進数をN進数文字列に
+# def dton(num, n):
+#     res = []
+#     while num > 0:
+#         num, m = divmod(num, n)
+#         res.append(m)
+#     res = ''.join(map(str, res))[::-1]
+#     if res:
+#         return res
+#     else:
+#         return '0'
+# 負数対応版
 def dton(num, n):
     res = []
-    while num > 0:
-        num, m = divmod(num, n)
+    while abs(num) > 0:
+        m = num % abs(n)
+        num -= m
         res.append(m)
+        num //= n
     res = ''.join(map(str, res))[::-1]
     if res:
         return res

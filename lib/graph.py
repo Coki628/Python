@@ -208,6 +208,26 @@ def get_route(s, t, res):
     StoT = StoT[::-1]
     return StoT
 
+def dijkstra(G, src):
+    """ O(V^2)のダイクストラ(動作確認してない) """
+
+    N = len(G)
+    dist = [INF] * N
+    used = [False] * N
+
+    dist[src] = 0
+    while 1:
+        v = -1
+        for u in range(N):
+            if not used[u] and (v == -1 or dist[u] < dist[v]):
+                v = u
+        if v == -1:
+            break
+        used[v] = True
+        for u in range(N):
+            dist[u] = min(dist[u], dist[v] + G[v][u])
+    return dist
+
 def bellman_ford(N: int, edges: list, src: int) -> list:
     """ ベルマンフォード(頂点数, 辺集合(0-indexed), 始点) """
 
@@ -541,23 +561,26 @@ class BipartiteMatching:
 class Dinic:
     """ 最大流(Dinic)：O(E*V^2) """
 
-    INF = 10 ** 18
+    INF = 10**18
 
     def __init__(self, n):
         self.n = n
         self.links = [[] for _ in range(n)]
         self.depth = None
         self.progress = None
+        self.pos = []
 
     def copy(self):
         res = Dinic(self.n)
         res.links = [[a[:] for a in b] for b in self.links]
+        res.pos = [a[:] for a in self.pos]
         return res
- 
+
     def add_edge(self, _from, to, cap):
+        self.pos.append((_from, len(self.links[_from])))
         self.links[_from].append([cap, to, len(self.links[to])])
         self.links[to].append([0, _from, len(self.links[_from]) - 1])
- 
+
     def bfs(self, s):
         from collections import deque
 
@@ -571,7 +594,7 @@ class Dinic:
                     depth[to] = depth[v] + 1
                     q.append(to)
         self.depth = depth
- 
+
     def dfs(self, v, t, flow):
         if v == t:
             return flow
@@ -588,7 +611,7 @@ class Dinic:
             self.links[to][rev][0] += d
             return d
         return 0
- 
+
     def flow(self, s, t):
         INF = Dinic.INF
         flow = 0
@@ -602,20 +625,40 @@ class Dinic:
                 flow += current_flow
                 current_flow = self.dfs(s, t, INF)
 
+    def get_edge(self, i):
+        e = self.links[self.pos[i][0]][self.pos[i][1]]
+        re = self.links[e[1]][e[2]]
+        # from, to, cap, flow
+        return (self.pos[i][0], e[1], e[0]+re[0], re[0])
+
+    def get_edges(self):
+        M = len(self.pos)
+        res = []
+        for i in range(M):
+            res.append(self.get_edge(i))
+        return res
+
 
 class MinCostFlow:
     """ 最小費用流(ダイクストラ版)：O(F*E*logV) """
 
-    INF = 10 ** 18
+    INF = 10**18
 
     def __init__(self, N):
         self.N = N
         self.G = [[] for i in range(N)]
+        self.pos = []
+
+    def copy(self):
+        res = MinCostFlow(self.N)
+        res.G = [[a[:] for a in b] for b in self.G]
+        res.pos = [a[:] for a in self.pos]
+        return res
 
     def add_edge(self, fr, to, cap, cost):
-        G = self.G
-        G[fr].append([to, cap, cost, len(G[to])])
-        G[to].append([fr, 0, -cost, len(G[fr])-1])
+        self.pos.append((fr, len(self.G[fr])))
+        self.G[fr].append([to, cap, cost, len(self.G[to])])
+        self.G[to].append([fr, 0, -cost, len(self.G[fr])-1])
 
     def flow(self, s, t, f):
         from heapq import heappush, heappop
@@ -662,20 +705,40 @@ class MinCostFlow:
                 v = prv_v[v]
         return res
 
+    def get_edge(self, i):
+        e = self.G[self.pos[i][0]][self.pos[i][1]]
+        re = self.G[e[0]][e[3]]
+        # from, to, cap, flow, cost
+        return (self.pos[i][0], e[0], e[1]+re[1], re[1], e[2])
+
+    def get_edges(self):
+        M = len(self.pos)
+        res = []
+        for i in range(M):
+            res.append(self.get_edge(i))
+        return res
+
 
 class MinCostFlow:
     """ 最小費用流(ダイクストラ版2)：O(F*V^2) """
 
-    INF = 10 ** 18
+    INF = 10**18
 
     def __init__(self, N):
         self.N = N
         self.G = [[] for i in range(N)]
+        self.pos = []
+
+    def copy(self):
+        res = MinCostFlow(self.N)
+        res.G = [[a[:] for a in b] for b in self.G]
+        res.pos = [a[:] for a in self.pos]
+        return res
 
     def add_edge(self, fr, to, cap, cost):
-        G = self.G
-        G[fr].append([to, cap, cost, len(G[to])])
-        G[to].append([fr, 0, -cost, len(G[fr])-1])
+        self.pos.append((fr, len(self.G[fr])))
+        self.G[fr].append([to, cap, cost, len(self.G[to])])
+        self.G[to].append([fr, 0, -cost, len(self.G[fr])-1])
 
     def flow(self, s, t, f):
 
@@ -724,20 +787,40 @@ class MinCostFlow:
                 v = prv_v[v]
         return res
 
+    def get_edge(self, i):
+        e = self.G[self.pos[i][0]][self.pos[i][1]]
+        re = self.G[e[0]][e[3]]
+        # from, to, cap, flow, cost
+        return (self.pos[i][0], e[0], e[1]+re[1], re[1], e[2])
+
+    def get_edges(self):
+        M = len(self.pos)
+        res = []
+        for i in range(M):
+            res.append(self.get_edge(i))
+        return res
+
 
 class MinCostFlow:
     """ 最小費用流(ベルマンフォード版、負コストに対応可)：O(F*E*V) """
 
-    INF = 10 ** 18
+    INF = 10**18
 
     def __init__(self, N):
         self.N = N
         self.G = [[] for i in range(N)]
+        self.pos = []
+    
+    def copy(self):
+        res = MinCostFlow(self.N)
+        res.G = [[a[:] for a in b] for b in self.G]
+        res.pos = [a[:] for a in self.pos]
+        return res
 
     def add_edge(self, fr, to, cap, cost):
-        G = self.G
-        G[fr].append([to, cap, cost, len(G[to])])
-        G[to].append([fr, 0, -cost, len(G[fr])-1])
+        self.pos.append((fr, len(self.G[fr])))
+        self.G[fr].append([to, cap, cost, len(self.G[to])])
+        self.G[to].append([fr, 0, -cost, len(self.G[fr])-1])
 
     def flow(self, s, t, f):
 
@@ -778,6 +861,19 @@ class MinCostFlow:
                 e[1] -= d
                 G[v][e[3]][1] += d
                 v = prv_v[v]
+        return res
+
+    def get_edge(self, i):
+        e = self.G[self.pos[i][0]][self.pos[i][1]]
+        re = self.G[e[0]][e[3]]
+        # from, to, cap, flow, cost
+        return (self.pos[i][0], e[0], e[1]+re[1], re[1], e[2])
+
+    def get_edges(self):
+        M = len(self.pos)
+        res = []
+        for i in range(M):
+            res.append(self.get_edge(i))
         return res
 
 

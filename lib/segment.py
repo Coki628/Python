@@ -21,6 +21,7 @@ class BIT:
     """ Binary Indexed Tree """
 
     def __init__(self, n):
+        self.n = n
         # 0-indexed
         n += 1
         nv = 1
@@ -45,21 +46,20 @@ class BIT:
             self.tree[i-1] += x
             i += i & -i
 
-    def get(self, l, r=None):
+    def query(self, l, r):
         """ 区間和の取得 [l, r) """
-        # 引数が1つなら一点の値を取得
-        if r is None: r = l + 1
-        res = 0
-        if r: res += self.sum(r-1)
-        if l: res -= self.sum(l-1)
-        return res
+        return self.sum(r-1) - self.sum(l-1)
+    
+    def get(self, i):
+        """ 一点取得 """
+        return self.query(i, i+1)
 
     def update(self, i, x):
         """ 値の更新：添字i, 値x """
         self.add(i, x - self.get(i))
 
-    def print(self, N):
-        for i in range(N):
+    def print(self):
+        for i in range(self.n):
             print(self.get(i), end=' ')
         print()
 
@@ -201,6 +201,38 @@ class SegTree:
     def all(self):
         """ 全区間[0, n)の取得 """
         return self.tree[1]
+
+    def bisearch_fore(self, l, r, x, func):
+        """ 区間[l,r]で左から最初にxに対して比較の条件を満たすような値が出現する位置 """
+
+        ok = r + 1
+        ng = l - 1
+        while ng+1 < ok:
+            mid = (ok+ng) // 2
+            if func(self.query(l, mid+1), x):
+                ok = mid
+            else:
+                ng = mid
+        if ok != r + 1:
+            return ok
+        else:
+            return INF
+
+    def bisearch_back(self, l, r, x, func):
+        """ 区間[l,r]で右から最初にxに対して比較の条件を満たすような値が出現する位置 """
+
+        ok = l - 1
+        ng = r + 1
+        while ok+1 < ng:
+            mid = (ok+ng) // 2
+            if func(self.query(mid, r+1), x):
+                ok = mid
+            else:
+                ng = mid
+        if ok != l - 1:
+            return ok
+        else:
+            return -INF
 
     def print(self):
         for i in range(self.n):
@@ -451,3 +483,35 @@ class SparseTable:
             raise Exception
         a = self.height[r-l]
         return self.func(self.dat[a][l], self.dat[a][r-(1<<a)])
+
+    def bisearch_fore(self, l, r, x, func):
+        """ 区間[l,r]で左から最初にxに対して比較の条件を満たすような値が出現する位置 """
+
+        ok = r + 1
+        ng = l - 1
+        while ng+1 < ok:
+            mid = (ok+ng) // 2
+            if func(self.get(l, mid+1), x):
+                ok = mid
+            else:
+                ng = mid
+        if ok != r + 1:
+            return ok
+        else:
+            return INF
+
+    def bisearch_back(self, l, r, x, func):
+        """ 区間[l,r]で右から最初にxに対して比較の条件を満たすような値が出現する位置 """
+
+        ok = l - 1
+        ng = r + 1
+        while ok+1 < ng:
+            mid = (ok+ng) // 2
+            if func(self.get(mid, r+1), x):
+                ok = mid
+            else:
+                ng = mid
+        if ok != l - 1:
+            return ok
+        else:
+            return -INF

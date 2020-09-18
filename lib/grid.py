@@ -18,7 +18,6 @@ sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
-
 # 右左上下
 directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
 # 斜め有り
@@ -30,7 +29,7 @@ directions = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, -1), (1, 1), (-1, 
 #     for j in range(1, W+1):
 #         grid[i][j] = row[j-1]
 
-def build_grid(H, W, intv, _type, space=True, padding=False):
+def build_grid(H, W, intv, _type, space=False, padding=True):
     # 入力がスペース区切りかどうか
     if space:
         _input = lambda: input().split()
