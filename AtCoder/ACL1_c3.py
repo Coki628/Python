@@ -11,6 +11,8 @@
 　その分そこにスペースがあると判断されて移動距離が長めになってしまってるぽい。
 　今回は全駒が確実に使われる(そこに存在する)ものとしてやらないといけないから、
 　始点から終点直行の辺は繋いじゃダメなんだね。
+・heapqに詰めるのをタプルじゃなくした版
+　ちょっと速くなった。pypyAC0.34→0.29秒。
 """
 
 import sys
@@ -86,17 +88,17 @@ class MinCostFlow:
         while f:
             dist = [INF] * N
             dist[s] = 0
-            que = [(0, s)]
+            que = [s]
 
             while que:
-                c, v = heappop(que)
+                c, v = divmod(heappop(que), N)
                 if dist[v] < c:
                     continue
                 for i, (to, cap, cost, _) in enumerate(G[v]):
                     if cap > 0 and dist[to] > dist[v] + cost + H[v] - H[to]:
                         dist[to] = r = dist[v] + cost + H[v] - H[to]
                         prv_v[to] = v; prv_e[to] = i
-                        heappush(que, (r, to))
+                        heappush(que, r*N+to)
             if dist[t] == INF:
                 return INF
 
