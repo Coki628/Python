@@ -1,0 +1,34 @@
+"""
+・自力AC
+・危ない。制約が妙に小さめだったので、DPとかできるんじゃあとか色々考えたけど、
+　括弧も使っていいルールとか考えると、どうにもうまくまとまりそうにない。
+・かなり色々なパターンでOKが出せそう、とは思って、まさか、、と思って1,0の場合だけNGで出したら、
+　1WAだけになった。それなら、と2,0の場合もNGにしたら通った。
+・OK,NG判定だけだったから読みで勝てたけど、構築しなさいだったら解けてなかったな。。
+"""
+
+import sys
+
+def input(): return sys.stdin.readline().strip()
+def list2d(a, b, c): return [[c for j in range(b)] for i in range(a)]
+def list3d(a, b, c, d): return [[[d for k in range(c)] for j in range(b)] for i in range(a)]
+def list4d(a, b, c, d, e): return [[[[e for l in range(d)] for k in range(c)] for j in range(b)] for i in range(a)]
+def ceil(x, y=1): return int(-(-x // y))
+def INT(): return int(input())
+def MAP(): return map(int, input().split())
+def LIST(N=None): return list(MAP()) if N is None else [INT() for i in range(N)]
+def Yes(): print('Yes')
+def No(): print('No')
+def YES(): print('YES')
+def NO(): print('NO')
+sys.setrecursionlimit(10**9)
+INF = 10**19
+MOD = 10**9 + 7
+EPS = 10**-10
+
+N, M = MAP()
+
+if N <= 2 and M == 0:
+    print('Impossible')
+else:
+    print('Possible')
