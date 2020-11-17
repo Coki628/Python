@@ -4,6 +4,7 @@
 参考：https://rsk0315.hatenablog.com/entry/2020/05/02/181650
 ・最小全域木、ダブリング、LCA
 ・HL分解でも解けるらしいのでまあそのうち。。
+→HLDやった。C++を方を参照。
 """
 
 import sys
