@@ -165,3 +165,19 @@ def dton(num, n):
         return res
     else:
         return '0'
+
+def extgcd(a, b, x, y):
+    """ 拡張ユークリッドの互除法(ax+by=gcd(a, b)の解を求める) """
+
+    if b == 0:
+        x = 1
+        y = 0
+        return (y, x)
+    else:
+        x, y = extgcd(b, a%b, y, x)
+        y -= a // b * x
+        return (y, x)
+
+# N以下の自然数でa+b=xを作る通り数
+def f(N, x):
+    return max(min(x-1, N*2+1-x), 0)

@@ -73,6 +73,8 @@ s = s[::-1]
 
 # 行列入れ替え
 # li2 = list(zip(*li1))
+# タプル->リスト変換付
+# grid = [list(row) for row in list(zip(*grid))]
 
 # int -> bin(str)
 num = 1234
@@ -543,7 +545,8 @@ def gauss_jordan(A, extended=False):
 def gauss_jordan(A, extended=False):
     """ ガウス・ジョルダン法(連立方程式の解) """
 
-    N, M = len(A), max(A).bit_length()
+    N = len(A)
+    M = N + 1
     res = A[:]
     rank = 0
     for col in range(M):

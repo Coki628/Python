@@ -202,3 +202,20 @@ class Geometry:
         except:
             # 一方が他方を内包しちゃってる場合等はここに飛ぶ(はず)
             return -1
+
+    def get_degree(self, a, b, c):
+        """ ∠abcについて、反時計回り側の角度を取得 """
+        from math import degrees, atan2
+
+        # bから見たa,cへ向かうベクトル
+        v1 = self.sub(a, b)
+        x1, y1 = v1
+        v2 = self.sub(c, b)
+        x2, y2 = v2
+         # atan2がx=0から見た角度を返すので、差分を取る
+        res = degrees(atan2(y2, x2) - atan2(y1, x1))
+        # 誤差対策のEPSを追加
+        if res < 0-self.EPS:
+            # 負の数なら時計回り側にあるので逆向きにする
+            res += 360
+        return res

@@ -67,6 +67,12 @@ def scale(grid, K):
             res[i][j] = grid[i//K][j//K]
     return res
 
+def gridtoid(i, j, W):
+    return i*W+j
+
+def idtogrid(id, W):
+    return divmod(id, W)
+
 # ※多点スタート対応のためsrcにはlistを渡す
 def bfs(grid, src):
     """ BFS(グリッド、重みなし) """

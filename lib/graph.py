@@ -209,7 +209,7 @@ def get_route(s, t, res):
     return StoT
 
 def dijkstra(G, src):
-    """ O(V^2)のダイクストラ(動作確認してない) """
+    """ O(V^2)のダイクストラ """
 
     N = len(G)
     dist = [INF] * N
@@ -464,6 +464,11 @@ class UnionFind:
     def is_tree(self, x):
         """ 木かどうかの判定 """
         return self.tree[self.find(x)]
+
+    def get_roots(self):
+        """ 全ての根を取得 """
+
+        return set([self.find(i) for i in range(self.n)])
 
 
 class WeightedUnionFind:

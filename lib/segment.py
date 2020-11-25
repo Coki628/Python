@@ -77,7 +77,7 @@ class BIT:
         if ok != r + 1:
             return ok
         else:
-            return INF
+            return -1
 
     def bisearch_back(self, l, r, x):
         """ 区間[l, r]を右から左に向かってx番目の値がある位置 """
@@ -93,7 +93,56 @@ class BIT:
         if ok != l - 1:
             return ok
         else:
-            return -INF
+            return -1
+
+
+class BIT:
+    """ Binary Indexed Tree (MOD付) """
+
+    def __init__(self, n):
+        self.n = n
+        # 0-indexed
+        n += 1
+        nv = 1
+        while nv < n:
+            nv *= 2
+        self.size = nv
+        self.tree = [0] * nv
+
+    def sum(self, i):
+        """ [0, i]を合計する """
+        s = 0
+        i += 1
+        while i > 0:
+            s += self.tree[i-1]
+            s %= MOD
+            i -= i & -i
+        return s
+
+    def add(self, i, x):
+        """ 値の追加：添字i, 値x """
+        i += 1
+        while i <= self.size:
+            self.tree[i-1] += x
+            self.tree[i-1] %= MOD
+            i += i & -i
+
+    def query(self, l, r):
+        """ 区間和の取得 [l, r) """
+        return (self.sum(r-1) - self.sum(l-1)) % MOD
+    
+    def get(self, i):
+        """ 一点取得 """
+        return self.query(i, i+1)
+
+    def update(self, i, x):
+        """ 値の更新：添字i, 値x """
+        self.add(i, x - self.get(i))
+
+    def print(self):
+        for i in range(self.n):
+            print(self.get(i), end=' ')
+        print()
 
 
 class BIT:
@@ -202,6 +251,11 @@ class SegTree:
         """ 全区間[0, n)の取得 """
         return self.tree[1]
 
+    def print(self):
+        for i in range(self.n):
+            print(self.get(i), end=' ')
+        print()
+
     def bisearch_fore(self, l, r, x, func):
         """ 区間[l,r]で左から最初にxに対して比較の条件を満たすような値が出現する位置 """
 
@@ -216,7 +270,7 @@ class SegTree:
         if ok != r + 1:
             return ok
         else:
-            return INF
+            return -1
 
     def bisearch_back(self, l, r, x, func):
         """ 区間[l,r]で右から最初にxに対して比較の条件を満たすような値が出現する位置 """
@@ -232,12 +286,7 @@ class SegTree:
         if ok != l - 1:
             return ok
         else:
-            return -INF
-
-    def print(self):
-        for i in range(self.n):
-            print(self.get(i), end=' ')
-        print()
+            return -1
 
 
 class SegTreeIndex:
@@ -498,7 +547,7 @@ class SparseTable:
         if ok != r + 1:
             return ok
         else:
-            return INF
+            return -1
 
     def bisearch_back(self, l, r, x, func):
         """ 区間[l,r]で右から最初にxに対して比較の条件を満たすような値が出現する位置 """
@@ -514,4 +563,4 @@ class SparseTable:
         if ok != l - 1:
             return ok
         else:
-            return -INF
+            return -1
