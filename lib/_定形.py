@@ -234,9 +234,11 @@ def bisearch_max(mn, mx, func, times):
             ng = mid
     return ok
 
-def trisearch_min(lo, hi, func):
+def trisearch_min(lo, hi, func, ln=0):
     """ 三分探索 """
 
+    m1 = l = lo
+    m2 = r = hi
     while lo+2 < hi:
         m1 = (lo*2+hi) // 3
         m2 = (lo+hi*2) // 3
@@ -246,11 +248,20 @@ def trisearch_min(lo, hi, func):
             hi = m2
         else:
             lo = m1
-    return m1, m2
+    mn = INF
+    ret = ()
+    for i in range(max(m1-ln, l), min(m2+ln, r)):
+        res = func(i)
+        if res < mn:
+            mn = res
+            ret = (i, res)
+    return ret
 
-def trisearch_max(lo, hi, func):
+def trisearch_max(lo, hi, func, ln=0):
     """ 三分探索 """
 
+    m1 = l = lo
+    m2 = r = hi
     while lo+2 < hi:
         m1 = (lo*2+hi) // 3
         m2 = (lo+hi*2) // 3
@@ -260,11 +271,20 @@ def trisearch_max(lo, hi, func):
             hi = m2
         else:
             lo = m1
-    return m1, m2
+    mx = -INF
+    ret = ()
+    for i in range(max(m1-ln, l+1), min(m2+ln, r+1)):
+        res = func(i)
+        if res > mx:
+            mx = res
+            ret = (i, res)
+    return ret
 
 def trisearch_min(lo, hi, func, times):
     """ 三分探索(小数) """
 
+    m1 = lo
+    m2 = hi
     for _ in range(times):
         m1 = (lo*2+hi) / 3
         m2 = (lo+hi*2) / 3
@@ -279,6 +299,8 @@ def trisearch_min(lo, hi, func, times):
 def trisearch_max(lo, hi, func, times):
     """ 三分探索(小数) """
 
+    m1 = lo
+    m2 = hi
     for _ in range(times):
         m1 = (lo*2+hi) / 3
         m2 = (lo+hi*2) / 3

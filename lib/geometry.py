@@ -219,3 +219,21 @@ class Geometry:
             # 負の数なら時計回り側にあるので逆向きにする
             res += 360
         return res
+
+# 2点を通る直線の式の係数a,b
+def calc(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    a = (y2-y1)/(x2-x1)
+    b = -(x1*y2/(x2-x1))+x1*y1/(x2-x1)+y1
+    return a, b
+
+# 2次方程式の解の公式
+def dim2formula(a, b, c):
+    from math import sqrt
+
+    try:
+        return (-b+sqrt(pow(b, 2)-4*a*c))/(2*a), (-b-sqrt(pow(b, 2)-4*a*c))/(2*a)
+    # 解なしはNoneを返却
+    except ValueError:
+        return None, None

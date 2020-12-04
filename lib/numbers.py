@@ -20,6 +20,9 @@ sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
+# MOD逆元
+def div(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
+
 # 非再帰GCD(多分純正は再帰っぽいからこっちのが速いはず)
 def gcd(a, b):
     while b: a, b = b, a % b
