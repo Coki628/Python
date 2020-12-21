@@ -564,3 +564,21 @@ class SparseTable:
             return ok
         else:
             return -1
+
+
+def slide_min(func, A, k):
+    """ スライド最小値(演算、元の数列A、欲しい区間長k) """
+    from collections import deque
+
+    que = deque()
+    res = []
+    N = len(A)
+    for i in range(N):
+        while que and func(A[que[-1]], A[i]) == A[i]:
+            que.pop()
+        que.append(i)
+        if i-k+1 >= 0:
+            res.append(A[que[0]])
+            if que[0] == i-k+1:
+                que.popleft()
+    return res

@@ -71,11 +71,6 @@ def rec():
 s = ''
 s = s[::-1]
 
-# 行列入れ替え
-# li2 = list(zip(*li1))
-# タプル->リスト変換付
-# grid = [list(row) for row in list(zip(*grid))]
-
 # int -> bin(str)
 num = 1234
 num = format(num, 'b')

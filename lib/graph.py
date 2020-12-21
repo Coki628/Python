@@ -276,6 +276,77 @@ def warshall_floyd(graph: list) -> list:
             return []
     return res
 
+def SCC(N, edges):
+    """ 強連結成分分解 """
+
+    nodes1 = [[] for i in range(N)]
+    nodes2 = [[] for i in range(N)]
+    for u, v in edges:
+        nodes1[u].append(v)
+        nodes2[v].append(u)
+
+    T = []
+    visited = [False] * N
+    def rec1(cur):
+        visited[cur] = True
+        for nxt in nodes1[cur]:
+            if not visited[nxt]:
+                rec1(nxt)
+        # 行き止まったところから順にTに入れていく
+        T.append(cur)
+
+    # グラフが連結とは限らないので全頂点やる
+    for u in range(N):
+        if not visited[u]:
+            rec1(u)
+
+    visited = [False] * N
+    group = [0] * N
+    grpnum = 0
+    def rec2(cur):
+        group[cur] = grpnum
+        visited[cur] = True
+        for nxt in nodes2[cur]:
+            if not visited[nxt]:
+                rec2(nxt)
+
+    # 逆順で進めるところまで行く
+    for u in reversed(T):
+        if not visited[u]:
+            rec2(u)
+            grpnum += 1
+    return grpnum, group
+# grpcnt, group = SCC(N, edges)
+
+# # 閉路潰してDAGグラフを再構築
+# vgroup = [[] for i in range(N)]
+# for i in range(N):
+#     g = group[i]
+#     vgroup[g].append(i)
+# # この後やることに合わせてグラフを用意
+# nodes = [[] for i in range(N+1)]
+# edges2 = []
+# G2 = list2d(N+1, N+1, INF)
+# for i in range(N):
+#     for j, v in enumerate(vgroup[i][1:], 1):
+#         u = vgroup[i][j-1]
+#         nodes[u].append(v)
+#         edges2.append((u, v))
+#         G2[u][v] = 1
+# for a, b in edges:
+#     ga, gb = group[a], group[b]
+#     if ga == gb:
+#         continue
+#     u = vgroup[ga][-1]
+#     v = vgroup[gb][0]
+#     nodes[u].append(v)
+#     edges2.append((u, v))
+#     G2[u][v] = 1
+# for i in range(N):
+#     nodes[N].append(i)
+#     edges2.append((N, i))
+#     G2[N][i] = 1
+
 def topological_sort(N: int, edges: list) -> list:
     """ トポロジカルソート(頂点数、辺集合(DAG, 0-indexed)) """
 
@@ -364,47 +435,6 @@ def low_link(nodes):
         aps.add(0)
 
     return aps, bridges
-
-def SCC(N, edges):
-    """ 強連結成分分解 """
-
-    nodes1 = [[] for i in range(N)]
-    nodes2 = [[] for i in range(N)]
-    for u, v in edges:
-        nodes1[u].append(v)
-        nodes2[v].append(u)
-
-    T = []
-    visited = [False] * N
-    def rec1(cur):
-        visited[cur] = True
-        for nxt in nodes1[cur]:
-            if not visited[nxt]:
-                rec1(nxt)
-        # 行き止まったところから順にTに入れていく
-        T.append(cur)
-
-    # グラフが連結とは限らないので全頂点やる
-    for u in range(N):
-        if not visited[u]:
-            rec1(u)
-
-    visited = [False] * N
-    group = [0] * N
-    grpnum = 0
-    def rec2(cur):
-        group[cur] = grpnum
-        visited[cur] = True
-        for nxt in nodes2[cur]:
-            if not visited[nxt]:
-                rec2(nxt)
-
-    # 逆順で進めるところまで行く
-    for u in reversed(T):
-        if not visited[u]:
-            rec2(u)
-            grpnum += 1
-    return grpnum, group
 
 
 class UnionFind:

@@ -18,6 +18,11 @@ sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
+# 行列入れ替え
+# li2 = list(zip(*li1))
+# タプル->リスト変換付
+# grid = [list(row) for row in list(zip(*grid))]
+
 # 右左上下
 directions = ((1, 0), (-1, 0), (0, 1), (0, -1))
 # 斜め有り
@@ -99,7 +104,7 @@ def bfs(grid, src):
     return dist
 
 def dijkstra(grid: list, src: tuple) -> list:
-    """ グリッドダイクストラ(縦, 横, H*Wグリッド, 始点(h, w)) """
+    """ グリッドダイクストラ(H*Wグリッド, 始点(h, w)) """
     from heapq import heappush, heappop
 
     H, W = len(grid), len(grid[0])

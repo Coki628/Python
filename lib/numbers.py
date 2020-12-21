@@ -20,7 +20,7 @@ sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
-# MOD逆元
+# MOD逆元で割り算(MODが素数の時のみ)
 def div(x, y, MOD): return x * pow(y, MOD-2, MOD) % MOD
 
 # 非再帰GCD(多分純正は再帰っぽいからこっちのが速いはず)
@@ -169,7 +169,7 @@ def dton(num, n):
     else:
         return '0'
 
-def extgcd(a, b, x, y):
+def extgcd(a, b, x=1, y=0):
     """ 拡張ユークリッドの互除法(ax+by=gcd(a, b)の解を求める) """
 
     if b == 0:
@@ -180,6 +180,11 @@ def extgcd(a, b, x, y):
         x, y = extgcd(b, a%b, y, x)
         y -= a // b * x
         return (y, x)
+
+# MOD逆元で割り算(MODが素数でなくても、bとMODが互いに素なら可)
+def div(a, b, MOD):
+    _, x = extgcd(b, MOD)
+    return a*x % MOD
 
 # N以下の自然数でa+b=xを作る通り数
 def f(N, x):
