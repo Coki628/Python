@@ -1,6 +1,7 @@
 """
 参考：https://tjkendev.github.io/procon-library/python/math/baby-step-giant-step.html
 　　　https://atcoder.jp/contests/abc186/submissions/18904196
+　　　https://twitter.com/tatyam_prime/status/1340295506140909569
 ・Baby-Step Giant-Step (BSGS)
 ・本来は指数部分を求めるのに使うみたいだけど、掛け算してるところを足し算にすると、
 　係数部分を求めるのにも使えるみたい。
