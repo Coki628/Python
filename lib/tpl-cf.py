@@ -12,7 +12,7 @@ def Yes(): print('Yes')
 def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
-INF = 10**19
+INF = 2**63 - 1
 MOD = 10**9 + 7
 EPS = 10**-10
 
