@@ -25,7 +25,7 @@ INF = float('inf')
 MOD = 10 ** 9 + 7
 
 # 拡張ユークリッドの互除法(ax+by=gcd(a, b)の解を求める)
-def extgcd(a, b, x, y):
+def extgcd(a, b, x=1, y=0):
     if b == 0:
         x = 1
         y = 0
@@ -37,5 +37,5 @@ def extgcd(a, b, x, y):
 
 a, b = MAP()
 
-y, x = extgcd(a, b, 0, 0)
+y, x = extgcd(a, b)
 print(x, y)
