@@ -205,7 +205,7 @@ class Geometry:
             # 一方が他方を内包しちゃってる場合等はここに飛ぶ(はず)
             return -1
 
-    def get_digree(self, a, b, c):
+    def get_degree(self, a, b, c):
         """ ∠abcについて、向き関係なく小さい方の角度を取得 """
         from math import degrees, atan2
 
@@ -222,7 +222,7 @@ class Geometry:
             res = 360 - res 
         return res
 
-    def get_digree2(self, a, b, c):
+    def get_degree2(self, a, b, c):
         """ ∠abcについて、反時計回り側の角度を取得 """
         from math import degrees, atan2
 
@@ -262,7 +262,7 @@ def dijkstra(nodes: list, src: int) -> list:
 
 gm = Geometry(10**-10)
 def calc(a, b, c):
-    res = gm.get_digree(XY[a], XY[b], XY[c])
+    res = gm.get_degree(XY[a], XY[b], XY[c])
     return res >= 90
 
 N, M = MAP()

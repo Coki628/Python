@@ -7,7 +7,7 @@
 ・先に全部の辺張ってから構築。これもTLE。
 ・同じのC++で作ってAC0.3秒。
 ・2000^2/2=200万の辺ならlogとか乗ってもいける気がするんだけどな。
-　ソートのlogか、UnionFindか、どっちがボトルネックだろうか。
+　→提出デバッグした。ボトルネックはソートのlogだ。
 """
 
 import sys
@@ -25,7 +25,7 @@ def Yes(): print('Yes')
 def No(): print('No')
 def YES(): print('YES')
 def NO(): print('NO')
-sys.setrecursionlimit(10 ** 9)
+# sys.setrecursionlimit(10 ** 9)
 INF = 10 ** 18
 MOD = 10 ** 9 + 7
 
@@ -38,11 +38,13 @@ class UnionFind:
         self.size = [1] * (n+1)
 
     def find(self, x):
-        if self.par[x] == x:
-            return x
-        else:
-            self.par[x] = self.find(self.par[x])
-            return self.par[x]
+        t = []
+        while self.par[x] != x:
+            t.append(x)
+            x = self.par[x]
+        for i in t:
+            self.par[i] = x
+        return self.par[x]
 
     def union(self, x, y):
         x = self.find(x)
@@ -71,7 +73,7 @@ class UnionFind:
 
 N = INT()
 cities = []
-edges2 = []
+edges = []
 for i in range(N):
     x, y = MAP()
     cities.append((x, y))
@@ -83,35 +85,37 @@ for i in range(N):
     x, y = cities[i]
     cities[i] = (x, y, c, k)
     # 各頂点から大元の発電所への辺
-    edges2.append((c, i, N))
+    edges.append((c, i, N))
 
 # 各頂点同士の辺
 for i in range(N):
     x1, y1, c1, k1 = cities[i]
     for j in range(i+1, N):
         x2, y2, c2, k2 = cities[j]
-        dist = abs(x1-x2) + abs(y1-y2)
-        edges2.append((dist * (k1+k2), i, j))
+        cost = (abs(x1-x2) + abs(y1-y2)) * (k1+k2)
+        # 明らかに不要な辺は繋がない
+        if C[i] > cost or C[j] > cost:
+            edges.append((cost, i, j))
 
-edges2.sort(key=itemgetter(0))
+edges.sort(key=itemgetter(0))
 uf = UnionFind(N+1)
 total = 0
 stations = []
-edges = []
-for c, a, b in edges2:
+edges2 = []
+for c, a, b in edges:
     if not uf.is_same(a, b):
         uf.union(a, b)
         total += c
         if b == N:
             stations.append(a+1)
         else:
-            edges.append((a+1, b+1))
+            edges2.append((a+1, b+1))
     if uf.get_size(N) == N+1:
         break
 
 print(total)
 print(len(stations))
 print(*sorted(stations))
-print(len(edges))
-for a, b in edges:
+print(len(edges2))
+for a, b in edges2:
     print(a, b)
