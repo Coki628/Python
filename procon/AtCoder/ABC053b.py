@@ -1,5 +1,0 @@
-# -*- coding: utf-8 -*-
-
-s = input()
-
-print(s.rfind("Z") - s.find("A") + 1)
